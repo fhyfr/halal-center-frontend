@@ -15,27 +15,41 @@ import {
   Grid,
 } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import DrawerAppBar from '../components/navbar';
-import Footer from '../components/footer';
+import DrawerAppBar from '../../components/navbar';
+import Footer from '../../components/footer';
+import axios from 'axios';
+import { useRouter } from 'next/router';
+
+const postDataToAPI = (valueRegister) => {
+  axios
+    .post('https://halal-hrd-service.onrender.com/api/v1/auth/register', valueRegister)
+    .then(function (response) {
+      // handle success
+      console.log(response);
+    });
+};
 
 const Register = () => {
+  const router = useRouter();
   const formik = useFormik({
     initialValues: {
+      username: '',
       email: '',
-      firstName: '',
-      lastName: '',
       password: '',
-      policy: false,
+      fullName: '',
+      // policy: false,
     },
     validationSchema: Yup.object({
+      username: Yup.string().max(255).required('Username is required'),
       email: Yup.string().email('Must be a valid email').max(255).required('Email is required'),
-      firstName: Yup.string().max(255).required('First name is required'),
-      lastName: Yup.string().max(255).required('Last name is required'),
       password: Yup.string().max(255).required('Password is required'),
-      policy: Yup.boolean().oneOf([true], 'This field must be checked'),
+      fullName: Yup.string().max(255).required('Full Name is required'),
+      // policy: Yup.boolean().oneOf([true], 'This field must be checked'),
     }),
-    onSubmit: () => {
-      Router.push('/').catch(console.error);
+    onSubmit: async (values) => {
+      // console.log(values);
+      await postDataToAPI(values);
+      router.push('/member/login');
     },
   });
 
@@ -70,11 +84,11 @@ const Register = () => {
                 }}
               >
                 <Container maxWidth="sm">
-                  <NextLink href="/" passHref>
+                  {/* <NextLink href="/" passHref>
                     <Button component="a" startIcon={<ArrowBackIcon fontSize="small" />}>
                       Dashboard
                     </Button>
-                  </NextLink>
+                  </NextLink> */}
                   <form onSubmit={formik.handleSubmit}>
                     <Box sx={{ my: 3 }}>
                       <Typography color="textPrimary" variant="h4">
@@ -85,29 +99,30 @@ const Register = () => {
                       </Typography>
                     </Box>
                     <TextField
-                      error={Boolean(formik.touched.firstName && formik.errors.firstName)}
+                      error={Boolean(formik.touched.fullName && formik.errors.fullName)}
                       fullWidth
-                      helperText={formik.touched.firstName && formik.errors.firstName}
-                      label="First Name"
+                      helperText={formik.touched.fullName && formik.errors.fullName}
+                      label="Full Name"
                       margin="normal"
-                      name="firstName"
+                      name="fullName"
                       onBlur={formik.handleBlur}
                       onChange={formik.handleChange}
-                      value={formik.values.firstName}
+                      value={formik.values.fullName}
                       variant="outlined"
                     />
                     <TextField
-                      error={Boolean(formik.touched.lastName && formik.errors.lastName)}
+                      error={Boolean(formik.touched.username && formik.errors.username)}
                       fullWidth
-                      helperText={formik.touched.lastName && formik.errors.lastName}
-                      label="Last Name"
+                      helperText={formik.touched.username && formik.errors.username}
+                      label="Username"
                       margin="normal"
-                      name="lastName"
+                      name="username"
                       onBlur={formik.handleBlur}
                       onChange={formik.handleChange}
-                      value={formik.values.lastName}
+                      value={formik.values.username}
                       variant="outlined"
                     />
+
                     <TextField
                       error={Boolean(formik.touched.email && formik.errors.email)}
                       fullWidth
@@ -134,7 +149,7 @@ const Register = () => {
                       value={formik.values.password}
                       variant="outlined"
                     />
-                    <Box
+                    {/* <Box
                       sx={{
                         alignItems: 'center',
                         display: 'flex',
@@ -157,7 +172,7 @@ const Register = () => {
                     </Box>
                     {Boolean(formik.touched.policy && formik.errors.policy) && (
                       <FormHelperText error>{formik.errors.policy}</FormHelperText>
-                    )}
+                    )} */}
                     <Box sx={{ py: 2 }}>
                       <Button
                         color="primary"
@@ -172,7 +187,7 @@ const Register = () => {
                     </Box>
                     <Typography color="textSecondary" variant="body2">
                       Have an account?{' '}
-                      <NextLink href="/login" passHref>
+                      <NextLink href="/member/login" passHref>
                         <Link variant="subtitle2" underline="hover">
                           Sign In
                         </Link>

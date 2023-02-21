@@ -1,27 +1,42 @@
 import Head from 'next/head';
 import NextLink from 'next/link';
-import Router from 'next/router';
+import Router, { useRouter } from 'next/router';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { Box, Button, Container, Grid, Link, TextField, Typography } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { Facebook as FacebookIcon } from '../icons/facebook';
-import { Google as GoogleIcon } from '../icons/google';
-import DrawerAppBar from '../components/navbar';
-import Footer from '../components/footer';
+import { Facebook as FacebookIcon } from '../../icons/facebook';
+import { Google as GoogleIcon } from '../../icons/google';
+import DrawerAppBar from '../../components/navbar';
+import Footer from '../../components/footer';
+import axios from 'axios';
+
+const postDataToAPI = (valueLogin) => {
+  axios.post('https://halal-hrd-service.onrender.com/api/v1/auth/login/', valueLogin);
+
+  // .then(function (response) {
+  //   // handle success
+  //   console.log(response);
+  // });
+  // .then(() => {
+  //
+  // });
+};
 
 const Login = () => {
+  const router = useRouter();
   const formik = useFormik({
     initialValues: {
-      email: 'demo@devias.io',
-      password: 'Password123',
+      email: '',
+      password: '',
     },
     validationSchema: Yup.object({
       email: Yup.string().email('Must be a valid email').max(255).required('Email is required'),
       password: Yup.string().max(255).required('Password is required'),
     }),
-    onSubmit: () => {
-      Router.push('/').catch(console.error);
+    onSubmit: async (values) => {
+      await postDataToAPI(values);
+      router.push('/');
     },
   });
 
@@ -46,11 +61,11 @@ const Login = () => {
               <img width="500px" src="https://halalcenter.id/uploads/system/sign_up.png"></img>
             </Grid>
             <Grid item xs={6}>
-              <NextLink href="/" passHref>
+              {/* <NextLink href="/" passHref>
                 <Button component="a" startIcon={<ArrowBackIcon fontSize="small" />}>
                   Dashboard
                 </Button>
-              </NextLink>
+              </NextLink> */}
               <form onSubmit={formik.handleSubmit}>
                 <Box sx={{ my: 3 }}>
                   <Typography color="textPrimary" variant="h4">
@@ -60,7 +75,7 @@ const Login = () => {
                     Sign in on the internal platform
                   </Typography>
                 </Box>
-                <Grid container spacing={3}>
+                {/* <Grid container spacing={3}>
                   <Grid item xs={12} md={6}>
                     <Button
                       color="info"
@@ -85,8 +100,8 @@ const Login = () => {
                       Login with Google
                     </Button>
                   </Grid>
-                </Grid>
-                <Box
+                </Grid> */}
+                {/* <Box
                   sx={{
                     pb: 1,
                     pt: 3,
@@ -95,7 +110,7 @@ const Login = () => {
                   <Typography align="center" color="textSecondary" variant="body1">
                     or login with email address
                   </Typography>
-                </Box>
+                </Box> */}
                 <TextField
                   error={Boolean(formik.touched.email && formik.errors.email)}
                   fullWidth
@@ -136,9 +151,9 @@ const Login = () => {
                 </Box>
                 <Typography color="textSecondary" variant="body2">
                   Don&apos;t have an account?{' '}
-                  <NextLink href="/register">
+                  <NextLink href="/member/register">
                     <Link
-                      to="/register"
+                      to="/member/register"
                       variant="subtitle2"
                       underline="hover"
                       sx={{

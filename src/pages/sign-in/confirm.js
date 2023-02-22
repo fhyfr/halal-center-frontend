@@ -40,9 +40,7 @@ const Page = () => {
 
     // Token missing, redirect to home
     if (!token) {
-      Router
-        .push('/')
-        .catch(console.error);
+      Router.push('/').catch(console.error);
       return;
     }
 
@@ -57,9 +55,7 @@ const Page = () => {
       authContext.signIn(user);
 
       // Redirect to home page
-      Router
-        .push('/')
-        .catch(console.error);
+      Router.push('/').catch(console.error);
     } catch (err) {
       console.error(err);
       setError(err.message || 'Something went wrong');
@@ -78,7 +74,7 @@ const Page = () => {
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
-          p: 3
+          p: 3,
         }}
       >
         <CircularProgress />
@@ -93,33 +89,25 @@ const Page = () => {
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
-          p: 3
+          p: 3,
         }}
       >
         <Box sx={{ p: 3 }}>
-          <NextLink
-            href="/"
-            passHref
-          >
+          <NextLink href="/" passHref>
             <a>
               <Logo
                 sx={{
                   height: 42,
-                  width: 42
+                  width: 42,
                 }}
               />
             </a>
           </NextLink>
         </Box>
-        <Typography
-          sx={{ mb: 1 }}
-          variant="h4"
-        >
+        <Typography sx={{ mb: 1 }} variant="h4">
           Oops!
         </Typography>
-        <Typography variant="body2">
-          {error}
-        </Typography>
+        <Typography variant="body2">{error}</Typography>
       </Box>
     );
   }

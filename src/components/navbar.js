@@ -14,6 +14,8 @@ import MenuIcon from '@mui/icons-material/Menu';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
+import Image from 'next/image';
+import logo from '../assets/images/logo_p3jph.jpg';
 
 const drawerWidth = 240;
 const navItems = ['Home', 'About', 'Contact'];
@@ -67,11 +69,7 @@ function DrawerAppBar(props) {
             component="div"
             sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}
           >
-            <img
-              width="auto"
-              height="40px"
-              src="https://halalcenter.id/uploads/system/9273938b72caad24889ec6fbaa9f5676.png"
-            />
+            <Image width="50px" height="50px" layout="fixed" src={logo} />
           </Typography>
 
           <Box sx={{ display: { xs: 'none', sm: 'block' } }}>

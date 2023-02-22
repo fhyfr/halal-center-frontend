@@ -10,6 +10,8 @@ import { Google as GoogleIcon } from '../../icons/google';
 import DrawerAppBar from '../../components/navbar';
 import Footer from '../../components/footer';
 import axios from 'axios';
+import Image from 'next/image';
+import logo from '../../assets/images/logo_p3jph.jpg';
 
 const postDataToAPI = (valueLogin) => {
   axios.post('https://halal-hrd-service.onrender.com/api/v1/auth/login/', valueLogin);
@@ -58,7 +60,7 @@ const Login = () => {
         <Container>
           <Grid container spacing={5} sx={{ marginTop: '5px' }}>
             <Grid item xs={6}>
-              <img width="500px" src="https://halalcenter.id/uploads/system/sign_up.png"></img>
+              <Image width="500px" height="500px" layout="responsive" src={logo} />
             </Grid>
             <Grid item xs={6}>
               {/* <NextLink href="/" passHref>

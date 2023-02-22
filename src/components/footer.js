@@ -4,6 +4,9 @@ import { Security, Info } from '@mui/icons-material';
 import theme from '../assets/images/styles/color';
 import { style } from '@mui/system';
 
+import Image from 'next/image';
+import logo from '../assets/images/logo_p3jph.jpg';
+
 const Footer = () => (
   <>
     <Grid sx={{ backgroundColor: '#0A1C3A', color: '#fff' }}>
@@ -24,7 +27,7 @@ const Footer = () => (
           sx={{ justifyContent: 'center', alignItems: 'center', margin: '0 auto' }}
         >
           <Grid item lg={4} xs={12}>
-            <img src="https://halalcenter.id/uploads/system/af0a991f666ca273ed1d7e56e2f9e415.png" />
+            <Image width="200px" height="200px" layout="fixed" src={logo} />
           </Grid>
           <Grid item lg={4} xs={12}>
             <Typography paragraph>

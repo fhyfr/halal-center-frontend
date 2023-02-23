@@ -6,7 +6,7 @@ import {
   TextField,
   InputAdornment,
   SvgIcon,
-  Typography
+  Typography,
 } from '@mui/material';
 import { Download as DownloadIcon } from '../../icons/download';
 import { Search as SearchIcon } from '../../icons/search';
@@ -20,33 +20,16 @@ export const ProductListToolbar = (props) => (
         display: 'flex',
         justifyContent: 'space-between',
         flexWrap: 'wrap',
-        m: -1
+        m: -1,
       }}
     >
-      <Typography
-        sx={{ m: 1 }}
-        variant="h4"
-      >
-        Products
+      <Typography sx={{ m: 1 }} variant="h4">
+        List Course
       </Typography>
       <Box sx={{ m: 1 }}>
-        <Button
-          startIcon={(<UploadIcon fontSize="small" />)}
-          sx={{ mr: 1 }}
-        >
-          Import
-        </Button>
-        <Button
-          startIcon={(<DownloadIcon fontSize="small" />)}
-          sx={{ mr: 1 }}
-        >
-          Export
-        </Button>
-        <Button
-          color="primary"
-          variant="contained"
-        >
-          Add products
+        {/* jika role admin */}
+        <Button color="primary" variant="contained">
+          Add Course
         </Button>
       </Box>
     </Box>
@@ -59,16 +42,13 @@ export const ProductListToolbar = (props) => (
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
-                    <SvgIcon
-                      fontSize="small"
-                      color="action"
-                    >
+                    <SvgIcon fontSize="small" color="action">
                       <SearchIcon />
                     </SvgIcon>
                   </InputAdornment>
-                )
+                ),
               }}
-              placeholder="Search product"
+              placeholder="Search Course"
               variant="outlined"
             />
           </Box>

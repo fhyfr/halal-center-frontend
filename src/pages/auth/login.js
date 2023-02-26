@@ -1,32 +1,36 @@
+import React, { useState } from 'react';
 import Head from 'next/head';
 import NextLink from 'next/link';
 import Router, { useRouter } from 'next/router';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { Box, Button, Container, Grid, Link, TextField, Typography } from '@mui/material';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { Facebook as FacebookIcon } from '../../icons/facebook';
-import { Google as GoogleIcon } from '../../icons/google';
+import { Box, Button, Container, Grid, Link, TextField, Typography, Alert } from '@mui/material';
 import DrawerAppBar from '../../components/navbar';
 import Footer from '../../components/footer';
 import axios from 'axios';
 import Image from 'next/image';
 import logo from '../../assets/images/logo_p3jph.jpg';
 
-const postDataToAPI = (valueLogin) => {
-  axios.post('https://halal-hrd-service.onrender.com/api/v1/auth/login/', valueLogin);
+const { NEXT_PUBLIC_API } = process.env;
 
-  // .then(function (response) {
-  //   // handle success
-  //   console.log(response);
-  // });
-  // .then(() => {
-  //
-  // });
+const onLogin = async (valueLogin, setErrorMessage) => {
+  try {
+    const res = await axios({
+      method: 'post',
+      url: `${NEXT_PUBLIC_API}/auth/login`,
+      data: valueLogin,
+    });
+
+    return res.data;
+  } catch (error) {
+    setErrorMessage(error.response.data.message);
+    throw error;
+  }
 };
 
 const Login = () => {
   const router = useRouter();
+  const [errorMessage, setErrorMessage] = useState(undefined);
   const formik = useFormik({
     initialValues: {
       email: '',
@@ -36,8 +40,10 @@ const Login = () => {
       email: Yup.string().email('Must be a valid email').max(255).required('Email is required'),
       password: Yup.string().max(255).required('Password is required'),
     }),
-    onSubmit: async (values) => {
-      await postDataToAPI(values);
+    onSubmit: async (values, actions) => {
+      const token = await onLogin(values, setErrorMessage);
+      // TODO: handle authentications
+
       router.push('/');
     },
   });
@@ -58,16 +64,11 @@ const Login = () => {
         }}
       >
         <Container>
-          <Grid container spacing={5} sx={{ marginTop: '5px' }}>
+          <Grid container spacing={5} sx={{ marginTop: '60px' }}>
             <Grid item xs={6}>
               <Image width="500px" height="500px" layout="responsive" src={logo} />
             </Grid>
             <Grid item xs={6}>
-              {/* <NextLink href="/" passHref>
-                <Button component="a" startIcon={<ArrowBackIcon fontSize="small" />}>
-                  Dashboard
-                </Button>
-              </NextLink> */}
               <form onSubmit={formik.handleSubmit}>
                 <Box sx={{ my: 3 }}>
                   <Typography color="textPrimary" variant="h4">
@@ -77,42 +78,13 @@ const Login = () => {
                     Sign in on the internal platform
                   </Typography>
                 </Box>
-                {/* <Grid container spacing={3}>
-                  <Grid item xs={12} md={6}>
-                    <Button
-                      color="info"
-                      fullWidth
-                      startIcon={<FacebookIcon />}
-                      onClick={() => formik.handleSubmit()}
-                      size="large"
-                      variant="contained"
-                    >
-                      Login with Facebook
-                    </Button>
-                  </Grid>
-                  <Grid item xs={12} md={6}>
-                    <Button
-                      color="error"
-                      fullWidth
-                      onClick={() => formik.handleSubmit()}
-                      size="large"
-                      startIcon={<GoogleIcon />}
-                      variant="contained"
-                    >
-                      Login with Google
-                    </Button>
-                  </Grid>
-                </Grid> */}
-                {/* <Box
-                  sx={{
-                    pb: 1,
-                    pt: 3,
-                  }}
-                >
-                  <Typography align="center" color="textSecondary" variant="body1">
-                    or login with email address
-                  </Typography>
-                </Box> */}
+
+                {errorMessage && (
+                  <Alert hidden={formik.errors} severity="error">
+                    {errorMessage}
+                  </Alert>
+                )}
+
                 <TextField
                   error={Boolean(formik.touched.email && formik.errors.email)}
                   fullWidth

@@ -8,15 +8,13 @@ import { customers } from '../__mocks__/customers';
 const Page = () => (
   <>
     <Head>
-      <title>
-        Customers | Material Kit
-      </title>
+      <title>Customers | Halal Center</title>
     </Head>
     <Box
       component="main"
       sx={{
         flexGrow: 1,
-        py: 8
+        py: 8,
       }}
     >
       <Container maxWidth={false}>
@@ -29,10 +27,6 @@ const Page = () => (
   </>
 );
 
-Page.getLayout = (page) => (
-  <DashboardLayout>
-    {page}
-  </DashboardLayout>
-);
+Page.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
 
 export default Page;

@@ -1,24 +1,14 @@
 import Head from 'next/head';
 import NextLink from 'next/link';
-import Router from 'next/router';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import {
-  Box,
-  Button,
-  Checkbox,
-  Container,
-  FormHelperText,
-  Link,
-  TextField,
-  Typography,
-  Grid,
-} from '@mui/material';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { Box, Button, Container, Link, TextField, Typography, Grid } from '@mui/material';
 import DrawerAppBar from '../../components/navbar';
 import Footer from '../../components/footer';
 import axios from 'axios';
 import { useRouter } from 'next/router';
+import logo from '../../assets/images/logo_p3jph.jpg';
+import Image from 'next/image';
 
 const postDataToAPI = (valueRegister) => {
   axios
@@ -44,19 +34,17 @@ const Register = () => {
       email: Yup.string().email('Must be a valid email').max(255).required('Email is required'),
       password: Yup.string().max(255).required('Password is required'),
       fullName: Yup.string().max(255).required('Full Name is required'),
-      // policy: Yup.boolean().oneOf([true], 'This field must be checked'),
     }),
     onSubmit: async (values) => {
-      // console.log(values);
       await postDataToAPI(values);
-      router.push('/member/login');
+      router.push('/auth/login');
     },
   });
 
   return (
     <>
       <Head>
-        <title>Register | Material Kit</title>
+        <title>Register | Halal Center</title>
       </Head>
       <DrawerAppBar />
       <Box
@@ -71,7 +59,7 @@ const Register = () => {
         <Container>
           <Grid container spacing={5} sx={{ marginTop: '60px', marginBottom: '60px' }}>
             <Grid item xs={6}>
-              <img width="500px" src="https://halalcenter.id/uploads/system/sign_up.png"></img>
+              <Image width="500px" height="500px" layout="responsive" src={logo} priority="true" />
             </Grid>
             <Grid item xs={6}>
               <Box
@@ -84,11 +72,6 @@ const Register = () => {
                 }}
               >
                 <Container maxWidth="sm">
-                  {/* <NextLink href="/" passHref>
-                    <Button component="a" startIcon={<ArrowBackIcon fontSize="small" />}>
-                      Dashboard
-                    </Button>
-                  </NextLink> */}
                   <form onSubmit={formik.handleSubmit}>
                     <Box sx={{ my: 3 }}>
                       <Typography color="textPrimary" variant="h4">
@@ -149,30 +132,6 @@ const Register = () => {
                       value={formik.values.password}
                       variant="outlined"
                     />
-                    {/* <Box
-                      sx={{
-                        alignItems: 'center',
-                        display: 'flex',
-                        ml: -1,
-                      }}
-                    >
-                      <Checkbox
-                        checked={formik.values.policy}
-                        name="policy"
-                        onChange={formik.handleChange}
-                      />
-                      <Typography color="textSecondary" variant="body2">
-                        I have read the{' '}
-                        <NextLink href="#" passHref>
-                          <Link color="primary" underline="always" variant="subtitle2">
-                            Terms and Conditions
-                          </Link>
-                        </NextLink>
-                      </Typography>
-                    </Box>
-                    {Boolean(formik.touched.policy && formik.errors.policy) && (
-                      <FormHelperText error>{formik.errors.policy}</FormHelperText>
-                    )} */}
                     <Box sx={{ py: 2 }}>
                       <Button
                         color="primary"
@@ -187,7 +146,7 @@ const Register = () => {
                     </Box>
                     <Typography color="textSecondary" variant="body2">
                       Have an account?{' '}
-                      <NextLink href="/member/login" passHref>
+                      <NextLink href="/auth/login" passHref>
                         <Link variant="subtitle2" underline="hover">
                           Sign In
                         </Link>

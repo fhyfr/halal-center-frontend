@@ -19,7 +19,7 @@ const otp = () => {
   return (
     <>
       <Head>
-        <title>Login | Material Kit</title>
+        <title>Login | Halal Center</title>
       </Head>
       <DrawerAppBar />
 

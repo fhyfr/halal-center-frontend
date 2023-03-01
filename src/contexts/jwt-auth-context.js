@@ -11,23 +11,25 @@ const initialAuthState = {
   user: null,
 };
 
-const isValidToken = (accessToken) => {
-  if (!accessToken) {
+const isValidToken = (accessToken, accessTokenExpiresAt) => {
+  if (!accessToken || !accessTokenExpiresAt) {
     return false;
   }
 
-  const decoded = jwtDecode(accessToken);
-  const currentTime = Date.now() / 1000;
+  const currentTime = new Date();
+  const accessTokenExpire = new Date(accessTokenExpiresAt);
 
-  return decoded.exp > currentTime;
+  return accessTokenExpire.getTime() > currentTime.getTime();
 };
 
-const setSession = (accessToken) => {
-  if (accessToken) {
+const setSession = (accessToken, accessTokenExpiresAt) => {
+  if (accessToken && accessTokenExpiresAt) {
     localStorage.setItem('accessToken', accessToken);
+    localStorage.setItem('accessTokenExpiresAt', accessTokenExpiresAt);
     axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
   } else {
     localStorage.removeItem('accessToken');
+    localStorage.removeItem('accessTokenExpiresAt');
     delete axios.defaults.headers.common.Authorization;
   }
 };
@@ -92,16 +94,19 @@ export const AuthProvider = ({ children }) => {
       url: `${NEXT_PUBLIC_API}/auth/login`,
       data: { email, password },
     });
-    const { accessToken } = response.data.data;
+    const { accessToken, accessTokenExpiresAt } = response.data.data;
 
-    setSession(accessToken);
+    setSession(accessToken, accessTokenExpiresAt);
+
+    const user = await axios({
+      method: 'GET',
+      url: `${NEXT_PUBLIC_API}/user/current/self`,
+    });
+
     dispatch({
       type: 'LOGIN',
       payload: {
-        user: {
-          email,
-          password,
-        },
+        user: user.data,
       },
     });
   };
@@ -111,15 +116,13 @@ export const AuthProvider = ({ children }) => {
     dispatch({ type: 'LOGOUT' });
   };
 
-  const register = async (email, name, password) => {
-    const response = await axios.post('/api/account/register', {
-      email,
-      name,
-      password,
+  const register = async (username, email, password, fullName) => {
+    const response = await axios({
+      method: 'POST',
+      url: `${NEXT_PUBLIC_API}/auth/register`,
+      data: { username, email, password, fullName },
     });
-    const { accessToken, user } = response.data;
-
-    window.localStorage.setItem('accessToken', accessToken);
+    const { data: user } = response.data;
 
     dispatch({
       type: 'REGISTER',
@@ -127,18 +130,27 @@ export const AuthProvider = ({ children }) => {
         user,
       },
     });
+
+    return response.data.message;
   };
 
   useEffect(() => {
     const initialise = async () => {
       try {
         const accessToken = window.localStorage.getItem('accessToken');
+        const accessTokenExpiresAt = window.localStorage.getItem('accessTokenExpiresAt');
 
-        if (accessToken && isValidToken(accessToken)) {
-          setSession(accessToken);
+        console.log(accessToken);
 
-          const response = await axios.get('/api/account/me');
-          const { user } = response.data;
+        if (
+          accessToken &&
+          accessTokenExpiresAt &&
+          isValidToken(accessToken, accessTokenExpiresAt)
+        ) {
+          setSession(accessToken, accessTokenExpiresAt);
+
+          const response = await axios.get(`${NEXT_PUBLIC_API}/user/current/self`);
+          const { data: user } = response;
 
           dispatch({
             type: 'INITIALISE',

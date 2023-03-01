@@ -13,7 +13,11 @@ import useAuth from '../../hooks/use-auth';
 
 const Login = () => {
   const router = useRouter();
-  const { login } = useAuth();
+  const { login, isAuthenticated } = useAuth();
+
+  if (isAuthenticated) {
+    router.back();
+  }
 
   const [errMessage, setErrMessage] = useState(undefined);
 
@@ -68,11 +72,7 @@ const Login = () => {
                   </Typography>
                 </Box>
 
-                {errMessage && (
-                  <Alert hidden={formik.errors} severity="error">
-                    {errMessage}
-                  </Alert>
-                )}
+                {errMessage && <Alert severity="error">{errMessage}</Alert>}
 
                 <TextField
                   error={Boolean(formik.touched.email && formik.errors.email)}

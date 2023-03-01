@@ -2,32 +2,27 @@ import Head from 'next/head';
 import NextLink from 'next/link';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { Box, Button, Container, Link, TextField, Typography, Grid } from '@mui/material';
+import { Box, Button, Container, Link, TextField, Typography, Grid, Alert } from '@mui/material';
 import DrawerAppBar from '../../components/navbar';
 import Footer from '../../components/footer';
-import axios from 'axios';
 import { useRouter } from 'next/router';
 import logo from '../../assets/images/logo_p3jph.jpg';
 import Image from 'next/image';
-
-const postDataToAPI = (valueRegister) => {
-  axios
-    .post('https://halal-hrd-service.onrender.com/api/v1/auth/register', valueRegister)
-    .then(function (response) {
-      // handle success
-      console.log(response);
-    });
-};
+import useAuth from '../../hooks/use-auth';
+import { useState } from 'react';
 
 const Register = () => {
   const router = useRouter();
+  const { register } = useAuth();
+  const [info, setInfo] = useState(undefined);
+  const [errMessage, setErrMessage] = useState(undefined);
+
   const formik = useFormik({
     initialValues: {
       username: '',
       email: '',
       password: '',
       fullName: '',
-      // policy: false,
     },
     validationSchema: Yup.object({
       username: Yup.string().max(255).required('Username is required'),
@@ -36,8 +31,17 @@ const Register = () => {
       fullName: Yup.string().max(255).required('Full Name is required'),
     }),
     onSubmit: async (values) => {
-      await postDataToAPI(values);
-      router.push('/auth/login');
+      register(values.username, values.email, values.password, values.fullName)
+        .then((res) => {
+          setInfo(res);
+          setErrMessage(undefined);
+          setTimeout(() => {
+            router.push('/auth/login');
+          }, 3000);
+        })
+        .catch((err) => {
+          setErrMessage(err.message);
+        });
     },
   });
 
@@ -81,6 +85,11 @@ const Register = () => {
                         Use your email to create a new account
                       </Typography>
                     </Box>
+
+                    {info && <Alert severity="success">{info}</Alert>}
+
+                    {errMessage && <Alert severity="error">{errMessage}</Alert>}
+
                     <TextField
                       error={Boolean(formik.touched.fullName && formik.errors.fullName)}
                       fullWidth
@@ -105,7 +114,6 @@ const Register = () => {
                       value={formik.values.username}
                       variant="outlined"
                     />
-
                     <TextField
                       error={Boolean(formik.touched.email && formik.errors.email)}
                       fullWidth

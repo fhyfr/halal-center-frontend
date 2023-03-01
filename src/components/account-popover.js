@@ -1,19 +1,18 @@
 import { useContext } from 'react';
 import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
-import { Box, MenuItem, MenuList, Popover, Typography } from '@mui/material';
+import { Box, MenuItem, MenuList, Popover, Typography, Link } from '@mui/material';
 import useAuth from '../hooks/use-auth';
 import { ENABLE_AUTH } from '../lib/auth';
+import NextLink from 'next/link';
 
 export const AccountPopover = (props) => {
   const { anchorEl, onClose, open, ...other } = props;
-  const { logout } = useAuth();
+  const { logout, user } = useAuth();
   const router = useRouter();
 
   const handleSignOut = async () => {
     onClose?.();
-
-    console.log('CLICK');
 
     // Check if authentication is enabled
     // If not enabled, then redirect is not required
@@ -52,9 +51,19 @@ export const AccountPopover = (props) => {
         }}
       >
         <Typography variant="overline">Account</Typography>
-        <Typography color="text.secondary" variant="body2">
-          John Doe
-        </Typography>
+        <NextLink href="/user/account">
+          <Link
+            to="/user/account"
+            underline="hover"
+            sx={{
+              cursor: 'pointer',
+            }}
+          >
+            <Typography color="textSecondary" variant="body2">
+              {user ? user.username : 'username'}
+            </Typography>
+          </Link>
+        </NextLink>
       </Box>
       <MenuList
         disablePadding

@@ -34,6 +34,10 @@ const setSession = (accessToken, accessTokenExpiresAt) => {
   }
 };
 
+export const getSession = () => {
+  return localStorage.getItem('accessToken');
+};
+
 const reducer = (state, action) => {
   switch (action.type) {
     case 'INITIALISE': {

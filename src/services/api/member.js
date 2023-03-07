@@ -1,53 +1,18 @@
-// import axios from "axios";
+import axios from 'axios';
+import { getSession } from '../../contexts/jwt-auth-context';
+const { NEXT_PUBLIC_API } = process.env;
 
-// export async const loginMember = () => {
-//     const ROOT_API = process.env.NEXT_PUBLIC_API;
-//     const response = await axios.post('${ROOT_API}/auth/login/',)
-//     const axiosResponse = response.data;
-//     return axiosResponse.data;
-// }
+export const updatePassword = async (currentPassword, newPassword, newPasswordConfirmation) => {
+  const accessToken = getSession();
 
-// export async const registerNewMember = () => {
-//     const ROOT_API = process.env.NEXT_PUBLIC_API;
-//     const response = await axios.post('${ROOT_API}/auth/register',)
-// }
+  const response = await axios({
+    method: 'PUT',
+    url: `${NEXT_PUBLIC_API}/user/password`,
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+    data: { password: currentPassword, newPassword, confirmNewPassword: newPasswordConfirmation },
+  });
 
-// export async const refreshToken = () => {
-//     const ROOT_API = process.env.NEXT_PUBLIC_API;
-//     const response = await axios.post('${ROOT_API}/auth/refresh-token',)
-// }
-
-// export async const logout = () => {
-//     const ROOT_API = process.env.NEXT_PUBLIC_API;
-//     const response = await axios.post('${ROOT_API}/auth/logout',)
-// }
-
-// export async const requestForgotPassword = () => {
-//     const ROOT_API = process.env.NEXT_PUBLIC_API;
-//     const response = await axios.post('${ROOT_API}/user/forgot-password',)
-// }
-
-// export async const verifyOTP = () => {
-//     const ROOT_API = process.env.NEXT_PUBLIC_API;
-//     const response = await axios.post('${ROOT_API}/auth/verify-otp',)
-// }
-
-// export async const resendOTP = () => {
-//     const ROOT_API = process.env.NEXT_PUBLIC_API;
-//     const response = await axios.post('${ROOT_API}/auth/resend-otp',)
-// }
-
-// export async const resetPassword = () => {
-//     const ROOT_API = process.env.NEXT_PUBLIC_API;
-//     const response = await axios.put('${ROOT_API}/user/reset-password/:id',)
-// }
-
-// export async const updatePassword = () => {
-//     const ROOT_API = process.env.NEXT_PUBLIC_API;
-//     const response = await axios.put('${ROOT_API}/user/password',)
-// }
-
-// export async const updateProfile = () => {
-//     const ROOT_API = process.env.NEXT_PUBLIC_API;
-//     const response = await axios.put('${ROOT_API}/member',)
-// }
+  return response.data.message;
+};

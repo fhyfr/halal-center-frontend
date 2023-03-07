@@ -4,7 +4,22 @@ import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { Box, Button, Container, Grid, Link, TextField, Typography, Alert } from '@mui/material';
+import {
+  Box,
+  Button,
+  Container,
+  Grid,
+  Link,
+  Typography,
+  Alert,
+  IconButton,
+  FormControl,
+  InputLabel,
+  OutlinedInput,
+  InputAdornment,
+  FormHelperText,
+} from '@mui/material';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 import DrawerAppBar from '../../components/navbar';
 import Footer from '../../components/footer';
 import Image from 'next/image';
@@ -20,6 +35,12 @@ const Login = () => {
   }
 
   const [errMessage, setErrMessage] = useState(undefined);
+  const [showPassword, setShowPassword] = useState(true);
+
+  const handleShowPassword = () => setShowPassword((show) => !show);
+  const handleMouseDownPassword = (event) => {
+    event.preventDefault();
+  };
 
   const formik = useFormik({
     initialValues: {
@@ -74,32 +95,53 @@ const Login = () => {
 
                 {errMessage && <Alert severity="error">{errMessage}</Alert>}
 
-                <TextField
-                  error={Boolean(formik.touched.email && formik.errors.email)}
-                  fullWidth
-                  helperText={formik.touched.email && formik.errors.email}
-                  label="Email Address"
-                  margin="normal"
-                  name="email"
-                  onBlur={formik.handleBlur}
-                  onChange={formik.handleChange}
-                  type="email"
-                  value={formik.values.email}
-                  variant="outlined"
-                />
-                <TextField
-                  error={Boolean(formik.touched.password && formik.errors.password)}
-                  fullWidth
-                  helperText={formik.touched.password && formik.errors.password}
-                  label="Password"
-                  margin="normal"
-                  name="password"
-                  onBlur={formik.handleBlur}
-                  onChange={formik.handleChange}
-                  type="password"
-                  value={formik.values.password}
-                  variant="outlined"
-                />
+                <FormControl sx={{ marginY: 2 }} fullWidth variant="outlined">
+                  <InputLabel htmlFor="outlined-adornment-email">Email</InputLabel>
+                  <OutlinedInput
+                    id="outlined-adornment-email"
+                    error={Boolean(formik.touched.email && formik.errors.email)}
+                    helperText={formik.touched.email && formik.errors.email}
+                    label="Email"
+                    name="email"
+                    onBlur={formik.handleBlur}
+                    onChange={formik.handleChange}
+                    type="email"
+                    value={formik.values.email}
+                  />
+                  {Boolean(formik.touched.email && formik.errors.email) && (
+                    <FormHelperText error>{formik.errors.email}</FormHelperText>
+                  )}
+                </FormControl>
+
+                <FormControl sx={{ marginY: 2 }} fullWidth variant="outlined">
+                  <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
+                  <OutlinedInput
+                    id="outlined-adornment-password"
+                    error={Boolean(formik.touched.password && formik.errors.password)}
+                    helperText={formik.touched.password && formik.errors.password}
+                    label="Password"
+                    name="password"
+                    onBlur={formik.handleBlur}
+                    onChange={formik.handleChange}
+                    type={showPassword ? 'text' : 'password'}
+                    value={formik.values.password}
+                    endAdornment={
+                      <InputAdornment position="end">
+                        <IconButton
+                          aria-label="toggle password visibility"
+                          onClick={handleShowPassword}
+                          onMouseDown={handleMouseDownPassword}
+                          edge="end"
+                        >
+                          {showPassword ? <VisibilityOff /> : <Visibility />}
+                        </IconButton>
+                      </InputAdornment>
+                    }
+                  />
+                  {Boolean(formik.touched.password && formik.errors.password) && (
+                    <FormHelperText error>{formik.errors.password}</FormHelperText>
+                  )}
+                </FormControl>
                 <Box sx={{ py: 2 }}>
                   <Button
                     color="primary"

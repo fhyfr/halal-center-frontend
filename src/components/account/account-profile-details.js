@@ -9,31 +9,24 @@ import {
   Grid,
   TextField,
 } from '@mui/material';
-
-const states = [
-  {
-    value: 'alabama',
-    label: 'Alabama',
-  },
-  {
-    value: 'new-york',
-    label: 'New York',
-  },
-  {
-    value: 'san-francisco',
-    label: 'San Francisco',
-  },
-];
+import useAuth from '../../hooks/use-auth';
 
 export const AccountProfileDetails = (props) => {
-  const [values, setValues] = useState({
-    full_name: 'Katarina',
-    email: 'demo@devias.io',
-    phone_number: '6289855',
-    address: 'address',
-    facebook: 'facebook',
-    linkedin: 'linkedin',
-  });
+  const { user } = useAuth();
+
+  let userProfile = {};
+  if (user) {
+    userProfile = {
+      full_name: user.fullName,
+      email: user.email,
+      phone_number: user.phoneNumber,
+      address: user.address,
+      facebook: user.facebook,
+      linkedin: user.linkedin,
+    };
+  }
+
+  const [values, setValues] = useState(userProfile);
 
   const handleChange = (event) => {
     setValues({
@@ -54,7 +47,7 @@ export const AccountProfileDetails = (props) => {
               <TextField
                 fullWidth
                 helperText="Please specify the full_name"
-                label="Full Name"
+                label="full name"
                 name="full_name"
                 onChange={handleChange}
                 required
@@ -65,7 +58,7 @@ export const AccountProfileDetails = (props) => {
             <Grid item md={6} xs={12}>
               <TextField
                 fullWidth
-                label="Email Address"
+                label="email address"
                 name="email"
                 onChange={handleChange}
                 required
@@ -76,10 +69,10 @@ export const AccountProfileDetails = (props) => {
             <Grid item md={6} xs={12}>
               <TextField
                 fullWidth
-                label="Phone Number"
+                label="phone number"
                 name="phone_number"
                 onChange={handleChange}
-                type="number"
+                required
                 value={values.phone_number}
                 variant="outlined"
               />
@@ -101,7 +94,6 @@ export const AccountProfileDetails = (props) => {
                 label="facebook"
                 name="facebook"
                 onChange={handleChange}
-                required
                 value={values.facebook}
                 variant="outlined"
               />
@@ -112,7 +104,6 @@ export const AccountProfileDetails = (props) => {
                 label="linkedin"
                 name="linkedin"
                 onChange={handleChange}
-                required
                 value={values.linkedin}
                 variant="outlined"
               />
@@ -128,7 +119,7 @@ export const AccountProfileDetails = (props) => {
           }}
         >
           <Button color="primary" variant="contained">
-            Save details
+            Update
           </Button>
         </Box>
       </Card>

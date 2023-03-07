@@ -2,7 +2,22 @@ import Head from 'next/head';
 import NextLink from 'next/link';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { Box, Button, Container, Link, TextField, Typography, Grid, Alert } from '@mui/material';
+import {
+  Box,
+  Button,
+  Container,
+  Link,
+  Typography,
+  Grid,
+  Alert,
+  FormControl,
+  InputLabel,
+  OutlinedInput,
+  FormHelperText,
+  InputAdornment,
+  IconButton,
+} from '@mui/material';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 import DrawerAppBar from '../../components/navbar';
 import Footer from '../../components/footer';
 import { useRouter } from 'next/router';
@@ -14,21 +29,28 @@ import { useState } from 'react';
 const Register = () => {
   const router = useRouter();
   const { register } = useAuth();
+
   const [info, setInfo] = useState(undefined);
   const [errMessage, setErrMessage] = useState(undefined);
+  const [showPassword, setShowPassword] = useState(true);
+
+  const handleShowPassword = () => setShowPassword((show) => !show);
+  const handleMouseDownPassword = (event) => {
+    event.preventDefault();
+  };
 
   const formik = useFormik({
     initialValues: {
+      fullName: '',
       username: '',
       email: '',
       password: '',
-      fullName: '',
     },
     validationSchema: Yup.object({
+      fullName: Yup.string().max(255).required('Full name is required'),
       username: Yup.string().max(255).required('Username is required'),
       email: Yup.string().email('Must be a valid email').max(255).required('Email is required'),
       password: Yup.string().max(255).required('Password is required'),
-      fullName: Yup.string().max(255).required('Full Name is required'),
     }),
     onSubmit: async (values) => {
       register(values.username, values.email, values.password, values.fullName)
@@ -82,64 +104,106 @@ const Register = () => {
                         Create a new account
                       </Typography>
                       <Typography color="textSecondary" gutterBottom variant="body2">
-                        Use your email to create a new account
+                        Fill out the form to create a new account
                       </Typography>
                     </Box>
 
-                    {info && <Alert severity="success">{info}</Alert>}
+                    {info && (
+                      <Alert sx={{ marginY: 1 }} severity="success">
+                        {info}
+                      </Alert>
+                    )}
 
-                    {errMessage && <Alert severity="error">{errMessage}</Alert>}
+                    {errMessage && (
+                      <Alert sx={{ marginY: 1 }} severity="error">
+                        {errMessage}
+                      </Alert>
+                    )}
 
-                    <TextField
-                      error={Boolean(formik.touched.fullName && formik.errors.fullName)}
-                      fullWidth
-                      helperText={formik.touched.fullName && formik.errors.fullName}
-                      label="Full Name"
-                      margin="normal"
-                      name="fullName"
-                      onBlur={formik.handleBlur}
-                      onChange={formik.handleChange}
-                      value={formik.values.fullName}
-                      variant="outlined"
-                    />
-                    <TextField
-                      error={Boolean(formik.touched.username && formik.errors.username)}
-                      fullWidth
-                      helperText={formik.touched.username && formik.errors.username}
-                      label="Username"
-                      margin="normal"
-                      name="username"
-                      onBlur={formik.handleBlur}
-                      onChange={formik.handleChange}
-                      value={formik.values.username}
-                      variant="outlined"
-                    />
-                    <TextField
-                      error={Boolean(formik.touched.email && formik.errors.email)}
-                      fullWidth
-                      helperText={formik.touched.email && formik.errors.email}
-                      label="Email Address"
-                      margin="normal"
-                      name="email"
-                      onBlur={formik.handleBlur}
-                      onChange={formik.handleChange}
-                      type="email"
-                      value={formik.values.email}
-                      variant="outlined"
-                    />
-                    <TextField
-                      error={Boolean(formik.touched.password && formik.errors.password)}
-                      fullWidth
-                      helperText={formik.touched.password && formik.errors.password}
-                      label="Password"
-                      margin="normal"
-                      name="password"
-                      onBlur={formik.handleBlur}
-                      onChange={formik.handleChange}
-                      type="password"
-                      value={formik.values.password}
-                      variant="outlined"
-                    />
+                    <FormControl sx={{ marginY: 1 }} fullWidth variant="outlined">
+                      <InputLabel htmlFor="outlined-adornment-full-name">Full Name</InputLabel>
+                      <OutlinedInput
+                        id="outlined-adornment-full-name"
+                        error={Boolean(formik.touched.fullName && formik.errors.fullName)}
+                        helperText={formik.touched.fullName && formik.errors.fullName}
+                        label="Full Name"
+                        name="fullName"
+                        type="text"
+                        onBlur={formik.handleBlur}
+                        onChange={formik.handleChange}
+                        value={formik.values.fullName}
+                      />
+                      {Boolean(formik.touched.fullName && formik.errors.fullName) && (
+                        <FormHelperText error>{formik.errors.fullName}</FormHelperText>
+                      )}
+                    </FormControl>
+
+                    <FormControl sx={{ marginY: 1 }} fullWidth variant="outlined">
+                      <InputLabel htmlFor="outlined-adornment-username">Username</InputLabel>
+                      <OutlinedInput
+                        id="outlined-adornment-username"
+                        error={Boolean(formik.touched.username && formik.errors.username)}
+                        helperText={formik.touched.username && formik.errors.username}
+                        label="Username"
+                        name="username"
+                        type="text"
+                        onBlur={formik.handleBlur}
+                        onChange={formik.handleChange}
+                        value={formik.values.username}
+                      />
+                      {Boolean(formik.touched.username && formik.errors.username) && (
+                        <FormHelperText error>{formik.errors.username}</FormHelperText>
+                      )}
+                    </FormControl>
+
+                    <FormControl sx={{ marginY: 1 }} fullWidth variant="outlined">
+                      <InputLabel htmlFor="outlined-adornment-email">Email</InputLabel>
+                      <OutlinedInput
+                        id="outlined-adornment-email"
+                        error={Boolean(formik.touched.email && formik.errors.email)}
+                        helperText={formik.touched.email && formik.errors.email}
+                        label="Email"
+                        name="email"
+                        type="email"
+                        onBlur={formik.handleBlur}
+                        onChange={formik.handleChange}
+                        value={formik.values.email}
+                      />
+                      {Boolean(formik.touched.email && formik.errors.email) && (
+                        <FormHelperText error>{formik.errors.email}</FormHelperText>
+                      )}
+                    </FormControl>
+
+                    <FormControl sx={{ marginY: 2 }} fullWidth variant="outlined">
+                      <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
+                      <OutlinedInput
+                        id="outlined-adornment-password"
+                        error={Boolean(formik.touched.password && formik.errors.password)}
+                        helperText={formik.touched.password && formik.errors.password}
+                        label="Password"
+                        name="password"
+                        onBlur={formik.handleBlur}
+                        onChange={formik.handleChange}
+                        type={showPassword ? 'text' : 'password'}
+                        value={formik.values.password}
+                        endAdornment={
+                          <InputAdornment position="end">
+                            <IconButton
+                              aria-label="toggle password visibility"
+                              onClick={handleShowPassword}
+                              onMouseDown={handleMouseDownPassword}
+                              edge="end"
+                            >
+                              {showPassword ? <VisibilityOff /> : <Visibility />}
+                            </IconButton>
+                          </InputAdornment>
+                        }
+                      />
+                      {Boolean(formik.touched.password && formik.errors.password) && (
+                        <FormHelperText error>{formik.errors.password}</FormHelperText>
+                      )}
+                    </FormControl>
+
                     <Box sx={{ py: 2 }}>
                       <Button
                         color="primary"

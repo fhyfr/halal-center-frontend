@@ -63,6 +63,7 @@ const Register = () => {
         })
         .catch((err) => {
           setErrMessage(err.message);
+          setInfo(undefined);
         });
     },
   });
@@ -124,8 +125,6 @@ const Register = () => {
                       <InputLabel htmlFor="outlined-adornment-full-name">Full Name</InputLabel>
                       <OutlinedInput
                         id="outlined-adornment-full-name"
-                        error={Boolean(formik.touched.fullName && formik.errors.fullName)}
-                        helperText={formik.touched.fullName && formik.errors.fullName}
                         label="Full Name"
                         name="fullName"
                         type="text"
@@ -142,8 +141,6 @@ const Register = () => {
                       <InputLabel htmlFor="outlined-adornment-username">Username</InputLabel>
                       <OutlinedInput
                         id="outlined-adornment-username"
-                        error={Boolean(formik.touched.username && formik.errors.username)}
-                        helperText={formik.touched.username && formik.errors.username}
                         label="Username"
                         name="username"
                         type="text"
@@ -160,8 +157,6 @@ const Register = () => {
                       <InputLabel htmlFor="outlined-adornment-email">Email</InputLabel>
                       <OutlinedInput
                         id="outlined-adornment-email"
-                        error={Boolean(formik.touched.email && formik.errors.email)}
-                        helperText={formik.touched.email && formik.errors.email}
                         label="Email"
                         name="email"
                         type="email"
@@ -178,8 +173,6 @@ const Register = () => {
                       <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
                       <OutlinedInput
                         id="outlined-adornment-password"
-                        error={Boolean(formik.touched.password && formik.errors.password)}
-                        helperText={formik.touched.password && formik.errors.password}
                         label="Password"
                         name="password"
                         onBlur={formik.handleBlur}

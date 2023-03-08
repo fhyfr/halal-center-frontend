@@ -144,8 +144,6 @@ export const AuthProvider = ({ children }) => {
         const accessToken = window.localStorage.getItem('accessToken');
         const accessTokenExpiresAt = window.localStorage.getItem('accessTokenExpiresAt');
 
-        console.log(accessToken);
-
         if (
           accessToken &&
           accessTokenExpiresAt &&

@@ -99,8 +99,6 @@ const Login = () => {
                   <InputLabel htmlFor="outlined-adornment-email">Email</InputLabel>
                   <OutlinedInput
                     id="outlined-adornment-email"
-                    error={Boolean(formik.touched.email && formik.errors.email)}
-                    helperText={formik.touched.email && formik.errors.email}
                     label="Email"
                     name="email"
                     onBlur={formik.handleBlur}
@@ -117,8 +115,6 @@ const Login = () => {
                   <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
                   <OutlinedInput
                     id="outlined-adornment-password"
-                    error={Boolean(formik.touched.password && formik.errors.password)}
-                    helperText={formik.touched.password && formik.errors.password}
                     label="Password"
                     name="password"
                     onBlur={formik.handleBlur}

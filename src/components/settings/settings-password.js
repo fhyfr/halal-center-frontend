@@ -59,6 +59,7 @@ export const SettingsPassword = (props) => {
         })
         .catch((err) => {
           setErrMessage(err.response.data.message);
+          setInfo(undefined);
         });
     },
   });
@@ -93,8 +94,6 @@ export const SettingsPassword = (props) => {
               </InputLabel>
               <OutlinedInput
                 id="outlined-adornment-current-password"
-                error={Boolean(formik.touched.currentPassword && formik.errors.currentPassword)}
-                helperText={formik.touched.currentPassword && formik.errors.currentPassword}
                 label="Current password"
                 name="currentPassword"
                 onBlur={formik.handleBlur}
@@ -123,8 +122,6 @@ export const SettingsPassword = (props) => {
               <InputLabel htmlFor="outlined-adornment-new-password">New password</InputLabel>
               <OutlinedInput
                 id="outlined-adornment-new-password"
-                error={Boolean(formik.touched.newPassword && formik.errors.newPassword)}
-                helperText={formik.touched.newPassword && formik.errors.newPassword}
                 label="New password"
                 name="newPassword"
                 onBlur={formik.handleBlur}
@@ -155,12 +152,6 @@ export const SettingsPassword = (props) => {
               </InputLabel>
               <OutlinedInput
                 id="outlined-adornment-new-password-confirmation"
-                error={Boolean(
-                  formik.touched.newPasswordConfirmation && formik.errors.newPasswordConfirmation,
-                )}
-                helperText={
-                  formik.touched.newPasswordConfirmation && formik.errors.newPasswordConfirmation
-                }
                 label="Confirm new password"
                 name="newPasswordConfirmation"
                 onBlur={formik.handleBlur}

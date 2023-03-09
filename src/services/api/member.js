@@ -38,3 +38,33 @@ export const updateProfile = async (updateValues) => {
 
   return response.data.message;
 };
+
+export const forgotPassword = async (email) => {
+  const response = await axios({
+    method: 'POST',
+    url: `${NEXT_PUBLIC_API}/user/forgot-password`,
+    data: { email },
+  });
+
+  return response.data.message;
+};
+
+export const verifyOTP = async (email, otp) => {
+  const response = await axios({
+    method: 'POST',
+    url: `${NEXT_PUBLIC_API}/auth/verify-otp`,
+    data: { email, otp: parseInt(otp, 10) },
+  });
+
+  return response.data.message;
+};
+
+export const resendOTP = async (email) => {
+  const response = await axios({
+    method: 'POST',
+    url: `${NEXT_PUBLIC_API}/auth/resend-otp`,
+    data: { email },
+  });
+
+  return response.data.message;
+};

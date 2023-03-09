@@ -150,21 +150,43 @@ const Login = () => {
                     Sign In Now
                   </Button>
                 </Box>
-                <Typography color="textSecondary" variant="body2">
-                  Don&apos;t have an account?{' '}
-                  <NextLink href="/auth/register">
-                    <Link
-                      to="/auth/register"
-                      variant="subtitle2"
-                      underline="hover"
-                      sx={{
-                        cursor: 'pointer',
-                      }}
-                    >
-                      Sign Up
-                    </Link>
-                  </NextLink>
-                </Typography>
+
+                <Grid container spacing={4}>
+                  <Grid item xs={8}>
+                    <Typography color="textSecondary" variant="body2">
+                      Don&apos;t have an account?{' '}
+                      <NextLink href="/auth/register">
+                        <Link
+                          to="/auth/register"
+                          variant="subtitle2"
+                          underline="hover"
+                          sx={{
+                            cursor: 'pointer',
+                          }}
+                        >
+                          Sign Up
+                        </Link>
+                      </NextLink>
+                    </Typography>
+                  </Grid>
+
+                  <Grid item xs={4}>
+                    <Typography color="textSecondary" variant="body2">
+                      <NextLink href="/auth/forgot-password">
+                        <Link
+                          to="/auth/forgot-password"
+                          variant="subtitle2"
+                          underline="hover"
+                          sx={{
+                            cursor: 'pointer',
+                          }}
+                        >
+                          Forgot Your Password?
+                        </Link>
+                      </NextLink>
+                    </Typography>
+                  </Grid>
+                </Grid>
               </form>
             </Grid>
           </Grid>

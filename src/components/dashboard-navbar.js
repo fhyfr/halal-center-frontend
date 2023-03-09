@@ -8,35 +8,38 @@ import { Bell as BellIcon } from '../icons/bell';
 import { UserCircle as UserCircleIcon } from '../icons/user-circle';
 import { Users as UsersIcon } from '../icons/users';
 import { AccountPopover } from './account-popover';
+import useAuth from '../hooks/use-auth';
 
 const DashboardNavbarRoot = styled(AppBar)(({ theme }) => ({
   backgroundColor: theme.palette.background.paper,
-  boxShadow: theme.shadows[3]
+  boxShadow: theme.shadows[3],
 }));
 
 export const DashboardNavbar = (props) => {
   const { onSidebarOpen, ...other } = props;
   const settingsRef = useRef(null);
   const [openAccountPopover, setOpenAccountPopover] = useState(false);
+  const { user } = useAuth();
 
   return (
     <>
       <DashboardNavbarRoot
         sx={{
           left: {
-            lg: 280
+            lg: 280,
           },
           width: {
-            lg: 'calc(100% - 280px)'
-          }
+            lg: 'calc(100% - 280px)',
+          },
         }}
-        {...other}>
+        {...other}
+      >
         <Toolbar
           disableGutters
           sx={{
             minHeight: 64,
             left: 0,
-            px: 2
+            px: 2,
           }}
         >
           <IconButton
@@ -44,8 +47,8 @@ export const DashboardNavbar = (props) => {
             sx={{
               display: {
                 xs: 'inline-flex',
-                lg: 'none'
-              }
+                lg: 'none',
+              },
             }}
           >
             <MenuIcon fontSize="small" />
@@ -63,11 +66,7 @@ export const DashboardNavbar = (props) => {
           </Tooltip>
           <Tooltip title="Notifications">
             <IconButton sx={{ ml: 1 }}>
-              <Badge
-                badgeContent={4}
-                color="primary"
-                variant="dot"
-              >
+              <Badge badgeContent={4} color="primary" variant="dot">
                 <BellIcon fontSize="small" />
               </Badge>
             </IconButton>
@@ -79,9 +78,10 @@ export const DashboardNavbar = (props) => {
               cursor: 'pointer',
               height: 40,
               width: 40,
-              ml: 1
+              ml: 1,
             }}
-            src="/static/images/avatars/avatar_1.png"
+            src={user ? user.profilePicture : '/static/images/avatars/avatar_1.png'}
+            alt="profile picture"
           >
             <UserCircleIcon fontSize="small" />
           </Avatar>
@@ -97,5 +97,5 @@ export const DashboardNavbar = (props) => {
 };
 
 DashboardNavbar.propTypes = {
-  onSidebarOpen: PropTypes.func
+  onSidebarOpen: PropTypes.func,
 };

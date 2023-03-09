@@ -25,13 +25,13 @@ const OTP = () => {
   const onSubmit = async (data) => {
     verifyOTP(query.email, data.otp)
       .then((res) => {
-        setInfo(res);
+        setInfo(res.message);
         setErrMessage(undefined);
 
         setTimeout(() => {
           router.push({
             pathname: '/auth/reset-password',
-            query: { email: query.email },
+            query: { email: query.email, id: res.data.id },
           });
         }, 2000);
       })

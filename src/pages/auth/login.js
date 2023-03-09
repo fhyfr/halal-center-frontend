@@ -31,7 +31,7 @@ const Login = () => {
   const { login, isAuthenticated } = useAuth();
 
   if (isAuthenticated) {
-    router.back();
+    router.push('/');
   }
 
   const [errMessage, setErrMessage] = useState(undefined);

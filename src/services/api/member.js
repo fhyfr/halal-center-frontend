@@ -56,7 +56,7 @@ export const verifyOTP = async (email, otp) => {
     data: { email, otp: parseInt(otp, 10) },
   });
 
-  return response.data.message;
+  return response.data;
 };
 
 export const resendOTP = async (email) => {
@@ -64,6 +64,16 @@ export const resendOTP = async (email) => {
     method: 'POST',
     url: `${NEXT_PUBLIC_API}/auth/resend-otp`,
     data: { email },
+  });
+
+  return response.data.message;
+};
+
+export const resetPassword = async (id, newPassword, confirmNewPassword) => {
+  const response = await axios({
+    method: 'PUT',
+    url: `${NEXT_PUBLIC_API}/user/reset-password/${id}`,
+    data: { newPassword, confirmNewPassword },
   });
 
   return response.data.message;

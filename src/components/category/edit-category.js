@@ -17,7 +17,7 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { useRouter } from 'next/router';
 
-export const AddCategory = () => {
+export const EditCategory = ({ category }) => {
   const router = useRouter();
 
   const [info, setInfo] = useState(undefined);
@@ -25,25 +25,12 @@ export const AddCategory = () => {
 
   const formik = useFormik({
     initialValues: {
-      categoryName: '',
+      categoryName: category.categoryName,
     },
     validationSchema: Yup.object({
       categoryName: Yup.string().required('Category Name is required'),
     }),
-    onSubmit: async (values) => {
-      createNewCategory(values.categoryName)
-        .then((res) => {
-          setInfo(res);
-          setErrMessage(undefined);
-          setTimeout(() => {
-            router.push('/category');
-          }, 2000);
-        })
-        .catch((err) => {
-          setErrMessage(err.response.data?.message);
-          setInfo(undefined);
-        });
-    },
+    onSubmit: async (values) => {},
   });
 
   const handleCancel = () => {

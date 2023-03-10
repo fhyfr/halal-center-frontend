@@ -10,6 +10,7 @@ import { AuthConsumer } from '../hooks/use-auth';
 import { createEmotionCache } from '../utils/create-emotion-cache';
 import { registerChartJs } from '../utils/register-chart-js';
 import { theme } from '../theme';
+import { CookiesProvider } from 'react-cookie';
 
 registerChartJs();
 
@@ -21,22 +22,26 @@ const App = (props) => {
   const getLayout = Component.getLayout ?? ((page) => page);
 
   return (
-    <CacheProvider value={emotionCache}>
-      <Head>
-        <title>Halal Center</title>
-        <meta name="viewport" content="initial-scale=1, width=device-width" />
-      </Head>
-      <LocalizationProvider dateAdapter={AdapterDateFns}>
-        <ThemeProvider theme={theme}>
-          <CssBaseline />
-          <AuthProvider>
-            <AuthConsumer>
-              {(auth) => (auth.isLoading ? <Fragment /> : getLayout(<Component {...pageProps} />))}
-            </AuthConsumer>
-          </AuthProvider>
-        </ThemeProvider>
-      </LocalizationProvider>
-    </CacheProvider>
+    <CookiesProvider>
+      <CacheProvider value={emotionCache}>
+        <Head>
+          <title>Halal Center</title>
+          <meta name="viewport" content="initial-scale=1, width=device-width" />
+        </Head>
+        <LocalizationProvider dateAdapter={AdapterDateFns}>
+          <ThemeProvider theme={theme}>
+            <CssBaseline />
+            <AuthProvider>
+              <AuthConsumer>
+                {(auth) =>
+                  auth.isLoading ? <Fragment /> : getLayout(<Component {...pageProps} />)
+                }
+              </AuthConsumer>
+            </AuthProvider>
+          </ThemeProvider>
+        </LocalizationProvider>
+      </CacheProvider>
+    </CookiesProvider>
   );
 };
 

@@ -1,9 +1,7 @@
 import { useState } from 'react';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import PropTypes from 'prop-types';
-import { format } from 'date-fns';
 import {
-  Avatar,
   Box,
   Card,
   Checkbox,
@@ -13,12 +11,15 @@ import {
   TableHead,
   TablePagination,
   TableRow,
-  Typography,
   Button,
+  Typography,
+  Tooltip,
 } from '@mui/material';
-import { getInitials } from '../../utils/get-initials';
+import { useRouter } from 'next/router';
 
 export const CategoryListResults = ({ category, ...rest }) => {
+  const router = useRouter();
+
   const [selectedCategoryIds, setSelectedCategoryIds] = useState([]);
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(0);
@@ -56,11 +57,29 @@ export const CategoryListResults = ({ category, ...rest }) => {
   };
 
   const handleLimitChange = (event) => {
+    const path = router.pathname;
+    const query = router.query;
+    query.limit = event.target.value;
+
     setLimit(event.target.value);
+
+    router.push({
+      pathname: path,
+      query: query,
+    });
   };
 
   const handlePageChange = (event, newPage) => {
+    const path = router.pathname;
+    const query = router.query;
+    query.page = newPage + 1;
+
     setPage(newPage);
+
+    router.push({
+      pathname: path,
+      query: query,
+    });
   };
 
   return (
@@ -80,7 +99,8 @@ export const CategoryListResults = ({ category, ...rest }) => {
                     onChange={handleSelectAll}
                   />
                 </TableCell>
-                <TableCell>Category Name</TableCell>
+                <TableCell align="center">Category Name</TableCell>
+                <TableCell align="center">Total Courses</TableCell>
                 <TableCell>
                   {' '}
                   <Box
@@ -95,7 +115,7 @@ export const CategoryListResults = ({ category, ...rest }) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {category.slice(0, limit).map((category) => (
+              {category.data.slice(0, limit).map((category) => (
                 <TableRow
                   hover
                   key={category.id}
@@ -109,7 +129,17 @@ export const CategoryListResults = ({ category, ...rest }) => {
                     />
                   </TableCell>
 
-                  <TableCell>{category.categoryName}</TableCell>
+                  <TableCell>
+                    <Typography color="textPrimary" variant="body2">
+                      {category.categoryName}
+                    </Typography>
+                  </TableCell>
+                  <TableCell align="center">
+                    {/* TODO: update this column with proper total courses */}
+                    <Typography color="textPrimary" variant="body2">
+                      {category.categoryName.length}
+                    </Typography>
+                  </TableCell>
                   <TableCell>
                     <Box
                       sx={{
@@ -120,6 +150,7 @@ export const CategoryListResults = ({ category, ...rest }) => {
                     >
                       <Button
                         color="secondary"
+                        size="small"
                         sx={{
                           mr: 2,
                         }}
@@ -127,9 +158,24 @@ export const CategoryListResults = ({ category, ...rest }) => {
                       >
                         Update
                       </Button>
-                      <Button color="error" variant="contained">
-                        Delete
-                      </Button>
+                      {/* 
+                          TODO: update this logic with proper total courses,
+                          category can't be delete if total courses is not equal to zero
+                      */}
+                      <Tooltip
+                        title={category.categoryName.length !== 0 ? 'category not empty' : ''}
+                      >
+                        <span>
+                          <Button
+                            disabled={category.categoryName.length !== 0}
+                            size="small"
+                            color="error"
+                            variant="contained"
+                          >
+                            Delete
+                          </Button>
+                        </span>
+                      </Tooltip>
                     </Box>
                   </TableCell>
                 </TableRow>
@@ -140,12 +186,12 @@ export const CategoryListResults = ({ category, ...rest }) => {
       </PerfectScrollbar>
       <TablePagination
         component="div"
-        count={category.length}
+        count={category.itemCount}
         onPageChange={handlePageChange}
         onRowsPerPageChange={handleLimitChange}
         page={page}
         rowsPerPage={limit}
-        rowsPerPageOptions={[5, 10, 25]}
+        rowsPerPageOptions={[1, 5, 10, 25]}
       />
     </Card>
   );

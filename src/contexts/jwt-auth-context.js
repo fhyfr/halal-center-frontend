@@ -1,7 +1,7 @@
 import React, { createContext, useEffect, useReducer } from 'react';
-import jwtDecode from 'jwt-decode';
 import SplashScreen from '../components/splash-screen';
 import axios from '../utils/axios';
+import { useCookies } from 'react-cookie';
 
 const { NEXT_PUBLIC_API } = process.env;
 
@@ -91,6 +91,7 @@ const AuthContext = createContext({
 
 export const AuthProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialAuthState);
+  const [cookie, setCookie] = useCookies(['user']);
 
   const login = async (email, password) => {
     const response = await axios({
@@ -101,6 +102,11 @@ export const AuthProvider = ({ children }) => {
     const { accessToken, accessTokenExpiresAt } = response.data.data;
 
     setSession(accessToken, accessTokenExpiresAt);
+    setCookie('user', JSON.stringify(response.data.data), {
+      path: '/',
+      maxAge: 7 * 24 * 60 * 60, // Expires after 7 days
+      sameSite: true,
+    });
 
     const user = await axios({
       method: 'GET',

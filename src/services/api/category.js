@@ -16,3 +16,18 @@ export const createNewCategory = async (categoryName) => {
 
   return response.data.message;
 };
+
+export const updateCategory = async (categoryId, categoryName) => {
+  const accessToken = getSession();
+
+  const response = await axios({
+    method: 'PUT',
+    url: `${NEXT_PUBLIC_API}/category/${categoryId}`,
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+    data: { categoryName },
+  });
+
+  return response.data.message;
+};

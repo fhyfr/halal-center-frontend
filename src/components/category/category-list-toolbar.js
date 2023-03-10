@@ -50,9 +50,6 @@ export const CategoryListToolbar = (props) => {
           Categories
         </Typography>
         <Box sx={{ m: 1 }}>
-          <Button color="error" sx={{ mr: 1 }}>
-            Delete
-          </Button>
           <Button color="primary" variant="contained" onClick={handleClickAddNew}>
             Add New
           </Button>

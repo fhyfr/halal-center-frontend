@@ -12,10 +12,10 @@ import {
   InputLabel,
   OutlinedInput,
 } from '@mui/material';
-import { createNewCategory } from '../../services/api/category';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { useRouter } from 'next/router';
+import { updateCategory } from '../../services/api/category';
 
 export const EditCategory = ({ category }) => {
   const router = useRouter();
@@ -30,7 +30,20 @@ export const EditCategory = ({ category }) => {
     validationSchema: Yup.object({
       categoryName: Yup.string().required('Category Name is required'),
     }),
-    onSubmit: async (values) => {},
+    onSubmit: async (values) => {
+      updateCategory(category.categoryId, values.categoryName)
+        .then((res) => {
+          setInfo(res);
+          setErrMessage(undefined);
+          setTimeout(() => {
+            router.push('/category');
+          }, 2000);
+        })
+        .catch((err) => {
+          setErrMessage(err.response.data?.message);
+          setInfo(undefined);
+        });
+    },
   });
 
   const handleCancel = () => {
@@ -40,7 +53,7 @@ export const EditCategory = ({ category }) => {
   return (
     <form onSubmit={formik.handleSubmit}>
       <Card>
-        <CardHeader subheader="Fill out this form for add new category" title="Add New Category" />
+        <CardHeader subheader="Fill out this form for edit category" title="Edit Category" />
         <Divider />
         <CardContent>
           {info && (

@@ -3,7 +3,7 @@ import { Box, Button, Container, IconButton, Tooltip, Typography } from '@mui/ma
 import { DashboardLayout } from '../../components/dashboard-layout';
 import { AddCategory } from '../../components/category/add-category';
 
-const AddNewCategory = () => {
+const AddNew = () => {
   return (
     <>
       <Head>
@@ -29,6 +29,6 @@ const AddNewCategory = () => {
   );
 };
 
-AddNewCategory.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
+AddNew.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
 
-export default AddNewCategory;
+export default AddNew;

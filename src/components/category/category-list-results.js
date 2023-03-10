@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import {
   Box,
   Card,
-  Checkbox,
   Table,
   TableBody,
   TableCell,
@@ -16,45 +15,14 @@ import {
   Tooltip,
 } from '@mui/material';
 import { useRouter } from 'next/router';
+import { formatDate } from '../../utils/date-converter';
 
-export const CategoryListResults = ({ category, ...rest }) => {
+export const CategoryListResults = ({ category }) => {
   const router = useRouter();
 
   const [selectedCategoryIds, setSelectedCategoryIds] = useState([]);
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(0);
-
-  const handleSelectAll = (event) => {
-    let newSelectedCategoryIds;
-
-    if (event.target.checked) {
-      newSelectedCategoryIds = category.map((category) => category.id);
-    } else {
-      newSelectedCategoryIds = [];
-    }
-
-    setSelectedCategoryIds(newSelectedCategoryIds);
-  };
-
-  const handleSelectOne = (event, id) => {
-    const selectedIndex = selectedCategoryIds.indexOf(id);
-    let newSelectedCategoryIds = [];
-
-    if (selectedIndex === -1) {
-      newSelectedCategoryIds = newSelectedCategoryIds.concat(selectedCategoryIds, id);
-    } else if (selectedIndex === 0) {
-      newSelectedCategoryIds = newSelectedCategoryIds.concat(selectedCategoryIds.slice(1));
-    } else if (selectedIndex === selectedCategoryIds.length - 1) {
-      newSelectedCategoryIds = newSelectedCategoryIds.concat(selectedCategoryIds.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelectedCategoryIds = newSelectedCategoryIds.concat(
-        selectedCategoryIds.slice(0, selectedIndex),
-        selectedCategoryIds.slice(selectedIndex + 1),
-      );
-    }
-
-    setSelectedCategoryIds(newSelectedCategoryIds);
-  };
 
   const handleLimitChange = (event) => {
     const path = router.pathname;
@@ -82,24 +50,25 @@ export const CategoryListResults = ({ category, ...rest }) => {
     });
   };
 
+  const handleUpdateCategory = (event, categoryId, categoryName) => {
+    router.push({
+      pathname: '/category/edit',
+      query: {
+        categoryId,
+        categoryName,
+      },
+    });
+  };
+
   return (
-    <Card {...rest}>
+    <Card>
       <PerfectScrollbar>
         <Box sx={{ minWidth: 1050 }}>
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell padding="checkbox">
-                  <Checkbox
-                    checked={selectedCategoryIds.length === category.length}
-                    color="primary"
-                    indeterminate={
-                      selectedCategoryIds.length > 0 && selectedCategoryIds.length < category.length
-                    }
-                    onChange={handleSelectAll}
-                  />
-                </TableCell>
-                <TableCell align="center">Category Name</TableCell>
+                <TableCell align="center">ID</TableCell>
+                <TableCell align="left">Category Name</TableCell>
                 <TableCell align="center">Total Courses</TableCell>
                 <TableCell>
                   {' '}
@@ -112,6 +81,7 @@ export const CategoryListResults = ({ category, ...rest }) => {
                     Action
                   </Box>
                 </TableCell>
+                <TableCell align="center">Last Update</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -121,25 +91,21 @@ export const CategoryListResults = ({ category, ...rest }) => {
                   key={category.id}
                   selected={selectedCategoryIds.indexOf(category.id) !== -1}
                 >
-                  <TableCell padding="checkbox">
-                    <Checkbox
-                      checked={selectedCategoryIds.indexOf(category.id) !== -1}
-                      onChange={(event) => handleSelectOne(event, category.id)}
-                      value="true"
-                    />
-                  </TableCell>
-
+                  <TableCell align="center">
+                    <Typography color="textPrimary" variant="body2">
+                      {category.id}
+                    </Typography>
+                  </TableCell>{' '}
                   <TableCell>
                     <Typography color="textPrimary" variant="body2">
                       {category.categoryName}
                     </Typography>
                   </TableCell>
                   <TableCell align="center">
-                    {/* TODO: update this column with proper total courses */}
                     <Typography color="textPrimary" variant="body2">
-                      {category.categoryName.length}
+                      {category.totalCourses}
                     </Typography>
-                  </TableCell>
+                  </TableCell>{' '}
                   <TableCell>
                     <Box
                       sx={{
@@ -155,19 +121,16 @@ export const CategoryListResults = ({ category, ...rest }) => {
                           mr: 2,
                         }}
                         variant="contained"
+                        onClick={(event) =>
+                          handleUpdateCategory(event, category.id, category.categoryName)
+                        }
                       >
                         Update
                       </Button>
-                      {/* 
-                          TODO: update this logic with proper total courses,
-                          category can't be delete if total courses is not equal to zero
-                      */}
-                      <Tooltip
-                        title={category.categoryName.length !== 0 ? 'category not empty' : ''}
-                      >
+                      <Tooltip title={category.totalCourses !== 0 ? 'category not empty' : ''}>
                         <span>
                           <Button
-                            disabled={category.categoryName.length !== 0}
+                            disabled={category.totalCourses !== 0}
                             size="small"
                             color="error"
                             variant="contained"
@@ -177,6 +140,11 @@ export const CategoryListResults = ({ category, ...rest }) => {
                         </span>
                       </Tooltip>
                     </Box>
+                  </TableCell>
+                  <TableCell align="center">
+                    <Typography color="textPrimary" variant="body2">
+                      {formatDate(category.updatedAt)}
+                    </Typography>
                   </TableCell>
                 </TableRow>
               ))}
@@ -191,7 +159,7 @@ export const CategoryListResults = ({ category, ...rest }) => {
         onRowsPerPageChange={handleLimitChange}
         page={page}
         rowsPerPage={limit}
-        rowsPerPageOptions={[1, 5, 10, 25]}
+        rowsPerPageOptions={[5, 10, 25]}
       />
     </Card>
   );

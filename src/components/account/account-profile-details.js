@@ -96,8 +96,7 @@ export const AccountProfileDetails = (props) => {
         setErrMessage(undefined);
       })
       .catch((err) => {
-        console.log(err);
-        setErrMessage(err.response.data.message);
+        setErrMessage(err.response.data?.message);
         setInfo(undefined);
       });
   };

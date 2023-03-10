@@ -29,6 +29,11 @@ const items = [
     title: 'Courses',
   },
   {
+    href: '/category',
+    icon: <ShoppingBagIcon fontSize="small" />,
+    title: 'Categories',
+  },
+  {
     href: '/user/account',
     icon: <UserIcon fontSize="small" />,
     title: 'Account',

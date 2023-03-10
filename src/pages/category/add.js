@@ -18,7 +18,7 @@ const AddNew = () => {
       >
         <Container maxWidth="lg">
           <Typography sx={{ mb: 3 }} variant="h4">
-            Add New Category
+            Category
           </Typography>
           <Box sx={{ pt: 3 }}>
             <AddCategory />

@@ -16,9 +16,9 @@ import {
 } from '@mui/material';
 import { useRouter } from 'next/router';
 import { formatDate } from '../../utils/date-converter';
-import { deleteCategory } from '../../services/api/category';
+import { deleteDepartment } from '../../services/api/department';
 
-export const CategoryListResults = ({ category }) => {
+export const DepartmentListResults = ({ department }) => {
   const router = useRouter();
 
   const [limit, setLimit] = useState(10);
@@ -50,20 +50,20 @@ export const CategoryListResults = ({ category }) => {
     });
   };
 
-  const handleUpdateCategory = (categoryId, categoryName) => {
+  const handleUpdateDepartment = (departmentId, departmentName) => {
     router.push({
-      pathname: '/category/edit',
+      pathname: '/department/edit',
       query: {
-        categoryId,
-        categoryName,
+        departmentId,
+        departmentName,
       },
     });
   };
 
-  const handleDeleteCategory = (categoryId) => {
+  const handleDeleteDepartment = (departmentId) => {
     const confirmation = confirm('Are you sure want to delete this department?');
     if (confirmation) {
-      deleteCategory(categoryId)
+      deleteDepartment(departmentId)
         .then((res) => {
           alert(res);
           router.reload();
@@ -75,10 +75,10 @@ export const CategoryListResults = ({ category }) => {
     return;
   };
 
-  if (category.error) {
+  if (department.error) {
     return (
       <Typography align="center" variant="h4" style={{ color: 'red' }}>
-        error, {category.error.message}
+        error, {department.error.message}
       </Typography>
     );
   }
@@ -91,8 +91,8 @@ export const CategoryListResults = ({ category }) => {
             <TableHead>
               <TableRow>
                 <TableCell align="center">ID</TableCell>
-                <TableCell align="left">Category Name</TableCell>
-                <TableCell align="center">Total Courses</TableCell>
+                <TableCell align="left">Department Name</TableCell>
+                <TableCell align="center">Total Employees</TableCell>
                 <TableCell>
                   {' '}
                   <Box
@@ -108,21 +108,21 @@ export const CategoryListResults = ({ category }) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {category.data.slice(0, limit).map((category) => (
-                <TableRow hover key={category.id}>
+              {department.data.slice(0, limit).map((department) => (
+                <TableRow hover key={department.id}>
                   <TableCell align="center">
                     <Typography color="textPrimary" variant="body2">
-                      {category.id}
+                      {department.id}
                     </Typography>
                   </TableCell>{' '}
                   <TableCell>
                     <Typography color="textPrimary" variant="body2">
-                      {category.categoryName}
+                      {department.departmentName}
                     </Typography>
                   </TableCell>
                   <TableCell align="center">
                     <Typography color="textPrimary" variant="body2">
-                      {category.totalCourses}
+                      {department.totalEmployees}
                     </Typography>
                   </TableCell>{' '}
                   <TableCell>
@@ -140,19 +140,23 @@ export const CategoryListResults = ({ category }) => {
                           mr: 2,
                         }}
                         variant="contained"
-                        onClick={() => handleUpdateCategory(category.id, category.categoryName)}
+                        onClick={() =>
+                          handleUpdateDepartment(department.id, department.departmentName)
+                        }
                       >
                         Update
                       </Button>
-                      <Tooltip title={category.totalCourses !== 0 ? 'category not empty' : ''}>
+                      <Tooltip
+                        title={department.totalEmployees !== 0 ? 'department not empty' : ''}
+                      >
                         <span>
                           <Button
-                            disabled={category.totalCourses !== 0}
+                            disabled={department.totalEmployees !== 0}
                             size="small"
                             color="error"
                             variant="contained"
                             onClick={() => {
-                              handleDeleteCategory(category.id);
+                              handleDeleteDepartment(department.id);
                             }}
                           >
                             Delete
@@ -163,7 +167,7 @@ export const CategoryListResults = ({ category }) => {
                   </TableCell>
                   <TableCell align="center">
                     <Typography color="textPrimary" variant="body2">
-                      {formatDate(category.updatedAt)}
+                      {formatDate(department.updatedAt)}
                     </Typography>
                   </TableCell>
                 </TableRow>
@@ -174,7 +178,7 @@ export const CategoryListResults = ({ category }) => {
       </PerfectScrollbar>
       <TablePagination
         component="div"
-        count={category.itemCount}
+        count={department.itemCount}
         onPageChange={handlePageChange}
         onRowsPerPageChange={handleLimitChange}
         page={page}
@@ -185,6 +189,6 @@ export const CategoryListResults = ({ category }) => {
   );
 };
 
-CategoryListResults.propTypes = {
-  category: PropTypes.array.isRequired,
+DepartmentListResults.propTypes = {
+  department: PropTypes.array.isRequired,
 };

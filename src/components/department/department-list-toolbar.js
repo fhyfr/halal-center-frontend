@@ -8,11 +8,11 @@ import {
   SvgIcon,
   Typography,
 } from '@mui/material';
-import { Search as SearchIcon } from '../../icons/search';
 import { useRouter } from 'next/router';
+import { Search as SearchIcon } from '../../icons/search';
 import { handleRedirectOnClick } from '../../utils/handle-event-button';
 
-export const CategoryListToolbar = (props) => {
+export const DepartmentListToolbar = (props) => {
   const router = useRouter();
 
   const handleSearch = (event) => {
@@ -44,14 +44,14 @@ export const CategoryListToolbar = (props) => {
         }}
       >
         <Typography sx={{ m: 1 }} variant="h4">
-          Categories
+          Departments
         </Typography>
         <Box sx={{ m: 1 }}>
           <Button
             color="primary"
             variant="contained"
             onClick={() => {
-              handleRedirectOnClick(router, '/category/add');
+              handleRedirectOnClick(router, '/department/add');
             }}
           >
             Add New
@@ -73,7 +73,7 @@ export const CategoryListToolbar = (props) => {
                     </InputAdornment>
                   ),
                 }}
-                placeholder="Search category"
+                placeholder="Search department"
                 variant="outlined"
                 onChange={handleSearch}
               />

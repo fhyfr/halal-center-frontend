@@ -12,13 +12,13 @@ import {
   InputLabel,
   OutlinedInput,
 } from '@mui/material';
+import { useRouter } from 'next/router';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { useRouter } from 'next/router';
-import { updateCategory } from '../../services/api/category';
+import { createNewDepartment } from '../../services/api/department';
 import { handleRedirectOnClick } from '../../utils/handle-event-button';
 
-export const EditCategory = ({ category }) => {
+export const AddDepartment = (props) => {
   const router = useRouter();
 
   const [info, setInfo] = useState(undefined);
@@ -26,18 +26,18 @@ export const EditCategory = ({ category }) => {
 
   const formik = useFormik({
     initialValues: {
-      categoryName: category.categoryName,
+      departmentName: '',
     },
     validationSchema: Yup.object({
-      categoryName: Yup.string().required('Category Name is required'),
+      departmentName: Yup.string().required('Department Name is required'),
     }),
     onSubmit: async (values) => {
-      updateCategory(category.categoryId, values.categoryName)
+      createNewDepartment(values.departmentName)
         .then((res) => {
           setInfo(res);
           setErrMessage(undefined);
           setTimeout(() => {
-            router.push('/category');
+            router.push('/department');
           }, 2000);
         })
         .catch((err) => {
@@ -50,7 +50,10 @@ export const EditCategory = ({ category }) => {
   return (
     <form onSubmit={formik.handleSubmit}>
       <Card>
-        <CardHeader subheader="Fill out this form for edit category" title="Edit Category" />
+        <CardHeader
+          subheader="Fill out this form for add new department"
+          title="Add New Department"
+        />
         <Divider />
         <CardContent>
           {info && (
@@ -66,18 +69,18 @@ export const EditCategory = ({ category }) => {
           )}
 
           <FormControl sx={{ marginY: 1 }} fullWidth variant="outlined">
-            <InputLabel htmlFor="outlined-adornment-category-name">Category Name</InputLabel>
+            <InputLabel htmlFor="outlined-adornment-department-name">Department Name</InputLabel>
             <OutlinedInput
               id="outlined-adornment-full-name"
-              label="Category Name"
-              name="categoryName"
+              label="Department Name"
+              name="departmentName"
               type="text"
               onBlur={formik.handleBlur}
               onChange={formik.handleChange}
-              value={formik.values.categoryName}
+              value={formik.values.departmentName}
             />
-            {Boolean(formik.touched.categoryName && formik.errors.categoryName) && (
-              <FormHelperText error>{formik.errors.categoryName}</FormHelperText>
+            {Boolean(formik.touched.departmentName && formik.errors.departmentName) && (
+              <FormHelperText error>{formik.errors.departmentName}</FormHelperText>
             )}
           </FormControl>
         </CardContent>
@@ -96,7 +99,7 @@ export const EditCategory = ({ category }) => {
             color="error"
             variant="text"
             onClick={() => {
-              handleRedirectOnClick(router, '/category');
+              handleRedirectOnClick(router, '/department');
             }}
           >
             Cancel

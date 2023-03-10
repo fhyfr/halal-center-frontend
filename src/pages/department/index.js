@@ -1,11 +1,10 @@
-import React, { useEffect } from 'react';
 import Head from 'next/head';
 import { Box, Container } from '@mui/material';
-import { CategoryListResults } from '../../components/category/category-list-results';
-import { CategoryListToolbar } from '../../components/category/category-list-toolbar';
+import { DepartmentListResults } from '../../components/department/department-list-results';
+import { DepartmentListToolbar } from '../../components/department/department-list-toolbar';
 import { DashboardLayout } from '../../components/dashboard-layout';
-import axios from 'axios';
 import { parseCookies } from '../../lib/auth-cookies';
+import axios from 'axios';
 
 const { NEXT_PUBLIC_API } = process.env;
 
@@ -14,7 +13,7 @@ export const getServerSideProps = async ({ req, res, query }) => {
   const size = query.limit || 10;
   const search = query.search;
 
-  let categories = null;
+  let departments = null;
   const data = parseCookies(req);
   if (!data.user) {
     return {
@@ -27,40 +26,40 @@ export const getServerSideProps = async ({ req, res, query }) => {
   }
   const user = JSON.parse(data.user);
 
-  let categoryURL;
+  let departmentURL;
   if (search && search.length > 0) {
-    categoryURL = `${NEXT_PUBLIC_API}/category?page=${page}&size=${size}&query=${search}`;
+    departmentURL = `${NEXT_PUBLIC_API}/department?page=${page}&size=${size}&query=${search}`;
   } else {
-    categoryURL = `${NEXT_PUBLIC_API}/category?page=${page}&size=${size}`;
+    departmentURL = `${NEXT_PUBLIC_API}/department?page=${page}&size=${size}`;
   }
 
   try {
     const response = await axios({
       method: 'GET',
-      url: categoryURL,
+      url: departmentURL,
       headers: {
         Authorization: `Bearer ${user.accessToken}`,
       },
     });
     if (response.status !== 200) {
-      throw new Error('failed to get data categories');
+      throw new Error('failed to get data departments');
     }
 
-    categories = response.data;
+    departments = response.data;
   } catch (err) {
-    categories = { error: { message: err.message } };
+    departments = { error: { message: err.message } };
   }
 
-  return { props: { categories } };
+  return { props: { departments } };
 };
 
-const Category = (props) => {
-  const { categories } = props;
+const Page = (props) => {
+  const { departments } = props;
 
   return (
     <>
       <Head>
-        <title>Categories | Halal Center</title>
+        <title>Departments | Halal Center</title>
       </Head>
       <Box
         component="main"
@@ -70,9 +69,9 @@ const Category = (props) => {
         }}
       >
         <Container maxWidth={false}>
-          <CategoryListToolbar />
+          <DepartmentListToolbar />
           <Box sx={{ mt: 3 }}>
-            <CategoryListResults category={categories} />
+            <DepartmentListResults department={departments} />
           </Box>
         </Container>
       </Box>
@@ -80,6 +79,6 @@ const Category = (props) => {
   );
 };
 
-Category.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
+Page.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
 
-export default Category;
+export default Page;

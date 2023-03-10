@@ -16,6 +16,7 @@ import { createNewCategory } from '../../services/api/category';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { useRouter } from 'next/router';
+import { handleRedirectOnClick } from '../../utils/handle-event-button';
 
 export const AddCategory = () => {
   const router = useRouter();
@@ -45,10 +46,6 @@ export const AddCategory = () => {
         });
     },
   });
-
-  const handleCancel = () => {
-    router.push('/category');
-  };
 
   return (
     <form onSubmit={formik.handleSubmit}>
@@ -98,7 +95,9 @@ export const AddCategory = () => {
             disabled={formik.isSubmitting}
             color="error"
             variant="text"
-            onClick={handleCancel}
+            onClick={() => {
+              handleRedirectOnClick(router, '/category');
+            }}
           >
             Cancel
           </Button>

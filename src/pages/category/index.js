@@ -35,21 +35,20 @@ export const getServerSideProps = async ({ req, res, query }) => {
   }
 
   try {
-    const res = await axios({
+    const response = await axios({
       method: 'GET',
       url: categoryURL,
       headers: {
         Authorization: `Bearer ${user.accessToken}`,
       },
     });
-
-    if (res.status !== 200) {
+    if (response.status !== 200) {
       throw new Error('failed to get data categories');
     }
 
-    categories = res.data;
+    categories = response.data;
   } catch (err) {
-    categories = { error: { message: res.message } };
+    categories = { error: { message: err.message } };
   }
 
   return { props: { categories } };
@@ -61,7 +60,7 @@ const Category = (props) => {
   return (
     <>
       <Head>
-        <title>Categories</title>
+        <title>Categories | Halal Center</title>
       </Head>
       <Box
         component="main"

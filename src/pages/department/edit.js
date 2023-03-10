@@ -1,25 +1,25 @@
 import Head from 'next/head';
 import { Box, Container, Typography } from '@mui/material';
 import { DashboardLayout } from '../../components/dashboard-layout';
-import { EditCategory } from '../../components/category/edit-category';
 import { useRouter } from 'next/router';
+import { EditDepartment } from '../../components/department/edit-department';
 
 const Edit = () => {
-  let category;
+  let department;
   const router = useRouter();
-  if (router.query.categoryId && router.query.categoryName) {
-    category = {
-      categoryId: router.query.categoryId,
-      categoryName: router.query.categoryName,
+  if (router.query.departmentId && router.query.departmentName) {
+    department = {
+      departmentId: router.query.departmentId,
+      departmentName: router.query.departmentName,
     };
   } else {
-    router.push('/category');
+    router.push('/department');
   }
 
   return (
     <>
       <Head>
-        <title>Edit Category</title>
+        <title>Edit Department</title>
       </Head>
       <Box
         component="main"
@@ -30,10 +30,10 @@ const Edit = () => {
       >
         <Container maxWidth="lg">
           <Typography sx={{ mb: 3 }} variant="h4">
-            Category
+            Department
           </Typography>
           <Box sx={{ pt: 3 }}>
-            <EditCategory category={category} />
+            <EditDepartment department={department} />
           </Box>
         </Container>
       </Box>

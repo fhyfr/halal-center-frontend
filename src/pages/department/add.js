@@ -6,7 +6,7 @@ import { AddDepartment } from '../../components/department/add-department';
 const Page = () => (
   <>
     <Head>
-      <title>Add Department</title>
+      <title>Add New Department</title>
     </Head>
     <Box
       component="main"
@@ -17,7 +17,7 @@ const Page = () => (
     >
       <Container maxWidth="lg">
         <Typography sx={{ mb: 3 }} variant="h4">
-          Add Department
+          Department
         </Typography>
         <Box sx={{ pt: 3 }}>
           <AddDepartment />

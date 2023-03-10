@@ -1,89 +1,98 @@
 import { useState } from 'react';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import PropTypes from 'prop-types';
-import { format } from 'date-fns';
 import {
-  Avatar,
   Box,
   Card,
-  Checkbox,
   Table,
   TableBody,
   TableCell,
   TableHead,
   TablePagination,
   TableRow,
-  Typography,
   Button,
+  Typography,
+  Tooltip,
 } from '@mui/material';
-import { getInitials } from '../../utils/get-initials';
+import { useRouter } from 'next/router';
+import { formatDate } from '../../utils/date-converter';
+import { deleteDepartment } from '../../services/api/department';
 
-export const DepartmentListResults = ({ department, ...rest }) => {
-  const [selectedDepartmentIds, setSelectedDepartmentIds] = useState([]);
+export const DepartmentListResults = ({ department }) => {
+  const router = useRouter();
+
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(0);
 
-  const handleSelectAll = (event) => {
-    let newSelectedDepartmentIds;
-
-    if (event.target.checked) {
-      newSelectedDepartmentIds = department.map((department) => department.id);
-    } else {
-      newSelectedDepartmentIds = [];
-    }
-
-    setSelectedDepartmentIds(newSelectedDepartmentIds);
-  };
-
-  const handleSelectOne = (event, id) => {
-    const selectedIndex = selectedDepartmentIds.indexOf(id);
-    let newSelectedDepartmentIds = [];
-
-    if (selectedIndex === -1) {
-      newSelectedDepartmentIds = newSelectedDepartmentIds.concat(selectedDepartmentIds, id);
-    } else if (selectedIndex === 0) {
-      newSelectedDepartmentIds = newSelectedDepartmentIds.concat(selectedDepartmentIds.slice(1));
-    } else if (selectedIndex === selectedDepartmentIds.length - 1) {
-      newSelectedDepartmentIds = newSelectedDepartmentIds.concat(
-        selectedDepartmentIds.slice(0, -1),
-      );
-    } else if (selectedIndex > 0) {
-      newSelectedDepartmentIds = newSelectedDepartmentIds.concat(
-        selectedDepartmentIds.slice(0, selectedIndex),
-        selectedDepartmentIds.slice(selectedIndex + 1),
-      );
-    }
-
-    setSelectedDepartmentIds(newSelectedDepartmentIds);
-  };
-
   const handleLimitChange = (event) => {
+    const path = router.pathname;
+    const query = router.query;
+    query.limit = event.target.value;
+
     setLimit(event.target.value);
+
+    router.push({
+      pathname: path,
+      query: query,
+    });
   };
 
   const handlePageChange = (event, newPage) => {
+    const path = router.pathname;
+    const query = router.query;
+    query.page = newPage + 1;
+
     setPage(newPage);
+
+    router.push({
+      pathname: path,
+      query: query,
+    });
   };
 
+  const handleUpdateDepartment = (departmentId, departmentName) => {
+    router.push({
+      pathname: '/department/edit',
+      query: {
+        departmentId,
+        departmentName,
+      },
+    });
+  };
+
+  const handleDeleteDepartment = (departmentId) => {
+    const confirmation = confirm('Are you sure want to delete this department?');
+    if (confirmation) {
+      deleteDepartment(departmentId)
+        .then((res) => {
+          alert(res);
+          router.reload();
+        })
+        .catch((err) => {
+          alert(err.response.data?.message);
+        });
+    }
+    return;
+  };
+
+  if (department.error) {
+    return (
+      <Typography align="center" variant="h4" style={{ color: 'red' }}>
+        error, {department.error.message}
+      </Typography>
+    );
+  }
+
   return (
-    <Card {...rest}>
+    <Card>
       <PerfectScrollbar>
         <Box sx={{ minWidth: 1050 }}>
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell padding="checkbox">
-                  <Checkbox
-                    checked={selectedDepartmentIds.length === department.length}
-                    color="primary"
-                    indeterminate={
-                      selectedDepartmentIds.length > 0 &&
-                      selectedDepartmentIds.length < department.length
-                    }
-                    onChange={handleSelectAll}
-                  />
-                </TableCell>
-                <TableCell>Department Name</TableCell>
+                <TableCell align="center">ID</TableCell>
+                <TableCell align="left">Department Name</TableCell>
+                <TableCell align="center">Total Employees</TableCell>
                 <TableCell>
                   {' '}
                   <Box
@@ -95,24 +104,27 @@ export const DepartmentListResults = ({ department, ...rest }) => {
                     Action
                   </Box>
                 </TableCell>
+                <TableCell align="center">Last Update</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {department.slice(0, limit).map((department) => (
-                <TableRow
-                  hover
-                  key={department.id}
-                  selected={selectedDepartmentIds.indexOf(department.id) !== -1}
-                >
-                  <TableCell padding="checkbox">
-                    <Checkbox
-                      checked={selectedDepartmentIds.indexOf(department.id) !== -1}
-                      onChange={(event) => handleSelectOne(event, department.id)}
-                      value="true"
-                    />
+              {department.data.slice(0, limit).map((department) => (
+                <TableRow hover key={department.id}>
+                  <TableCell align="center">
+                    <Typography color="textPrimary" variant="body2">
+                      {department.id}
+                    </Typography>
+                  </TableCell>{' '}
+                  <TableCell>
+                    <Typography color="textPrimary" variant="body2">
+                      {department.departmentName}
+                    </Typography>
                   </TableCell>
-
-                  <TableCell>{department.departmentName}</TableCell>
+                  <TableCell align="center">
+                    <Typography color="textPrimary" variant="body2">
+                      {department.totalEmployees}
+                    </Typography>
+                  </TableCell>{' '}
                   <TableCell>
                     <Box
                       sx={{
@@ -123,17 +135,40 @@ export const DepartmentListResults = ({ department, ...rest }) => {
                     >
                       <Button
                         color="secondary"
+                        size="small"
                         sx={{
                           mr: 2,
                         }}
                         variant="contained"
+                        onClick={() =>
+                          handleUpdateDepartment(department.id, department.departmentName)
+                        }
                       >
                         Update
                       </Button>
-                      <Button color="error" variant="contained">
-                        Delete
-                      </Button>
+                      <Tooltip
+                        title={department.totalEmployees !== 0 ? 'department not empty' : ''}
+                      >
+                        <span>
+                          <Button
+                            disabled={department.totalEmployees !== 0}
+                            size="small"
+                            color="error"
+                            variant="contained"
+                            onClick={() => {
+                              handleDeleteDepartment(department.id);
+                            }}
+                          >
+                            Delete
+                          </Button>
+                        </span>
+                      </Tooltip>
                     </Box>
+                  </TableCell>
+                  <TableCell align="center">
+                    <Typography color="textPrimary" variant="body2">
+                      {formatDate(department.updatedAt)}
+                    </Typography>
                   </TableCell>
                 </TableRow>
               ))}
@@ -143,7 +178,7 @@ export const DepartmentListResults = ({ department, ...rest }) => {
       </PerfectScrollbar>
       <TablePagination
         component="div"
-        count={department.length}
+        count={department.itemCount}
         onPageChange={handlePageChange}
         onRowsPerPageChange={handleLimitChange}
         page={page}

@@ -16,11 +16,11 @@ import {
 } from '@mui/material';
 import { useRouter } from 'next/router';
 import { formatDate } from '../../utils/date-converter';
+import { deleteCategory } from '../../services/api/category';
 
 export const CategoryListResults = ({ category }) => {
   const router = useRouter();
 
-  const [selectedCategoryIds, setSelectedCategoryIds] = useState([]);
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(0);
 
@@ -50,7 +50,7 @@ export const CategoryListResults = ({ category }) => {
     });
   };
 
-  const handleUpdateCategory = (event, categoryId, categoryName) => {
+  const handleUpdateCategory = (categoryId, categoryName) => {
     router.push({
       pathname: '/category/edit',
       query: {
@@ -59,6 +59,29 @@ export const CategoryListResults = ({ category }) => {
       },
     });
   };
+
+  const handleDeleteCategory = (categoryId) => {
+    const confirmation = confirm('Are you sure want to delete this department?');
+    if (confirmation) {
+      deleteCategory(categoryId)
+        .then((res) => {
+          alert(res);
+          router.reload();
+        })
+        .catch((err) => {
+          alert(err.response.data?.message);
+        });
+    }
+    return;
+  };
+
+  if (category.error) {
+    return (
+      <Typography align="center" variant="h4" style={{ color: 'red' }}>
+        error, {category.error.message}
+      </Typography>
+    );
+  }
 
   return (
     <Card>
@@ -86,11 +109,7 @@ export const CategoryListResults = ({ category }) => {
             </TableHead>
             <TableBody>
               {category.data.slice(0, limit).map((category) => (
-                <TableRow
-                  hover
-                  key={category.id}
-                  selected={selectedCategoryIds.indexOf(category.id) !== -1}
-                >
+                <TableRow hover key={category.id}>
                   <TableCell align="center">
                     <Typography color="textPrimary" variant="body2">
                       {category.id}
@@ -121,9 +140,7 @@ export const CategoryListResults = ({ category }) => {
                           mr: 2,
                         }}
                         variant="contained"
-                        onClick={(event) =>
-                          handleUpdateCategory(event, category.id, category.categoryName)
-                        }
+                        onClick={() => handleUpdateCategory(category.id, category.categoryName)}
                       >
                         Update
                       </Button>
@@ -134,6 +151,9 @@ export const CategoryListResults = ({ category }) => {
                             size="small"
                             color="error"
                             variant="contained"
+                            onClick={() => {
+                              handleDeleteCategory(category.id);
+                            }}
                           >
                             Delete
                           </Button>

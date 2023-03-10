@@ -6,11 +6,10 @@ import { Box, Divider, Drawer, Typography, useMediaQuery } from '@mui/material';
 import { ChartBar as ChartBarIcon } from '../icons/chart-bar';
 import { Cog as CogIcon } from '../icons/cog';
 import { Selector as SelectorIcon } from '../icons/selector';
-import { ShoppingBag as ShoppingBagIcon } from '../icons/shopping-bag';
-import { User as UserIcon } from '../icons/user';
 import { Users as UsersIcon } from '../icons/users';
 import { Logo } from './logo';
 import { NavItem } from './nav-item';
+import { Apartment, Category, People, School } from '@mui/icons-material';
 
 const items = [
   {
@@ -25,17 +24,22 @@ const items = [
   },
   {
     href: '/products',
-    icon: <ShoppingBagIcon fontSize="small" />,
+    icon: <School fontSize="small" />,
     title: 'Courses',
   },
   {
     href: '/category',
-    icon: <ShoppingBagIcon fontSize="small" />,
+    icon: <Category fontSize="small" />,
     title: 'Categories',
   },
   {
+    href: '/department',
+    icon: <Apartment fontSize="small" />,
+    title: 'Departments',
+  },
+  {
     href: '/user/account',
-    icon: <UserIcon fontSize="small" />,
+    icon: <People fontSize="small" />,
     title: 'Account',
   },
   {

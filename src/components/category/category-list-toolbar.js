@@ -10,6 +10,7 @@ import {
 } from '@mui/material';
 import { Search as SearchIcon } from '../../icons/search';
 import { useRouter } from 'next/router';
+import { handleRedirectOnClick } from '../../utils/handle-event-button';
 
 export const CategoryListToolbar = (props) => {
   const router = useRouter();
@@ -31,10 +32,6 @@ export const CategoryListToolbar = (props) => {
     }
   };
 
-  const handleClickAddNew = () => {
-    router.push('/category/add');
-  };
-
   return (
     <Box {...props}>
       <Box
@@ -50,7 +47,13 @@ export const CategoryListToolbar = (props) => {
           Categories
         </Typography>
         <Box sx={{ m: 1 }}>
-          <Button color="primary" variant="contained" onClick={handleClickAddNew}>
+          <Button
+            color="primary"
+            variant="contained"
+            onClick={() => {
+              handleRedirectOnClick(router, '/category/add');
+            }}
+          >
             Add New
           </Button>
         </Box>

@@ -1,12 +1,12 @@
 import Head from 'next/head';
-import { Box, Button, Container, IconButton, Tooltip, Typography } from '@mui/material';
+import { Box, Container, Typography } from '@mui/material';
 import { DashboardLayout } from '../../components/dashboard-layout';
-import { AddCategory } from '../../components/category/add-category';
+import { AddPosition } from '../../components/position/add-position';
 
 const AddNew = () => (
   <>
     <Head>
-      <title>Add New Category</title>
+      <title>Add New Position</title>
     </Head>
     <Box
       component="main"
@@ -17,10 +17,10 @@ const AddNew = () => (
     >
       <Container maxWidth="lg">
         <Typography sx={{ mb: 3 }} variant="h4">
-          Category
+          Position
         </Typography>
         <Box sx={{ pt: 3 }}>
-          <AddCategory />
+          <AddPosition />
         </Box>
       </Container>
     </Box>

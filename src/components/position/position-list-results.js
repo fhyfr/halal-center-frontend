@@ -10,15 +10,15 @@ import {
   TableHead,
   TablePagination,
   TableRow,
-  Button,
   Typography,
+  Button,
   Tooltip,
 } from '@mui/material';
 import { useRouter } from 'next/router';
 import { formatDate } from '../../utils/date-converter';
-import { deleteDepartment } from '../../services/api/department';
+import { deletePosition } from '../../services/api/position';
 
-export const DepartmentListResults = ({ department }) => {
+export const PositionListResults = ({ position }) => {
   const router = useRouter();
 
   const [limit, setLimit] = useState(10);
@@ -50,20 +50,20 @@ export const DepartmentListResults = ({ department }) => {
     });
   };
 
-  const handleUpdateDepartment = (departmentId, departmentName) => {
+  const handleUpdatePosition = (positionId, positionName) => {
     router.push({
-      pathname: '/department/edit',
+      pathname: '/position/edit',
       query: {
-        departmentId,
-        departmentName,
+        positionId,
+        positionName,
       },
     });
   };
 
-  const handleDeleteDepartment = (departmentId) => {
-    const confirmation = confirm('Are you sure want to delete this department?');
+  const handleDeletePosition = (positionId) => {
+    const confirmation = confirm('Are you sure want to delete this position?');
     if (confirmation) {
-      deleteDepartment(departmentId)
+      deletePosition(positionId)
         .then((res) => {
           alert(res);
           router.reload();
@@ -75,10 +75,10 @@ export const DepartmentListResults = ({ department }) => {
     return;
   };
 
-  if (department.error) {
+  if (position.error) {
     return (
       <Typography align="center" variant="h4" style={{ color: 'red' }}>
-        error, {department.error.message}
+        error, {position.error.message}
       </Typography>
     );
   }
@@ -91,7 +91,7 @@ export const DepartmentListResults = ({ department }) => {
             <TableHead>
               <TableRow>
                 <TableCell align="center">ID</TableCell>
-                <TableCell align="left">Department Name</TableCell>
+                <TableCell align="left">Position Name</TableCell>
                 <TableCell align="center">Total Employees</TableCell>
                 <TableCell>
                   {' '}
@@ -108,21 +108,21 @@ export const DepartmentListResults = ({ department }) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {department.data.slice(0, limit).map((department) => (
-                <TableRow hover key={department.id}>
+              {position.data.slice(0, limit).map((position) => (
+                <TableRow hover key={position.id}>
                   <TableCell align="center">
                     <Typography color="textPrimary" variant="body2">
-                      {department.id}
+                      {position.id}
                     </Typography>
                   </TableCell>{' '}
                   <TableCell>
                     <Typography color="textPrimary" variant="body2">
-                      {department.departmentName}
+                      {position.positionName}
                     </Typography>
                   </TableCell>
                   <TableCell align="center">
                     <Typography color="textPrimary" variant="body2">
-                      {department.totalEmployees}
+                      {position.totalEmployees}
                     </Typography>
                   </TableCell>{' '}
                   <TableCell>
@@ -140,23 +140,19 @@ export const DepartmentListResults = ({ department }) => {
                           mr: 2,
                         }}
                         variant="contained"
-                        onClick={() =>
-                          handleUpdateDepartment(department.id, department.departmentName)
-                        }
+                        onClick={() => handleUpdatePosition(position.id, position.positionName)}
                       >
                         Update
                       </Button>
-                      <Tooltip
-                        title={department.totalEmployees !== 0 ? 'department not empty' : ''}
-                      >
+                      <Tooltip title={position.totalEmployees !== 0 ? 'position not empty' : ''}>
                         <span>
                           <Button
-                            disabled={department.totalEmployees !== 0}
+                            disabled={position.totalEmployees !== 0}
                             size="small"
                             color="error"
                             variant="contained"
                             onClick={() => {
-                              handleDeleteDepartment(department.id);
+                              handleDeletePosition(position.id);
                             }}
                           >
                             Delete
@@ -167,7 +163,7 @@ export const DepartmentListResults = ({ department }) => {
                   </TableCell>
                   <TableCell align="center">
                     <Typography color="textPrimary" variant="body2">
-                      {formatDate(department.updatedAt)}
+                      {formatDate(position.updatedAt)}
                     </Typography>
                   </TableCell>
                 </TableRow>
@@ -178,7 +174,7 @@ export const DepartmentListResults = ({ department }) => {
       </PerfectScrollbar>
       <TablePagination
         component="div"
-        count={department.itemCount}
+        count={position.itemCount}
         onPageChange={handlePageChange}
         onRowsPerPageChange={handleLimitChange}
         page={page}
@@ -189,6 +185,6 @@ export const DepartmentListResults = ({ department }) => {
   );
 };
 
-DepartmentListResults.propTypes = {
-  department: PropTypes.array.isRequired,
+PositionListResults.propTypes = {
+  position: PropTypes.array.isRequired,
 };

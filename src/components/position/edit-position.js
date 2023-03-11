@@ -15,10 +15,10 @@ import {
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { useRouter } from 'next/router';
-import { updateCategory } from '../../services/api/category';
 import { handleRedirectOnClick } from '../../utils/handle-event-button';
+import { updatePosition } from '../../services/api/position';
 
-export const EditCategory = ({ category }) => {
+export const EditPosition = ({ position }) => {
   const router = useRouter();
 
   const [info, setInfo] = useState(undefined);
@@ -26,18 +26,18 @@ export const EditCategory = ({ category }) => {
 
   const formik = useFormik({
     initialValues: {
-      categoryName: category.categoryName,
+      positionName: position.positionName,
     },
     validationSchema: Yup.object({
-      categoryName: Yup.string().required('Category Name is required'),
+      positionName: Yup.string().required('Position Name is required'),
     }),
     onSubmit: async (values) => {
-      updateCategory(category.categoryId, values.categoryName)
+      updatePosition(position.positionId, values.positionName)
         .then((res) => {
           setInfo(res);
           setErrMessage(undefined);
           setTimeout(() => {
-            router.push('/category');
+            router.push('/position');
           }, 2000);
         })
         .catch((err) => {
@@ -50,7 +50,7 @@ export const EditCategory = ({ category }) => {
   return (
     <form onSubmit={formik.handleSubmit}>
       <Card>
-        <CardHeader subheader="Fill out this form for edit category" title="Edit Category" />
+        <CardHeader subheader="Fill out this form for edit position" title="Edit Position" />
         <Divider />
         <CardContent>
           {info && (
@@ -66,18 +66,18 @@ export const EditCategory = ({ category }) => {
           )}
 
           <FormControl sx={{ marginY: 1 }} fullWidth variant="outlined">
-            <InputLabel htmlFor="outlined-adornment-category-name">Category Name</InputLabel>
+            <InputLabel htmlFor="outlined-adornment-position-name">Position Name</InputLabel>
             <OutlinedInput
-              id="outlined-adornment-category-name"
-              label="Category Name"
-              name="categoryName"
+              id="outlined-adornment-position-name"
+              label="Position Name"
+              name="positionName"
               type="text"
               onBlur={formik.handleBlur}
               onChange={formik.handleChange}
-              value={formik.values.categoryName}
+              value={formik.values.positionName}
             />
-            {Boolean(formik.touched.categoryName && formik.errors.categoryName) && (
-              <FormHelperText error>{formik.errors.categoryName}</FormHelperText>
+            {Boolean(formik.touched.positionName && formik.errors.positionName) && (
+              <FormHelperText error>{formik.errors.positionName}</FormHelperText>
             )}
           </FormControl>
         </CardContent>
@@ -96,7 +96,7 @@ export const EditCategory = ({ category }) => {
             color="error"
             variant="text"
             onClick={() => {
-              handleRedirectOnClick(router, '/category');
+              handleRedirectOnClick(router, '/position');
             }}
           >
             Cancel

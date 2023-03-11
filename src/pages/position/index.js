@@ -1,8 +1,7 @@
-import React, { useEffect } from 'react';
 import Head from 'next/head';
 import { Box, Container } from '@mui/material';
-import { CategoryListResults } from '../../components/category/category-list-results';
-import { CategoryListToolbar } from '../../components/category/category-list-toolbar';
+import { PositionListResults } from '../../components/position/position-list-results';
+import { PositionListToolbar } from '../../components/position/position-list-toolbar';
 import { DashboardLayout } from '../../components/dashboard-layout';
 import axios from 'axios';
 import { parseCookies } from '../../lib/auth-cookies';
@@ -14,7 +13,7 @@ export const getServerSideProps = async ({ req, res, query }) => {
   const size = query.limit || 10;
   const search = query.search;
 
-  let categories = null;
+  let positions = null;
   const data = parseCookies(req);
   if (!data.user) {
     return {
@@ -27,40 +26,40 @@ export const getServerSideProps = async ({ req, res, query }) => {
   }
   const user = JSON.parse(data.user);
 
-  let categoryURL;
+  let positionURL;
   if (search && search.length > 0) {
-    categoryURL = `${NEXT_PUBLIC_API}/category?page=${page}&size=${size}&query=${search}`;
+    positionURL = `${NEXT_PUBLIC_API}/position?page=${page}&size=${size}&query=${search}`;
   } else {
-    categoryURL = `${NEXT_PUBLIC_API}/category?page=${page}&size=${size}`;
+    positionURL = `${NEXT_PUBLIC_API}/position?page=${page}&size=${size}`;
   }
 
   try {
     const response = await axios({
       method: 'GET',
-      url: categoryURL,
+      url: positionURL,
       headers: {
         Authorization: `Bearer ${user.accessToken}`,
       },
     });
     if (response.status !== 200) {
-      throw new Error('failed to get data categories');
+      throw new Error('failed to get data positions');
     }
 
-    categories = response.data;
+    positions = response.data;
   } catch (err) {
-    categories = { error: { message: err.message } };
+    positions = { error: { message: err.message } };
   }
 
-  return { props: { categories } };
+  return { props: { positions } };
 };
 
-const Category = (props) => {
-  const { categories } = props;
+const Position = (props) => {
+  const { positions } = props;
 
   return (
     <>
       <Head>
-        <title>Categories | Halal Center</title>
+        <title>Positions | Halal Center</title>
       </Head>
       <Box
         component="main"
@@ -70,9 +69,9 @@ const Category = (props) => {
         }}
       >
         <Container maxWidth={false}>
-          <CategoryListToolbar />
+          <PositionListToolbar />
           <Box sx={{ mt: 3 }}>
-            <CategoryListResults category={categories} />
+            <PositionListResults position={positions} />
           </Box>
         </Container>
       </Box>
@@ -80,6 +79,6 @@ const Category = (props) => {
   );
 };
 
-Category.getLayout = (category) => <DashboardLayout>{category}</DashboardLayout>;
+Position.getLayout = (position) => <DashboardLayout>{position}</DashboardLayout>;
 
-export default Category;
+export default Position;

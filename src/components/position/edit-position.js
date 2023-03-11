@@ -12,13 +12,13 @@ import {
   InputLabel,
   OutlinedInput,
 } from '@mui/material';
-import { useRouter } from 'next/router';
 import { useFormik } from 'formik';
-import { handleRedirectOnClick } from '../../utils/handle-event-button';
 import * as Yup from 'yup';
-import { createNewPosition } from '../../services/api/position';
+import { useRouter } from 'next/router';
+import { handleRedirectOnClick } from '../../utils/handle-event-button';
+import { updatePosition } from '../../services/api/position';
 
-export const AddPosition = (props) => {
+export const EditPosition = ({ position }) => {
   const router = useRouter();
 
   const [info, setInfo] = useState(undefined);
@@ -26,13 +26,13 @@ export const AddPosition = (props) => {
 
   const formik = useFormik({
     initialValues: {
-      positionName: '',
+      positionName: position.positionName,
     },
     validationSchema: Yup.object({
       positionName: Yup.string().required('Position Name is required'),
     }),
     onSubmit: async (values) => {
-      createNewPosition(values.positionName)
+      updatePosition(position.positionId, values.positionName)
         .then((res) => {
           setInfo(res);
           setErrMessage(undefined);
@@ -50,7 +50,7 @@ export const AddPosition = (props) => {
   return (
     <form onSubmit={formik.handleSubmit}>
       <Card>
-        <CardHeader subheader="Fill out this form for add new position" title="Add New Position" />
+        <CardHeader subheader="Fill out this form for edit position" title="Edit Position" />
         <Divider />
         <CardContent>
           {info && (

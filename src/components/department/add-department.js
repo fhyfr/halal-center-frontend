@@ -71,7 +71,7 @@ export const AddDepartment = (props) => {
           <FormControl sx={{ marginY: 1 }} fullWidth variant="outlined">
             <InputLabel htmlFor="outlined-adornment-department-name">Department Name</InputLabel>
             <OutlinedInput
-              id="outlined-adornment-full-name"
+              id="outlined-adornment-department-name"
               label="Department Name"
               name="departmentName"
               type="text"

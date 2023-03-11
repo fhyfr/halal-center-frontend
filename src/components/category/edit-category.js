@@ -68,7 +68,7 @@ export const EditCategory = ({ category }) => {
           <FormControl sx={{ marginY: 1 }} fullWidth variant="outlined">
             <InputLabel htmlFor="outlined-adornment-category-name">Category Name</InputLabel>
             <OutlinedInput
-              id="outlined-adornment-full-name"
+              id="outlined-adornment-category-name"
               label="Category Name"
               name="categoryName"
               type="text"

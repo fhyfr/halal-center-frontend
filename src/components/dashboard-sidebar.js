@@ -9,7 +9,14 @@ import { Selector as SelectorIcon } from '../icons/selector';
 import { Users as UsersIcon } from '../icons/users';
 import { Logo } from './logo';
 import { NavItem } from './nav-item';
-import { Apartment, Category, People, School } from '@mui/icons-material';
+import {
+  Apartment,
+  Badge,
+  Category,
+  People,
+  PermContactCalendar,
+  School,
+} from '@mui/icons-material';
 
 const items = [
   {
@@ -36,6 +43,11 @@ const items = [
     href: '/department',
     icon: <Apartment fontSize="small" />,
     title: 'Departments',
+  },
+  {
+    href: '/position',
+    icon: <PermContactCalendar fontSize="small" />,
+    title: 'Positions',
   },
   {
     href: '/user/account',

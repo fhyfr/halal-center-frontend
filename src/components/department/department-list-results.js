@@ -104,7 +104,7 @@ export const DepartmentListResults = ({ department }) => {
                     Action
                   </Box>
                 </TableCell>
-                <TableCell align="center">Last Update</TableCell>
+                <TableCell align="center">Last Updated</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>

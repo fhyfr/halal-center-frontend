@@ -3,10 +3,10 @@ import { Box, Container, Typography } from '@mui/material';
 import { DashboardLayout } from '../../components/dashboard-layout';
 import { AddPosition } from '../../components/position/add-position';
 
-const Page = () => (
+const AddNew = () => (
   <>
     <Head>
-      <title>Add Position</title>
+      <title>Add New Position</title>
     </Head>
     <Box
       component="main"
@@ -17,7 +17,7 @@ const Page = () => (
     >
       <Container maxWidth="lg">
         <Typography sx={{ mb: 3 }} variant="h4">
-          Add Position
+          Position
         </Typography>
         <Box sx={{ pt: 3 }}>
           <AddPosition />
@@ -27,6 +27,6 @@ const Page = () => (
   </>
 );
 
-Page.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
+AddNew.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
 
-export default Page;
+export default AddNew;

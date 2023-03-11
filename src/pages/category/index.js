@@ -80,6 +80,6 @@ const Category = (props) => {
   );
 };
 
-Category.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
+Category.getLayout = (category) => <DashboardLayout>{category}</DashboardLayout>;
 
 export default Category;

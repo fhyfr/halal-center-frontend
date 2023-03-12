@@ -71,7 +71,7 @@ const Page = (props) => {
         <Container maxWidth={false}>
           <DepartmentListToolbar />
           <Box sx={{ mt: 3 }}>
-            <DepartmentListResults department={departments} />
+            <DepartmentListResults departments={departments} />
           </Box>
         </Container>
       </Box>

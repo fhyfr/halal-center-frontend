@@ -1,32 +1,100 @@
 import Head from 'next/head';
 import { Box, Container } from '@mui/material';
-import { CustomerListResults } from '../../components/customer/customer-list-results';
-import { CustomerListToolbar } from '../../components/customer/customer-list-toolbar';
 import { DashboardLayout } from '../../components/dashboard-layout';
-import { customers } from '../../__mocks__/customers';
+import { UserListToolbar } from '../../components/user/user-list-toolbar';
+import { UserListResults } from '../../components/user/user-list-results';
+import { parseCookies } from '../../lib/auth-cookies';
+import axios from 'axios';
 
-const Page = () => (
-  <>
-    <Head>
-      <title>Users | Halal Center</title>
-    </Head>
-    <Box
-      component="main"
-      sx={{
-        flexGrow: 1,
-        py: 8,
-      }}
-    >
-      <Container maxWidth={false}>
-        <CustomerListToolbar />
-        <Box sx={{ mt: 3 }}>
-          <CustomerListResults customers={customers} />
-        </Box>
-      </Container>
-    </Box>
-  </>
-);
+const { NEXT_PUBLIC_API } = process.env;
 
-Page.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
+export const getServerSideProps = async ({ req, res, query }) => {
+  const page = query.page || 1;
+  const size = query.limit || 10;
+  const search = query.search;
+  const roleId = query.roleId;
 
-export default Page;
+  let users,
+    roles = null;
+  const data = parseCookies(req);
+  if (!data.user) {
+    return {
+      redirect: {
+        permanent: false,
+        destination: '/auth/login',
+      },
+      props: {},
+    };
+  }
+  const user = JSON.parse(data.user);
+
+  let userURL;
+  if (search && search.length > 0 && roleId) {
+    userURL = `${NEXT_PUBLIC_API}/user?page=${page}&size=${size}&query=${search}&roleId=${roleId}`;
+  } else if (search && search.length > 0) {
+    userURL = `${NEXT_PUBLIC_API}/user?page=${page}&size=${size}&query=${search}`;
+  } else if (roleId) {
+    userURL = `${NEXT_PUBLIC_API}/user?page=${page}&size=${size}&roleId=${roleId}`;
+  } else {
+    userURL = `${NEXT_PUBLIC_API}/user?page=${page}&size=${size}`;
+  }
+
+  try {
+    const responseUser = await axios({
+      method: 'GET',
+      url: userURL,
+      headers: {
+        Authorization: `Bearer ${user.accessToken}`,
+      },
+    });
+    if (responseUser.status !== 200) {
+      throw new Error('failed to get data users');
+    }
+
+    const responseRole = await axios({
+      method: 'GET',
+      url: `${NEXT_PUBLIC_API}/role?page=1&size=20`,
+      headers: {
+        Authorization: `Bearer ${user.accessToken}`,
+      },
+    });
+
+    roles = responseRole.data;
+    users = responseUser.data;
+  } catch (err) {
+    users = { error: { message: err.message } };
+    roles = { error: { message: err.message } };
+  }
+
+  return { props: { users, roles } };
+};
+
+const User = (props) => {
+  const { users, roles } = props;
+
+  return (
+    <>
+      <Head>
+        <title>Users | Halal Center</title>
+      </Head>
+      <Box
+        component="main"
+        sx={{
+          flexGrow: 1,
+          py: 8,
+        }}
+      >
+        <Container maxWidth={false}>
+          <UserListToolbar roles={roles} />
+          <Box sx={{ mt: 3 }}>
+            <UserListResults users={users} />
+          </Box>
+        </Container>
+      </Box>
+    </>
+  );
+};
+
+User.getLayout = (user) => <DashboardLayout>{user}</DashboardLayout>;
+
+export default User;

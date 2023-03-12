@@ -1,3 +1,4 @@
+import { Add } from '@mui/icons-material';
 import {
   Box,
   Button,
@@ -48,6 +49,11 @@ export const DepartmentListToolbar = (props) => {
         </Typography>
         <Box sx={{ m: 1 }}>
           <Button
+            startIcon={
+              <SvgIcon fontSize="small">
+                <Add />
+              </SvgIcon>
+            }
             color="primary"
             variant="contained"
             onClick={() => {

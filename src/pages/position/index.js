@@ -71,7 +71,7 @@ const Position = (props) => {
         <Container maxWidth={false}>
           <PositionListToolbar />
           <Box sx={{ mt: 3 }}>
-            <PositionListResults position={positions} />
+            <PositionListResults positions={positions} />
           </Box>
         </Container>
       </Box>

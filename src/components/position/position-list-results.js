@@ -18,7 +18,7 @@ import { useRouter } from 'next/router';
 import { formatDate } from '../../utils/date-converter';
 import { deletePosition } from '../../services/api/position';
 
-export const PositionListResults = ({ position }) => {
+export const PositionListResults = ({ positions }) => {
   const router = useRouter();
 
   const [limit, setLimit] = useState(10);
@@ -75,10 +75,10 @@ export const PositionListResults = ({ position }) => {
     return;
   };
 
-  if (position.error) {
+  if (positions.error) {
     return (
       <Typography align="center" variant="h4" style={{ color: 'red' }}>
-        error, {position.error.message}
+        error, {positions.error.message}
       </Typography>
     );
   }
@@ -108,7 +108,7 @@ export const PositionListResults = ({ position }) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {position.data.slice(0, limit).map((position) => (
+              {positions.data.slice(0, limit).map((position) => (
                 <TableRow hover key={position.id}>
                   <TableCell align="center">
                     <Typography color="textPrimary" variant="body2">
@@ -174,7 +174,7 @@ export const PositionListResults = ({ position }) => {
       </PerfectScrollbar>
       <TablePagination
         component="div"
-        count={position.itemCount}
+        count={positions.itemCount}
         onPageChange={handlePageChange}
         onRowsPerPageChange={handleLimitChange}
         page={page}
@@ -186,5 +186,5 @@ export const PositionListResults = ({ position }) => {
 };
 
 PositionListResults.propTypes = {
-  position: PropTypes.array.isRequired,
+  positions: PropTypes.array.isRequired,
 };

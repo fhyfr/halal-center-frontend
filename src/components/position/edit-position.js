@@ -108,7 +108,7 @@ export const EditPosition = ({ position }) => {
             color="primary"
             variant="contained"
           >
-            Submit
+            Update
           </Button>
         </Box>
       </Card>

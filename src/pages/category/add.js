@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import { Box, Button, Container, IconButton, Tooltip, Typography } from '@mui/material';
+import { Box, Container, Typography } from '@mui/material';
 import { DashboardLayout } from '../../components/dashboard-layout';
 import { AddCategory } from '../../components/category/add-category';
 

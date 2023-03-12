@@ -15,6 +15,7 @@ import {
 } from '@mui/material';
 import { formatDate } from '../../utils/date-converter';
 import { useRouter } from 'next/router';
+import { deleteUser } from '../../services/api/user';
 
 export const UserListResults = ({ users }) => {
   const router = useRouter();
@@ -48,9 +49,30 @@ export const UserListResults = ({ users }) => {
     });
   };
 
-  const handleUpdateUser = (userId) => {};
+  const handleUpdateUser = (userId) => {
+    router.push({
+      pathname: '/user/edit',
+      query: {
+        userId,
+      },
+    });
+  };
   const handleDetailUser = (userId) => {};
-  const handleDeleteUser = (userId) => {};
+
+  const handleDeleteUser = (userId) => {
+    const confirmation = confirm('Are you sure want to delete this user?');
+    if (confirmation) {
+      deleteUser(userId)
+        .then((res) => {
+          alert(res);
+          router.reload();
+        })
+        .catch((err) => {
+          alert(err.response.data?.message);
+        });
+    }
+    return;
+  };
 
   if (users.error) {
     return (
@@ -160,6 +182,24 @@ export const UserListResults = ({ users }) => {
                             onClick={() => handleDeleteUser(user.id)}
                           >
                             Delete
+                          </Button>
+                          <Button
+                            color="warning"
+                            size="small"
+                            sx={{
+                              mr: 2,
+                            }}
+                            variant="contained"
+                            onClick={() => {
+                              router.push({
+                                pathname: '/user/reset-password',
+                                query: {
+                                  userId: user.id,
+                                },
+                              });
+                            }}
+                          >
+                            Reset Password
                           </Button>
                         </Box>
                       )}

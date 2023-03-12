@@ -58,6 +58,9 @@ export const getServerSideProps = async ({ req, res, query }) => {
         Authorization: `Bearer ${user.accessToken}`,
       },
     });
+    if (responseRole.status !== 200) {
+      throw new Error('failed to get data roles');
+    }
 
     roles = responseRole.data;
     users = responseUser.data;

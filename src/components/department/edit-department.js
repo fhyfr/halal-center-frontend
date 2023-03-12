@@ -108,7 +108,7 @@ export const EditDepartment = ({ department }) => {
             color="primary"
             variant="contained"
           >
-            Submit
+            Update
           </Button>
         </Box>
       </Card>

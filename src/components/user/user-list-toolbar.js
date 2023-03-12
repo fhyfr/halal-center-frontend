@@ -77,7 +77,7 @@ export const UserListToolbar = ({ roles }) => {
           <CardContent>
             <Grid container spacing={2}>
               <Grid item xs={6} md={8}>
-                <Box sx={{ maxWidth: 300 }}>
+                <Box sx={{ maxWidth: 500 }}>
                   <TextField
                     fullWidth
                     InputProps={{

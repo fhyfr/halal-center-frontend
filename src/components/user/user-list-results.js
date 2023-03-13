@@ -57,7 +57,15 @@ export const UserListResults = ({ users }) => {
       },
     });
   };
-  const handleDetailUser = (userId) => {};
+
+  const handleDetailUser = (userId) => {
+    router.push({
+      pathname: '/member/details',
+      query: {
+        userId,
+      },
+    });
+  };
 
   const handleDeleteUser = (userId) => {
     const confirmation = confirm('Are you sure want to delete this user?');

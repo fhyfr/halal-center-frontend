@@ -75,7 +75,7 @@ export const DashboardNavbar = (props) => {
               width: 40,
               ml: 1,
             }}
-            src={user ? user.profilePicture : '/static/images/avatars/avatar_1.png'}
+            src={user ? user.profilePicture : ''}
             alt="profile picture"
           >
             <UserCircleIcon fontSize="small" />

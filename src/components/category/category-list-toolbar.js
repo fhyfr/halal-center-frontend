@@ -11,6 +11,7 @@ import {
 import { Search as SearchIcon } from '../../icons/search';
 import { useRouter } from 'next/router';
 import { handleRedirectOnClick } from '../../utils/handle-event-button';
+import { Add } from '@mui/icons-material';
 
 export const CategoryListToolbar = (props) => {
   const router = useRouter();
@@ -48,6 +49,11 @@ export const CategoryListToolbar = (props) => {
         </Typography>
         <Box sx={{ m: 1 }}>
           <Button
+            startIcon={
+              <SvgIcon fontSize="small">
+                <Add />
+              </SvgIcon>
+            }
             color="primary"
             variant="contained"
             onClick={() => {

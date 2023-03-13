@@ -74,7 +74,7 @@ const ResetPassword = () => {
   return (
     <>
       <Head>
-        <title>Verify OTP | Halal Center</title>
+        <title>Reset Password | Halal Center</title>
       </Head>
       <DrawerAppBar />
       <Box
@@ -168,7 +168,7 @@ const ResetPassword = () => {
               </FormControl>
               <Box sx={{ m: 2 }}>
                 <Button color="primary" fullWidth size="large" type="submit" variant="contained">
-                  Verify
+                  Reset Password
                 </Button>
               </Box>
             </form>

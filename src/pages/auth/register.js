@@ -48,9 +48,9 @@ const Register = () => {
     },
     validationSchema: Yup.object({
       fullName: Yup.string().max(255).required('Full name is required'),
-      username: Yup.string().max(255).required('Username is required'),
+      username: Yup.string().min(2).max(255).required('Username is required'),
       email: Yup.string().email('Must be a valid email').max(255).required('Email is required'),
-      password: Yup.string().max(255).required('Password is required'),
+      password: Yup.string().min(8).max(255).required('Password is required'),
     }),
     onSubmit: async (values) => {
       register(values.username, values.email, values.password, values.fullName)

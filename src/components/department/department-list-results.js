@@ -18,7 +18,7 @@ import { useRouter } from 'next/router';
 import { formatDate } from '../../utils/date-converter';
 import { deleteDepartment } from '../../services/api/department';
 
-export const DepartmentListResults = ({ department }) => {
+export const DepartmentListResults = ({ departments }) => {
   const router = useRouter();
 
   const [limit, setLimit] = useState(10);
@@ -75,10 +75,10 @@ export const DepartmentListResults = ({ department }) => {
     return;
   };
 
-  if (department.error) {
+  if (departments.error) {
     return (
       <Typography align="center" variant="h4" style={{ color: 'red' }}>
-        error, {department.error.message}
+        error, {departments.error.message}
       </Typography>
     );
   }
@@ -108,7 +108,7 @@ export const DepartmentListResults = ({ department }) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {department.data.slice(0, limit).map((department) => (
+              {departments.data.slice(0, limit).map((department) => (
                 <TableRow hover key={department.id}>
                   <TableCell align="center">
                     <Typography color="textPrimary" variant="body2">
@@ -178,7 +178,7 @@ export const DepartmentListResults = ({ department }) => {
       </PerfectScrollbar>
       <TablePagination
         component="div"
-        count={department.itemCount}
+        count={departments.itemCount}
         onPageChange={handlePageChange}
         onRowsPerPageChange={handleLimitChange}
         page={page}
@@ -190,5 +190,5 @@ export const DepartmentListResults = ({ department }) => {
 };
 
 DepartmentListResults.propTypes = {
-  department: PropTypes.array.isRequired,
+  departments: PropTypes.array.isRequired,
 };

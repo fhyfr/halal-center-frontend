@@ -108,7 +108,7 @@ export const EditCategory = ({ category }) => {
             color="primary"
             variant="contained"
           >
-            Submit
+            Update
           </Button>
         </Box>
       </Card>

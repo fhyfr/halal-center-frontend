@@ -6,7 +6,7 @@ import { DashboardLayout } from '../../components/dashboard-layout';
 const Page = () => (
   <>
     <Head>
-      <title>Account | Halal Center</title>
+      <title>Account</title>
     </Head>
     <Box
       component="main"

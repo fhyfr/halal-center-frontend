@@ -18,7 +18,7 @@ import { useRouter } from 'next/router';
 import { formatDate } from '../../utils/date-converter';
 import { deleteCategory } from '../../services/api/category';
 
-export const CategoryListResults = ({ category }) => {
+export const CategoryListResults = ({ categories }) => {
   const router = useRouter();
 
   const [limit, setLimit] = useState(10);
@@ -75,10 +75,10 @@ export const CategoryListResults = ({ category }) => {
     return;
   };
 
-  if (category.error) {
+  if (categories.error) {
     return (
       <Typography align="center" variant="h4" style={{ color: 'red' }}>
-        error, {category.error.message}
+        error, {categories.error.message}
       </Typography>
     );
   }
@@ -94,7 +94,6 @@ export const CategoryListResults = ({ category }) => {
                 <TableCell align="left">Category Name</TableCell>
                 <TableCell align="center">Total Courses</TableCell>
                 <TableCell>
-                  {' '}
                   <Box
                     sx={{
                       display: 'flex',
@@ -108,13 +107,13 @@ export const CategoryListResults = ({ category }) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {category.data.slice(0, limit).map((category) => (
+              {categories.data.slice(0, limit).map((category) => (
                 <TableRow hover key={category.id}>
                   <TableCell align="center">
                     <Typography color="textPrimary" variant="body2">
                       {category.id}
                     </Typography>
-                  </TableCell>{' '}
+                  </TableCell>
                   <TableCell>
                     <Typography color="textPrimary" variant="body2">
                       {category.categoryName}
@@ -124,7 +123,7 @@ export const CategoryListResults = ({ category }) => {
                     <Typography color="textPrimary" variant="body2">
                       {category.totalCourses}
                     </Typography>
-                  </TableCell>{' '}
+                  </TableCell>
                   <TableCell>
                     <Box
                       sx={{
@@ -174,7 +173,7 @@ export const CategoryListResults = ({ category }) => {
       </PerfectScrollbar>
       <TablePagination
         component="div"
-        count={category.itemCount}
+        count={categories.itemCount}
         onPageChange={handlePageChange}
         onRowsPerPageChange={handleLimitChange}
         page={page}
@@ -186,5 +185,5 @@ export const CategoryListResults = ({ category }) => {
 };
 
 CategoryListResults.propTypes = {
-  category: PropTypes.array.isRequired,
+  categories: PropTypes.array.isRequired,
 };

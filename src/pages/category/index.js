@@ -72,7 +72,7 @@ const Category = (props) => {
         <Container maxWidth={false}>
           <CategoryListToolbar />
           <Box sx={{ mt: 3 }}>
-            <CategoryListResults category={categories} />
+            <CategoryListResults categories={categories} />
           </Box>
         </Container>
       </Box>

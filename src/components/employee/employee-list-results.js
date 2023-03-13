@@ -1,9 +1,7 @@
 import { useState } from 'react';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import PropTypes from 'prop-types';
-import { format } from 'date-fns';
 import {
-  Avatar,
   Box,
   Card,
   Checkbox,
@@ -13,12 +11,12 @@ import {
   TableHead,
   TablePagination,
   TableRow,
-  Typography,
   Button,
+  Typography,
 } from '@mui/material';
-import { getInitials } from '../../utils/get-initials';
+import { formatDate } from '../../utils/date-converter';
 
-export const EmployeeListResults = ({ employee, ...rest }) => {
+export const EmployeeListResults = ({ employees }) => {
   const [selectedEmployeeIds, setSelectedEmployeeIds] = useState([]);
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(0);
@@ -63,31 +61,30 @@ export const EmployeeListResults = ({ employee, ...rest }) => {
     setPage(newPage);
   };
 
+  if (employees.error) {
+    return (
+      <Typography align="center" variant="h4" style={{ color: 'red' }}>
+        error, {employees.error.message}
+      </Typography>
+    );
+  }
+
   return (
-    <Card {...rest}>
+    <Card>
       <PerfectScrollbar>
         <Box sx={{ minWidth: 1050 }}>
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell padding="checkbox">
-                  <Checkbox
-                    checked={selectedEmployeeIds.length === employee.length}
-                    color="primary"
-                    indeterminate={
-                      selectedEmployeeIds.length > 0 && selectedEmployeeIds.length < employee.length
-                    }
-                    onChange={handleSelectAll}
-                  />
-                </TableCell>
+                <TableCell align="center">ID</TableCell>
                 <TableCell>Position</TableCell>
                 <TableCell>Department</TableCell>
                 <TableCell>NIK</TableCell>
                 <TableCell>Full Name</TableCell>
                 <TableCell>Address</TableCell>
                 <TableCell>Phone Number</TableCell>
+                <TableCell>Last Updated</TableCell>
                 <TableCell>
-                  {' '}
                   <Box
                     sx={{
                       display: 'flex',
@@ -100,26 +97,52 @@ export const EmployeeListResults = ({ employee, ...rest }) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {employee.slice(0, limit).map((employee) => (
+              {employees.data.slice(0, limit).map((employee) => (
                 <TableRow
                   hover
                   key={employee.id}
                   selected={selectedEmployeeIds.indexOf(employee.id) !== -1}
                 >
-                  <TableCell padding="checkbox">
-                    <Checkbox
-                      checked={selectedEmployeeIds.indexOf(employee.id) !== -1}
-                      onChange={(event) => handleSelectOne(event, employee.id)}
-                      value="true"
-                    />
+                  <TableCell>
+                    <Typography color="textPrimary" variant="body2">
+                      {employee.id}
+                    </Typography>
                   </TableCell>
-
-                  <TableCell>{employee.positionId}</TableCell>
-                  <TableCell>{employee.departmentId}</TableCell>
-                  <TableCell>{employee.nik}</TableCell>
-                  <TableCell>{employee.fullName}</TableCell>
-                  <TableCell>{employee.address}</TableCell>
-                  <TableCell>{employee.phoneNumber}</TableCell>
+                  <TableCell>
+                    <Typography color="textPrimary" variant="body2">
+                      {employee.position.positionName}
+                    </Typography>
+                  </TableCell>
+                  <TableCell>
+                    <Typography color="textPrimary" variant="body2">
+                      {employee.department.departmentName}
+                    </Typography>
+                  </TableCell>
+                  <TableCell>
+                    <Typography color="textPrimary" variant="body2">
+                      {employee.nik}
+                    </Typography>
+                  </TableCell>
+                  <TableCell>
+                    <Typography color="textPrimary" variant="body2">
+                      {employee.fullName}
+                    </Typography>
+                  </TableCell>
+                  <TableCell>
+                    <Typography color="textPrimary" variant="body2">
+                      {employee.address}
+                    </Typography>
+                  </TableCell>
+                  <TableCell>
+                    <Typography color="textPrimary" variant="body2">
+                      {employee.phoneNumber}
+                    </Typography>
+                  </TableCell>
+                  <TableCell>
+                    <Typography color="textPrimary" variant="body2">
+                      {formatDate(employee.updatedAt)}
+                    </Typography>
+                  </TableCell>
                   <TableCell>
                     <Box
                       sx={{
@@ -159,7 +182,7 @@ export const EmployeeListResults = ({ employee, ...rest }) => {
       </PerfectScrollbar>
       <TablePagination
         component="div"
-        count={employee.length}
+        count={employees.itemCount}
         onPageChange={handlePageChange}
         onRowsPerPageChange={handleLimitChange}
         page={page}
@@ -171,5 +194,5 @@ export const EmployeeListResults = ({ employee, ...rest }) => {
 };
 
 EmployeeListResults.propTypes = {
-  employee: PropTypes.array.isRequired,
+  employees: PropTypes.array.isRequired,
 };

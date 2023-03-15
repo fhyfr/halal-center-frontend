@@ -77,13 +77,12 @@ export const EmployeeListResults = ({ employees }) => {
             <TableHead>
               <TableRow>
                 <TableCell align="center">ID</TableCell>
-                <TableCell>Position</TableCell>
                 <TableCell>Department</TableCell>
+                <TableCell>Position</TableCell>
                 <TableCell>NIK</TableCell>
                 <TableCell>Full Name</TableCell>
-                <TableCell>Address</TableCell>
+                <TableCell>Gender</TableCell>
                 <TableCell>Phone Number</TableCell>
-                <TableCell>Last Updated</TableCell>
                 <TableCell>
                   <Box
                     sx={{
@@ -110,12 +109,12 @@ export const EmployeeListResults = ({ employees }) => {
                   </TableCell>
                   <TableCell>
                     <Typography color="textPrimary" variant="body2">
-                      {employee.position.positionName}
+                      {employee.department.departmentName}
                     </Typography>
                   </TableCell>
                   <TableCell>
                     <Typography color="textPrimary" variant="body2">
-                      {employee.department.departmentName}
+                      {employee.position.positionName}
                     </Typography>
                   </TableCell>
                   <TableCell>
@@ -130,7 +129,7 @@ export const EmployeeListResults = ({ employees }) => {
                   </TableCell>
                   <TableCell>
                     <Typography color="textPrimary" variant="body2">
-                      {employee.address}
+                      {employee.gender}
                     </Typography>
                   </TableCell>
                   <TableCell>
@@ -139,37 +138,44 @@ export const EmployeeListResults = ({ employees }) => {
                     </Typography>
                   </TableCell>
                   <TableCell>
-                    <Typography color="textPrimary" variant="body2">
-                      {formatDate(employee.updatedAt)}
-                    </Typography>
-                  </TableCell>
-                  <TableCell>
                     <Box
                       sx={{
                         display: 'flex',
                         justifyContent: 'center',
-                        mr: 2,
+                        mr: 1,
                       }}
                     >
                       <Button
-                        color="primary"
+                        color="warning"
                         sx={{
-                          mr: 2,
+                          mr: 1,
                         }}
                         variant="contained"
+                        size="small"
                       >
                         Mutation
                       </Button>
                       <Button
                         color="secondary"
                         sx={{
-                          mr: 2,
+                          mr: 1,
                         }}
                         variant="contained"
+                        size="small"
                       >
                         Update
                       </Button>
-                      <Button color="error" variant="contained">
+                      <Button
+                        color="primary"
+                        sx={{
+                          mr: 1,
+                        }}
+                        variant="contained"
+                        size="small"
+                      >
+                        Detail
+                      </Button>
+                      <Button color="error" variant="contained" size="small">
                         Delete
                       </Button>
                     </Box>

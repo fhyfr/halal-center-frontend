@@ -32,3 +32,18 @@ export const mutationEmployee = async (employeeId, newEmployee) => {
 
   return response.data.message;
 };
+
+export const editEmployee = async (employeeId, updateEmployee) => {
+  const accessToken = getSession();
+
+  const response = await axios({
+    method: 'PUT',
+    url: `${NEXT_PUBLIC_API}/employee/${employeeId}`,
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+    data: updateEmployee,
+  });
+
+  return response.data.message;
+};

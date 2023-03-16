@@ -24,33 +24,29 @@ import * as Yup from 'yup';
 import 'yup-phone';
 import { useRouter } from 'next/router';
 import { handleRedirectOnClick } from '../../utils/handle-event-button';
-import { createNewEmployee } from '../../services/api/employee';
+import { editEmployee } from '../../services/api/employee';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { CancelRounded } from '@mui/icons-material';
 
-export const AddEmployee = ({ departments, positions }) => {
+export const EditEmployee = ({ employee }) => {
   const router = useRouter();
 
   const [info, setInfo] = useState(undefined);
   const [errMessage, setErrMessage] = useState(undefined);
-  const [salary, setSalary] = useState(0);
+  const [salary, setSalary] = useState(employee.salary);
 
   const formik = useFormik({
     initialValues: {
-      positionId: '',
-      departmentId: '',
-      nik: '',
-      fullName: '',
-      address: '',
-      phoneNumber: '',
-      joinDate: new Date().toISOString(),
-      gender: '',
+      nik: employee.nik,
+      fullName: employee.fullName,
+      address: employee.address,
+      phoneNumber: employee.phoneNumber,
+      joinDate: employee.joinDate,
+      gender: employee.gender,
     },
     validationSchema: Yup.object({
-      positionId: Yup.number().required('Position is required'),
-      departmentId: Yup.number().required('Department is required'),
       nik: Yup.string().required('NIK is required'),
       fullName: Yup.string().required('Full Name is required'),
       address: Yup.string().required('Address is required'),
@@ -59,12 +55,20 @@ export const AddEmployee = ({ departments, positions }) => {
       joinDate: Yup.string().required(),
     }),
     onSubmit: async (values) => {
-      const newEmployee = { ...values };
-      Object.assign(newEmployee, {
-        salary: parseInt(salary.replace(/[^0-9\.]/gi, ''), 10),
+      let employeeSalary;
+
+      const updateEmployee = { ...values };
+      if (typeof salary === 'number') {
+        employeeSalary = salary;
+      } else {
+        employeeSalary = parseInt(salary.replace(/[^0-9\.]/gi, ''), 10);
+      }
+
+      Object.assign(updateEmployee, {
+        salary: employeeSalary,
       });
 
-      createNewEmployee(newEmployee)
+      editEmployee(employee.id, updateEmployee)
         .then((res) => {
           setInfo(res);
           setErrMessage(undefined);
@@ -88,6 +92,10 @@ export const AddEmployee = ({ departments, positions }) => {
       return;
     }
 
+    if (typeof salary === 'number') {
+      return;
+    }
+
     let tempSalary = salary.replace(/[^0-9\.]/gi, '');
     if (tempSalary.match(/\./g) > 1) {
       const [thousands] = tempSalary.split('.');
@@ -106,17 +114,10 @@ export const AddEmployee = ({ departments, positions }) => {
     setSalary(tempSalary);
   };
 
-  if (departments.error) {
+  if (employee.error) {
     return (
       <Typography align="center" variant="h4" style={{ color: 'red' }}>
-        error, {departments.error.message}
-      </Typography>
-    );
-  }
-  if (positions.error) {
-    return (
-      <Typography align="center" variant="h4" style={{ color: 'red' }}>
-        error, {positions.error.message}
+        error, {employee.error.message}
       </Typography>
     );
   }
@@ -124,7 +125,7 @@ export const AddEmployee = ({ departments, positions }) => {
   return (
     <form onSubmit={formik.handleSubmit}>
       <Card>
-        <CardHeader subheader="Fill out this form for add new employee" title="Add New Employee" />
+        <CardHeader subheader="Fill out this form for edit employee" title="Edit Employee" />
         <Divider />
         <CardContent>
           {info && (
@@ -140,56 +141,6 @@ export const AddEmployee = ({ departments, positions }) => {
           )}
           <Grid container spacing={3}>
             <Grid item lg={6} md={6} xs={12}>
-              <FormControl sx={{ marginTop: 1, marginBottom: 2 }} fullWidth variant="outlined">
-                <InputLabel id="select-department">Department</InputLabel>
-                <Select
-                  labelId="select-department"
-                  id="select-department"
-                  value={formik.values.departmentId}
-                  label="Department"
-                  onChange={formik.handleChange}
-                  name="departmentId"
-                >
-                  <MenuItem disabled key="" value="">
-                    --- Select Department ---
-                  </MenuItem>
-
-                  {departments.data.map((department) => (
-                    <MenuItem key={department.id} value={department.id}>
-                      {department.departmentName}
-                    </MenuItem>
-                  ))}
-                </Select>
-                {Boolean(formik.touched.departmentId && formik.errors.departmentId) && (
-                  <FormHelperText error>{formik.errors.departmentId}</FormHelperText>
-                )}
-              </FormControl>
-
-              <FormControl sx={{ marginTop: 1, marginBottom: 2 }} fullWidth variant="outlined">
-                <InputLabel id="select-position">Position</InputLabel>
-                <Select
-                  labelId="select-position"
-                  id="select-position"
-                  value={formik.values.positionId}
-                  label="Position"
-                  onChange={formik.handleChange}
-                  name="positionId"
-                >
-                  <MenuItem disabled key="" value="">
-                    --- Select Position ---
-                  </MenuItem>
-
-                  {positions.data.map((position) => (
-                    <MenuItem key={position.id} value={position.id}>
-                      {position.positionName}
-                    </MenuItem>
-                  ))}
-                </Select>
-                {Boolean(formik.touched.positionId && formik.errors.positionId) && (
-                  <FormHelperText error>{formik.errors.positionId}</FormHelperText>
-                )}
-              </FormControl>
-
               <FormControl sx={{ marginY: 2 }} fullWidth variant="outlined">
                 <InputLabel htmlFor="outlined-adornment-nik">
                   NIK (Employee Identification Number)
@@ -239,10 +190,8 @@ export const AddEmployee = ({ departments, positions }) => {
                   <FormHelperText error>{formik.errors.address}</FormHelperText>
                 )}
               </FormControl>
-            </Grid>
 
-            <Grid item lg={6} md={6} xs={12}>
-              <FormControl sx={{ marginTop: 1, marginBottom: 2 }} fullWidth variant="outlined">
+              <FormControl sx={{ marginY: 2 }} fullWidth variant="outlined">
                 <InputLabel id="select-gender">Gender</InputLabel>
                 <Select
                   labelId="select-gender"
@@ -266,8 +215,10 @@ export const AddEmployee = ({ departments, positions }) => {
                   <FormHelperText error>{formik.errors.gender}</FormHelperText>
                 )}
               </FormControl>
+            </Grid>
 
-              <FormControl sx={{ marginTop: 1, marginBottom: 2 }} fullWidth variant="outlined">
+            <Grid item lg={6} md={6} xs={12}>
+              <FormControl sx={{ marginY: 2 }} fullWidth variant="outlined">
                 <InputLabel htmlFor="outlined-adornment-phone-number">Phone Number</InputLabel>
                 <OutlinedInput
                   id="outlined-adornment-phone-number"
@@ -367,7 +318,7 @@ export const AddEmployee = ({ departments, positions }) => {
                   color="primary"
                   variant="contained"
                 >
-                  Submit
+                  Update
                 </Button>
               </Box>
             </Grid>

@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import {
   Box,
   Card,
-  Checkbox,
   Table,
   TableBody,
   TableCell,
@@ -14,7 +13,6 @@ import {
   Button,
   Typography,
 } from '@mui/material';
-import { formatDate } from '../../utils/date-converter';
 import { useRouter } from 'next/router';
 
 export const EmployeeListResults = ({ employees }) => {
@@ -173,6 +171,14 @@ export const EmployeeListResults = ({ employees }) => {
                         }}
                         variant="contained"
                         size="small"
+                        onClick={() => {
+                          router.push({
+                            pathname: '/employee/edit',
+                            query: {
+                              id: employee.id,
+                            },
+                          });
+                        }}
                       >
                         Update
                       </Button>
@@ -183,6 +189,14 @@ export const EmployeeListResults = ({ employees }) => {
                         }}
                         variant="contained"
                         size="small"
+                        onClick={() => {
+                          router.push({
+                            pathname: '/employee/details',
+                            query: {
+                              id: employee.id,
+                            },
+                          });
+                        }}
                       >
                         Detail
                       </Button>

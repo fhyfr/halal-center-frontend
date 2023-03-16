@@ -4,12 +4,23 @@ import { DashboardLayout } from '../../components/dashboard-layout';
 import { AddEmployee } from '../../components/employee/add-employee';
 import { parseCookies } from '../../lib/auth-cookies';
 import axios from 'axios';
+import { MutationEmployee } from '../../components/employee/mutation-employee';
 
 const { NEXT_PUBLIC_API } = process.env;
 
-export const getServerSideProps = async ({ req, res }) => {
+export const getServerSideProps = async ({ req, res, query }) => {
+  if (!query.id || query.id === null) {
+    return {
+      redirect: {
+        permanent: false,
+        destination: '/employee',
+      },
+      props: {},
+    };
+  }
+
   const data = parseCookies(req);
-  let departments, positions;
+  let departments, positions, employee;
 
   if (!data.user) {
     return {
@@ -39,23 +50,33 @@ export const getServerSideProps = async ({ req, res }) => {
       },
     });
 
+    const responseEmployee = await axios({
+      method: 'GET',
+      url: `${NEXT_PUBLIC_API}/employee/${query.id}`,
+      headers: {
+        Authorization: `Bearer ${user.accessToken}`,
+      },
+    });
+
     departments = responseDepartment.data;
     positions = responsePosition.data;
+    employee = responseEmployee.data;
   } catch (err) {
     departments = { error: { message: err.message } };
     positions = { error: { message: err.message } };
+    employee = { error: { message: err.message } };
   }
 
-  return { props: { departments, positions } };
+  return { props: { departments, positions, employee } };
 };
 
-const AddNew = (props) => {
-  const { departments, positions } = props;
+const Mutation = (props) => {
+  const { departments, positions, employee } = props;
 
   return (
     <>
       <Head>
-        <title>Add New Employee</title>
+        <title>Mutation Employee</title>
       </Head>
       <Box
         component="main"
@@ -64,12 +85,12 @@ const AddNew = (props) => {
           py: 8,
         }}
       >
-        <Container maxWidth="lg">
+        <Container maxWidth="sm">
           <Typography sx={{ mb: 3 }} variant="h4">
             Employee
           </Typography>
           <Box sx={{ pt: 3 }}>
-            <AddEmployee departments={departments} positions={positions} />
+            <MutationEmployee departments={departments} positions={positions} employee={employee} />
           </Box>
         </Container>
       </Box>
@@ -77,6 +98,6 @@ const AddNew = (props) => {
   );
 };
 
-AddNew.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
+Mutation.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
 
-export default AddNew;
+export default Mutation;

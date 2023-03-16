@@ -15,8 +15,11 @@ import {
   Typography,
 } from '@mui/material';
 import { formatDate } from '../../utils/date-converter';
+import { useRouter } from 'next/router';
 
 export const EmployeeListResults = ({ employees }) => {
+  const router = useRouter();
+
   const [selectedEmployeeIds, setSelectedEmployeeIds] = useState([]);
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(0);
@@ -152,6 +155,14 @@ export const EmployeeListResults = ({ employees }) => {
                         }}
                         variant="contained"
                         size="small"
+                        onClick={() => {
+                          router.push({
+                            pathname: '/employee/mutation',
+                            query: {
+                              id: employee.id,
+                            },
+                          });
+                        }}
                       >
                         Mutation
                       </Button>

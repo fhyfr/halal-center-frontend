@@ -17,3 +17,18 @@ export const createNewEmployee = async (newEmployee) => {
 
   return response.data.message;
 };
+
+export const mutationEmployee = async (employeeId, newEmployee) => {
+  const accessToken = getSession();
+
+  const response = await axios({
+    method: 'PUT',
+    url: `${NEXT_PUBLIC_API}/employee/mutation/${employeeId}`,
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+    data: newEmployee,
+  });
+
+  return response.data.message;
+};

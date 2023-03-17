@@ -47,3 +47,17 @@ export const editEmployee = async (employeeId, updateEmployee) => {
 
   return response.data.message;
 };
+
+export const deleteEmployee = async (employeeId) => {
+  const accessToken = getSession();
+
+  const response = await axios({
+    method: 'DELETE',
+    url: `${NEXT_PUBLIC_API}/employee/${employeeId}`,
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+
+  return response.data.message;
+};

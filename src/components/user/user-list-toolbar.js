@@ -89,7 +89,7 @@ export const UserListToolbar = ({ roles }) => {
                         </InputAdornment>
                       ),
                     }}
-                    placeholder="Search user"
+                    placeholder="Search username"
                     variant="outlined"
                     onChange={handleSearch}
                   />

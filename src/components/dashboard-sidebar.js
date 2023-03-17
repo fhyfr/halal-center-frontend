@@ -10,10 +10,10 @@ import { Users as UsersIcon } from '../icons/users';
 import { Logo } from './logo';
 import { NavItem } from './nav-item';
 import {
+  AccountCircle,
   Apartment,
-  Badge,
   Category,
-  People,
+  Groups,
   PermContactCalendar,
   School,
 } from '@mui/icons-material';
@@ -50,8 +50,13 @@ const items = [
     title: 'Positions',
   },
   {
+    href: '/employee',
+    icon: <Groups fontSize="small" />,
+    title: 'Employees',
+  },
+  {
     href: '/user/account',
-    icon: <People fontSize="small" />,
+    icon: <AccountCircle fontSize="small" />,
     title: 'Account',
   },
   {

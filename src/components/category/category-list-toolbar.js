@@ -79,7 +79,7 @@ export const CategoryListToolbar = (props) => {
                     </InputAdornment>
                   ),
                 }}
-                placeholder="Search category"
+                placeholder="Search category name"
                 variant="outlined"
                 onChange={handleSearch}
               />

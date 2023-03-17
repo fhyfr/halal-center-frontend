@@ -95,7 +95,7 @@ export const AddUser = ({ roles }) => {
             <InputLabel id="select-role">Role</InputLabel>
             <Select
               labelId="select-role"
-              id="demo-simple-select"
+              id="select-role"
               value={formik.values.roleId}
               label="Role"
               onChange={formik.handleChange}

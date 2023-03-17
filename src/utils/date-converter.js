@@ -8,3 +8,12 @@ export const formatDate = (dateString) => {
   };
   return new Date(dateString).toLocaleDateString('ID', options);
 };
+
+export const formatDateWithoutHourMinutes = (dateString) => {
+  const options = {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  };
+  return new Date(dateString).toLocaleDateString('ID', options);
+};

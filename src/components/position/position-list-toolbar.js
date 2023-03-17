@@ -79,7 +79,7 @@ export const PositionListToolbar = (props) => {
                     </InputAdornment>
                   ),
                 }}
-                placeholder="Search position"
+                placeholder="Search position name"
                 variant="outlined"
                 onChange={handleSearch}
               />

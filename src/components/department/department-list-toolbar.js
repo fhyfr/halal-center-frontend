@@ -79,7 +79,7 @@ export const DepartmentListToolbar = (props) => {
                     </InputAdornment>
                   ),
                 }}
-                placeholder="Search department"
+                placeholder="Search department name"
                 variant="outlined"
                 onChange={handleSearch}
               />

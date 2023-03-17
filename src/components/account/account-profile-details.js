@@ -12,13 +12,12 @@ import {
   FormControl,
   FormHelperText,
   Grid,
-  IconButton,
   InputLabel,
   OutlinedInput,
   Typography,
 } from '@mui/material';
 import useAuth from '../../hooks/use-auth';
-import { setIn, useFormik } from 'formik';
+import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import 'yup-phone';
 import { updateProfile } from '../../services/api/member';
@@ -62,7 +61,7 @@ export const AccountProfileDetails = (props) => {
       username: Yup.string().min(2).max(255).required('Username is required'),
       fullName: Yup.string().max(255).required('Full name is required'),
       address: Yup.string().max(255).required('Address is required'),
-      phoneNumber: Yup.string().phone('ID').required(),
+      phoneNumber: Yup.string().phone('ID').required('Phone Number is required'),
       facebook: Yup.string().url(),
       linkedin: Yup.string().url(),
       profilePicture: Yup.string().url(),

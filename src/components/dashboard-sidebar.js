@@ -2,10 +2,9 @@ import { useEffect } from 'react';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
-import { Box, Divider, Drawer, Typography, useMediaQuery } from '@mui/material';
+import { Box, Divider, Drawer, useMediaQuery } from '@mui/material';
 import { ChartBar as ChartBarIcon } from '../icons/chart-bar';
 import { Cog as CogIcon } from '../icons/cog';
-import { Selector as SelectorIcon } from '../icons/selector';
 import { Users as UsersIcon } from '../icons/users';
 import { Logo } from './logo';
 import { NavItem } from './nav-item';
@@ -13,7 +12,11 @@ import {
   AccountCircle,
   Apartment,
   Category,
+  FolderCopy,
   Groups,
+  LocalOffer,
+  Payment,
+  People,
   PermContactCalendar,
   School,
 } from '@mui/icons-material';
@@ -30,9 +33,24 @@ const items = [
     title: 'Users',
   },
   {
-    href: '/products',
+    href: '/course',
     icon: <School fontSize="small" />,
     title: 'Courses',
+  },
+  {
+    href: '#',
+    icon: <People fontSize="small" />,
+    title: 'Instructors',
+  },
+  {
+    href: '#',
+    icon: <Payment fontSize="small" />,
+    title: 'Payments',
+  },
+  {
+    href: '#',
+    icon: <LocalOffer fontSize="small" />,
+    title: 'Promotions',
   },
   {
     href: '/category',
@@ -58,6 +76,11 @@ const items = [
     href: '/user/account',
     icon: <AccountCircle fontSize="small" />,
     title: 'Account',
+  },
+  {
+    href: '#',
+    icon: <FolderCopy fontSize="small" />,
+    title: 'Report',
   },
   {
     href: '/auth/settings',
@@ -110,41 +133,11 @@ export const DashboardSidebar = (props) => {
               </a>
             </NextLink>
           </Box>
-          <Box sx={{ px: 2 }}>
-            <Box
-              sx={{
-                alignItems: 'center',
-                backgroundColor: 'rgba(255, 255, 255, 0.04)',
-                cursor: 'pointer',
-                display: 'flex',
-                justifyContent: 'space-between',
-                px: 3,
-                py: '11px',
-                borderRadius: 1,
-              }}
-            >
-              <div>
-                <Typography color="inherit" variant="subtitle1">
-                  Acme Inc
-                </Typography>
-                <Typography color="neutral.400" variant="body2">
-                  Your tier : Premium
-                </Typography>
-              </div>
-              <SelectorIcon
-                sx={{
-                  color: 'neutral.500',
-                  width: 14,
-                  height: 14,
-                }}
-              />
-            </Box>
-          </Box>
         </div>
         <Divider
           sx={{
             borderColor: '#2D3748',
-            my: 3,
+            marginBottom: 3,
           }}
         />
         <Box sx={{ flexGrow: 1 }}>

@@ -15,7 +15,7 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import Image from 'next/image';
-import logo from '../assets/images/logo_p3jph.jpg';
+import logo from '../assets/images/logo_p3jph.png';
 
 const drawerWidth = 240;
 const navItems = ['Home', 'About', 'Contact'];

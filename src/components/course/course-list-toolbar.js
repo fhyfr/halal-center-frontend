@@ -1,3 +1,4 @@
+import { Add } from '@mui/icons-material';
 import {
   Box,
   Button,
@@ -8,11 +9,9 @@ import {
   SvgIcon,
   Typography,
 } from '@mui/material';
-import { Download as DownloadIcon } from '../../icons/download';
 import { Search as SearchIcon } from '../../icons/search';
-import { Upload as UploadIcon } from '../../icons/upload';
 
-export const ProductListToolbar = (props) => (
+export const CourseListToolbar = (props) => (
   <Box {...props}>
     <Box
       sx={{
@@ -27,9 +26,19 @@ export const ProductListToolbar = (props) => (
         List Course
       </Typography>
       <Box sx={{ m: 1 }}>
-        {/* jika role admin */}
-        <Button color="primary" variant="contained">
-          Add Course
+        <Button
+          startIcon={
+            <SvgIcon fontSize="small">
+              <Add />
+            </SvgIcon>
+          }
+          color="primary"
+          variant="contained"
+          onClick={() => {
+            handleRedirectOnClick(router, '/category/add');
+          }}
+        >
+          Add New
         </Button>
       </Box>
     </Box>

@@ -19,7 +19,7 @@ import EventIcon from '@mui/icons-material/Event';
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import LocalOfferIcon from '@mui/icons-material/LocalOffer';
 
-export const ProductCard = ({ product, ...rest }) => (
+export const CourseCard = ({ product, ...rest }) => (
   <Card
     sx={{
       display: 'flex',
@@ -132,6 +132,6 @@ export const ProductCard = ({ product, ...rest }) => (
   </Card>
 );
 
-ProductCard.propTypes = {
+CourseCard.propTypes = {
   product: PropTypes.object.isRequired,
 };

@@ -63,9 +63,22 @@ export const AddCourse = ({ categories }) => {
       endDate: Yup.string().required(),
     }),
     onSubmit: async (values) => {
+      let coursePrice;
+
+      if (typeof price === 'number') {
+        coursePrice = price;
+      } else {
+        coursePrice = parseInt(price.replace(/[^0-9\.]/gi, ''), 10);
+      }
+
       Object.assign(values, {
         banner,
-        price,
+        price: coursePrice,
+      });
+
+      Object.assign(values, {
+        banner,
+        price: coursePrice,
       });
 
       createNewCourse(values)
@@ -115,13 +128,7 @@ export const AddCourse = ({ categories }) => {
     uploadImage(event.target.files[0])
       .then((res) => {
         setInfo(res.message);
-
-        console.log(res.data.imagePreview);
-
         setBanner(res.data.imagePreview);
-
-        console.log(banner);
-
         setErrMessage(undefined);
       })
       .catch((err) => {

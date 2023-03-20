@@ -64,7 +64,6 @@ export const AccountProfileDetails = (props) => {
       phoneNumber: Yup.string().phone('ID').required('Phone Number is required'),
       facebook: Yup.string().url(),
       linkedin: Yup.string().url(),
-      profilePicture: Yup.string().url(),
     }),
     onSubmit: async (values) => {
       if (profilePictureUrl) {
@@ -115,9 +114,9 @@ export const AccountProfileDetails = (props) => {
               >
                 <Avatar
                   src={
-                    user && user.profilePicture !== null
-                      ? user.profilePicture
-                      : '/static/images/avatars/avatar_1.png'
+                    profilePictureUrl && user && profilePictureUrl !== null
+                      ? profilePictureUrl
+                      : user?.profilePicture
                   }
                   sx={{
                     height: 64,

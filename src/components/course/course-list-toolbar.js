@@ -1,3 +1,4 @@
+import { Add } from '@mui/icons-material';
 import {
   Box,
   Button,
@@ -7,23 +8,23 @@ import {
   InputAdornment,
   SvgIcon,
   Typography,
+  Grid,
   FormControl,
   InputLabel,
   NativeSelect,
-  Grid,
 } from '@mui/material';
-import { Search as SearchIcon } from '../../icons/search';
-import { Add } from '@mui/icons-material';
-import { handleRedirectOnClick } from '../../utils/handle-event-button';
 import { useRouter } from 'next/router';
+import { Search as SearchIcon } from '../../icons/search';
+import { handleRedirectOnClick } from '../../utils/handle-event-button';
 
-export const UserListToolbar = ({ roles }) => {
+export const CourseListToolbar = ({ categories }) => {
   const router = useRouter();
 
-  const handleFilterRole = (event) => {
+  const handleFilterCategory = (event) => {
     const path = router.pathname;
     const query = router.query;
-    query.roleId = event.target.value;
+    query.categoryId = event.target.value;
+
     router.push({
       pathname: path,
       query: query,
@@ -41,14 +42,6 @@ export const UserListToolbar = ({ roles }) => {
     });
   };
 
-  if (roles.error) {
-    return (
-      <Typography align="center" variant="h4" style={{ color: 'red' }}>
-        error, {roles.error.message}
-      </Typography>
-    );
-  }
-
   return (
     <Box>
       <Box
@@ -61,7 +54,7 @@ export const UserListToolbar = ({ roles }) => {
         }}
       >
         <Typography sx={{ m: 1 }} variant="h4">
-          Users
+          List Course
         </Typography>
         <Box sx={{ m: 1 }}>
           <Button
@@ -73,7 +66,7 @@ export const UserListToolbar = ({ roles }) => {
             color="primary"
             variant="contained"
             onClick={() => {
-              handleRedirectOnClick(router, '/user/add');
+              handleRedirectOnClick(router, '/course/add');
             }}
           >
             Add New
@@ -97,7 +90,7 @@ export const UserListToolbar = ({ roles }) => {
                         </InputAdornment>
                       ),
                     }}
-                    placeholder="Search username"
+                    placeholder="Search course name"
                     variant="outlined"
                     onChange={handleSearch}
                   />
@@ -107,27 +100,23 @@ export const UserListToolbar = ({ roles }) => {
               <Grid item xs={6} md={4}>
                 <Box sx={{ maxWidth: 200 }}>
                   <FormControl fullWidth>
-                    <InputLabel variant="standard" htmlFor="select-role">
-                      Role
+                    <InputLabel variant="standard" htmlFor="select-category">
+                      Category
                     </InputLabel>
                     <NativeSelect
                       defaultValue=""
                       inputProps={{
                         name: 'role',
-                        id: 'select-role',
+                        id: 'select-category',
                       }}
-                      onChange={handleFilterRole}
+                      onChange={handleFilterCategory}
                     >
-                      <option disabled> -- Select Role -- </option>
-                      {roles.data.map((role) =>
-                        role.roleName === 'SUPER_ADMIN' ? (
-                          ''
-                        ) : (
-                          <option key={role.id} value={role.id}>
-                            {role.roleName}
-                          </option>
-                        ),
-                      )}
+                      <option disabled> -- Select Category -- </option>
+                      {categories.data.map((category) => (
+                        <option key={category.id} value={category.id}>
+                          {category.categoryName}
+                        </option>
+                      ))}
                     </NativeSelect>
                   </FormControl>
                 </Box>

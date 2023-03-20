@@ -23,7 +23,7 @@ import { Visibility, VisibilityOff } from '@mui/icons-material';
 import DrawerAppBar from '../../components/navbar';
 import Footer from '../../components/footer';
 import Image from 'next/image';
-import logo from '../../assets/images/logo_p3jph.jpg';
+import logo from '../../assets/images/logo_p3jph.png';
 import useAuth from '../../hooks/use-auth';
 
 const Login = () => {
@@ -78,11 +78,11 @@ const Login = () => {
         }}
       >
         <Container>
-          <Grid container spacing={5} sx={{ marginTop: '60px' }}>
+          <Grid container spacing={5}>
             <Grid item xs={6}>
-              <Image width="500px" height="500px" layout="responsive" src={logo} priority="true" />
+              <Image width="200px" height="200px" layout="responsive" src={logo} priority="true" />
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={6} sx={{ marginTop: 13 }}>
               <form onSubmit={formik.handleSubmit}>
                 <Box sx={{ my: 3 }}>
                   <Typography color="textPrimary" variant="h4">

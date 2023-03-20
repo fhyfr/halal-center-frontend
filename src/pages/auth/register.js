@@ -21,7 +21,7 @@ import { Visibility, VisibilityOff } from '@mui/icons-material';
 import DrawerAppBar from '../../components/navbar';
 import Footer from '../../components/footer';
 import { useRouter } from 'next/router';
-import logo from '../../assets/images/logo_p3jph.jpg';
+import logo from '../../assets/images/logo_p3jph.png';
 import Image from 'next/image';
 import useAuth from '../../hooks/use-auth';
 import { useState } from 'react';
@@ -88,7 +88,7 @@ const Register = () => {
             <Grid item xs={6}>
               <Image width="500px" height="500px" layout="responsive" src={logo} priority="true" />
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={6} sx={{ marginTop: 5 }}>
               <Box
                 component="main"
                 sx={{

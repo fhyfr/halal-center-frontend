@@ -25,8 +25,7 @@ import 'yup-phone';
 import { useRouter } from 'next/router';
 import { handleRedirectOnClick } from '../../utils/handle-event-button';
 import { createNewEmployee } from '../../services/api/employee';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { CancelRounded } from '@mui/icons-material';
 
@@ -287,6 +286,7 @@ export const AddEmployee = ({ departments, positions }) => {
                 <TextField
                   id="salary"
                   name="salary"
+                  label="Salary"
                   onChange={handleOnChangeSalary}
                   onBlur={handleOnBlurSalary}
                   value={salary}

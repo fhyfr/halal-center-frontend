@@ -46,3 +46,17 @@ export const deleteCourse = async (courseId) => {
 
   return response.data.message;
 };
+
+export const registerCourse = async (courseId) => {
+  const accessToken = getSession();
+
+  const response = await axios({
+    method: 'POST',
+    url: `${NEXT_PUBLIC_API}/course/register/${courseId}`,
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+
+  return response.data.message;
+};

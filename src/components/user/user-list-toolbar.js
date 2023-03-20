@@ -41,6 +41,14 @@ export const UserListToolbar = ({ roles }) => {
     });
   };
 
+  if (roles.error) {
+    return (
+      <Typography align="center" variant="h4" style={{ color: 'red' }}>
+        error, {roles.error.message}
+      </Typography>
+    );
+  }
+
   return (
     <Box>
       <Box

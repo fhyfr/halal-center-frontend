@@ -7,6 +7,7 @@ import { parseCookies } from '../../lib/auth-cookies';
 import axios from 'axios';
 import { useState } from 'react';
 import { useRouter } from 'next/router';
+import useAuth from '../../hooks/use-auth';
 
 const { NEXT_PUBLIC_API } = process.env;
 
@@ -76,7 +77,9 @@ export const getServerSideProps = async ({ req, res, query }) => {
 
 const Course = (props) => {
   const { courses, categories } = props;
+
   const router = useRouter();
+  const { user } = useAuth();
 
   const [page, setPage] = useState(1);
 
@@ -111,7 +114,7 @@ const Course = (props) => {
             <Grid container spacing={3}>
               {courses.data.map((course) => (
                 <Grid item key={course.id} lg={4} md={6} xs={12}>
-                  <CourseCard course={course} />
+                  <CourseCard user={user} course={course} />
                 </Grid>
               ))}
             </Grid>

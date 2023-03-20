@@ -8,6 +8,7 @@ import {
   Typography,
   CardMedia,
   Button,
+  Tooltip,
 } from '@mui/material';
 import SignalCellularAltIcon from '@mui/icons-material/SignalCellularAlt';
 import EventIcon from '@mui/icons-material/Event';
@@ -17,10 +18,14 @@ import { useRouter } from 'next/router';
 import { formatDateWithoutHourMinutes } from '../../utils/date-converter';
 import { formatRupiahCurrency } from '../../utils/currency-converter';
 import { Category } from '@mui/icons-material';
-import { deleteCourse } from '../../services/api/course';
+import { deleteCourse, registerCourse } from '../../services/api/course';
 
-export const CourseCard = ({ course }) => {
+export const CourseCard = ({ user, course }) => {
   const router = useRouter();
+
+  if (!user || user === null) {
+    router.push('/auth/login');
+  }
 
   const quota = course.quota - course.totalRegistered;
 
@@ -47,6 +52,31 @@ export const CourseCard = ({ course }) => {
         });
     }
     return;
+  };
+
+  const handleRegisterCourse = (courseId, user) => {
+    if (
+      !user.phoneNumber ||
+      user.phoneNumber === null ||
+      !user.address ||
+      user.address === null ||
+      !user.profilePicture ||
+      user.profilePicture === null
+    ) {
+      alert('please complete your profile before register to this course!');
+
+      setTimeout(() => {
+        router.push('/user/account');
+      }, 1000);
+    }
+
+    registerCourse(courseId)
+      .then((res) => {
+        alert(res);
+      })
+      .catch((err) => {
+        alert(err.response.data?.message);
+      });
   };
 
   return (
@@ -126,46 +156,68 @@ export const CourseCard = ({ course }) => {
         <Typography align="left" color="textPrimary" variant="body1">
           {course.descriptions}
         </Typography>
-        <Box
-          sx={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            pt: 2,
-          }}
-        >
-          {/* jika role admin */}
-          <Button
-            size="big"
-            color="error"
-            variant="contained"
-            onClick={() => {
-              handleDeleteCourse(course);
+        {user && user.roleId === 3 ? (
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              mt: 4,
             }}
           >
-            Delete Course
-          </Button>
-
-          <Button
-            size="big"
-            color="secondary"
-            variant="contained"
-            onClick={() => {
-              router.push({
-                pathname: '/course/edit',
-                query: {
-                  id: course.id,
-                },
-              });
+            <Tooltip title={new Date(course.endDate) < new Date() ? 'course is expired' : ''}>
+              <span>
+                <Button
+                  size="medium"
+                  variant="contained"
+                  onClick={() => {
+                    handleRegisterCourse(course.id, user);
+                  }}
+                  disabled={new Date(course.endDate) < new Date()}
+                >
+                  {/* 
+                    TODO: complete this feature for register course by member
+                  */}
+                  Register Course
+                </Button>
+              </span>
+            </Tooltip>
+          </Box>
+        ) : (
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'space-around',
+              mt: 4,
             }}
           >
-            Update Course
-          </Button>
+            <Button
+              size="small"
+              color="error"
+              variant="contained"
+              onClick={() => {
+                handleDeleteCourse(course);
+              }}
+            >
+              Delete Course
+            </Button>
 
-          {/* jika role customer */}
-          <Button size="big" variant="contained">
-            Ikuti Course
-          </Button>
-        </Box>
+            <Button
+              size="small"
+              color="secondary"
+              variant="contained"
+              onClick={() => {
+                router.push({
+                  pathname: '/course/edit',
+                  query: {
+                    id: course.id,
+                  },
+                });
+              }}
+            >
+              Update Course
+            </Button>
+          </Box>
+        )}
       </CardContent>
       <Box sx={{ flexGrow: 1 }} />
       <Divider />

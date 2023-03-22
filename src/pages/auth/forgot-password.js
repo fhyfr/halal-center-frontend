@@ -35,7 +35,7 @@ const ForgotPassword = () => {
     validationSchema: Yup.object({
       email: Yup.string().email('Must be a valid email').max(255).required('Email is required'),
     }),
-    onSubmit: async (values) => {
+    onSubmit: (values, action) => {
       forgotPassword(values.email)
         .then((res) => {
           setInfo(res);
@@ -51,6 +51,7 @@ const ForgotPassword = () => {
         .catch((err) => {
           setErrMessage(err.response.data?.message);
           setInfo(undefined);
+          action.setSubmitting(false);
         });
     },
   });

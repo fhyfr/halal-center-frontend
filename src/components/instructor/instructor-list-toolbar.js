@@ -105,7 +105,7 @@ export const InstructorListToolbar = ({ courses }) => {
                 </Box>
               </Grid>
               <Grid item xs={6} md={6}>
-                <Box sx={{ maxWidth: 200 }}>
+                <Box sx={{ maxWidth: 500 }}>
                   <FormControl fullWidth>
                     <InputLabel variant="standard" htmlFor="select-course">
                       Course
@@ -113,7 +113,7 @@ export const InstructorListToolbar = ({ courses }) => {
                     <NativeSelect
                       defaultValue=""
                       inputProps={{
-                        name: 'role',
+                        name: 'course',
                         id: 'select-course',
                       }}
                       onChange={handleFilterCourse}

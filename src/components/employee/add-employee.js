@@ -57,7 +57,7 @@ export const AddEmployee = ({ departments, positions }) => {
       gender: Yup.string().required('Gender is required'),
       joinDate: Yup.string().required(),
     }),
-    onSubmit: async (values) => {
+    onSubmit: (values, action) => {
       const newEmployee = { ...values };
       Object.assign(newEmployee, {
         salary: parseInt(salary.replace(/[^0-9\.]/gi, ''), 10),
@@ -67,6 +67,7 @@ export const AddEmployee = ({ departments, positions }) => {
         .then((res) => {
           setInfo(res);
           setErrMessage(undefined);
+
           setTimeout(() => {
             router.push('/employee');
           }, 2000);
@@ -74,6 +75,7 @@ export const AddEmployee = ({ departments, positions }) => {
         .catch((err) => {
           setErrMessage(err.response.data?.message);
           setInfo(undefined);
+          action.setSubmitting(false);
         });
     },
   });

@@ -52,11 +52,12 @@ const Register = () => {
       email: Yup.string().email('Must be a valid email').max(255).required('Email is required'),
       password: Yup.string().min(8).max(255).required('Password is required'),
     }),
-    onSubmit: async (values) => {
+    onSubmit: (values, action) => {
       register(values.username, values.email, values.password, values.fullName)
         .then((res) => {
           setInfo(res);
           setErrMessage(undefined);
+
           setTimeout(() => {
             router.push('/auth/login');
           }, 3000);
@@ -64,6 +65,7 @@ const Register = () => {
         .catch((err) => {
           setErrMessage(err.message);
           setInfo(undefined);
+          action.setSubmitting(false);
         });
     },
   });

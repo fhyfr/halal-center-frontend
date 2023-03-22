@@ -31,11 +31,12 @@ export const EditDepartment = ({ department }) => {
     validationSchema: Yup.object({
       departmentName: Yup.string().required('Department Name is required'),
     }),
-    onSubmit: async (values) => {
+    onSubmit: (values, action) => {
       updateDepartment(department.departmentId, values.departmentName)
         .then((res) => {
           setInfo(res);
           setErrMessage(undefined);
+
           setTimeout(() => {
             router.push('/department');
           }, 2000);
@@ -43,6 +44,7 @@ export const EditDepartment = ({ department }) => {
         .catch((err) => {
           setErrMessage(err.response.data?.message);
           setInfo(undefined);
+          action.setSubmitting(false);
         });
     },
   });

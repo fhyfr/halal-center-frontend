@@ -65,7 +65,7 @@ export const AccountProfileDetails = (props) => {
       facebook: Yup.string().url(),
       linkedin: Yup.string().url(),
     }),
-    onSubmit: async (values) => {
+    onSubmit: (values, action) => {
       if (profilePictureUrl) {
         values.profilePicture = profilePictureUrl;
       }
@@ -82,6 +82,7 @@ export const AccountProfileDetails = (props) => {
         .catch((err) => {
           setErrMessage(err.response.data?.message);
           setInfo(undefined);
+          action.setSubmitting(false);
         });
     },
   });

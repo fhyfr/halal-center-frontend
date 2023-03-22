@@ -42,8 +42,8 @@ export const InstructorListResults = ({ instructors }) => {
             <TableHead>
               <TableRow>
                 <TableCell align="center">ID</TableCell>
-                <TableCell>Email</TableCell>
                 <TableCell>Full Name</TableCell>
+                <TableCell>Email</TableCell>
                 <TableCell>Phone Number</TableCell>
                 <TableCell align="left">Last Updated</TableCell>
                 <TableCell>
@@ -69,13 +69,13 @@ export const InstructorListResults = ({ instructors }) => {
 
                   <TableCell>
                     <Typography color="textPrimary" variant="body2">
-                      {instructor.email}
+                      {instructor.fullName}
                     </Typography>
                   </TableCell>
 
                   <TableCell>
                     <Typography color="textPrimary" variant="body2">
-                      {instructor.fullName}
+                      {instructor.email}
                     </Typography>
                   </TableCell>
 
@@ -100,6 +100,7 @@ export const InstructorListResults = ({ instructors }) => {
                       }}
                     >
                       <Button
+                        size="small"
                         color="secondary"
                         sx={{
                           mr: 2,
@@ -108,7 +109,7 @@ export const InstructorListResults = ({ instructors }) => {
                       >
                         Update
                       </Button>
-                      <Button color="error" variant="contained">
+                      <Button size="small" color="error" variant="contained">
                         Delete
                       </Button>
                     </Box>

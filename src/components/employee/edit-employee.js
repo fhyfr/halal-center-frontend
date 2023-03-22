@@ -54,7 +54,7 @@ export const EditEmployee = ({ employee }) => {
       gender: Yup.string().required('Gender is required'),
       joinDate: Yup.string().required(),
     }),
-    onSubmit: async (values) => {
+    onSubmit: (values, action) => {
       let employeeSalary;
 
       const updateEmployee = { ...values };
@@ -72,6 +72,7 @@ export const EditEmployee = ({ employee }) => {
         .then((res) => {
           setInfo(res);
           setErrMessage(undefined);
+
           setTimeout(() => {
             router.push('/employee');
           }, 2000);
@@ -79,6 +80,7 @@ export const EditEmployee = ({ employee }) => {
         .catch((err) => {
           setErrMessage(err.response.data?.message);
           setInfo(undefined);
+          action.setSubmitting(false);
         });
     },
   });

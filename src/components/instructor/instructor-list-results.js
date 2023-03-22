@@ -13,17 +13,47 @@ import {
   Typography,
   Button,
 } from '@mui/material';
+import { useRouter } from 'next/router';
 
 export const InstructorListResults = ({ instructors }) => {
+  const router = useRouter();
+
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(0);
 
   const handleLimitChange = (event) => {
+    const path = router.pathname;
+    const query = router.query;
+    query.limit = event.target.value;
+
     setLimit(event.target.value);
+
+    router.push({
+      pathname: path,
+      query: query,
+    });
   };
 
   const handlePageChange = (event, newPage) => {
+    const path = router.pathname;
+    const query = router.query;
+    query.page = newPage + 1;
+
     setPage(newPage);
+
+    router.push({
+      pathname: path,
+      query: query,
+    });
+  };
+
+  const handleDetailInstructor = (instructorId) => {
+    router.push({
+      pathname: '/instructor/details',
+      query: {
+        instructorId,
+      },
+    });
   };
 
   if (instructors.error) {
@@ -99,6 +129,18 @@ export const InstructorListResults = ({ instructors }) => {
                         mr: 2,
                       }}
                     >
+                      <Button
+                        color="primary"
+                        size="small"
+                        sx={{
+                          mr: 2,
+                        }}
+                        variant="contained"
+                        onClick={() => handleDetailInstructor(instructor.id)}
+                      >
+                        Detail
+                      </Button>
+
                       <Button
                         size="small"
                         color="secondary"

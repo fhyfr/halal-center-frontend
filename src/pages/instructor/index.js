@@ -78,7 +78,7 @@ const Instructor = (props) => {
   return (
     <>
       <Head>
-        <title>Instructor</title>
+        <title>Instructors | Halal Center</title>
       </Head>
       <Box
         component="main"

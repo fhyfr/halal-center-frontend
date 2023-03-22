@@ -38,7 +38,7 @@ const items = [
     title: 'Courses',
   },
   {
-    href: '#',
+    href: '/instructor',
     icon: <People fontSize="small" />,
     title: 'Instructors',
   },

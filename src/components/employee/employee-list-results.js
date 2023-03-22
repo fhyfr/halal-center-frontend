@@ -98,9 +98,9 @@ export const EmployeeListResults = ({ employees }) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {employees.data.slice(0, limit).map((employee) => (
+              {employees.data?.slice(0, limit).map((employee) => (
                 <TableRow hover key={employee.id}>
-                  <TableCell>
+                  <TableCell align="center">
                     <Typography color="textPrimary" variant="body2">
                       {employee.id}
                     </Typography>

@@ -137,6 +137,7 @@ export const AddEmployee = ({ departments, positions }) => {
               {errMessage}
             </Alert>
           )}
+
           <Grid container spacing={3}>
             <Grid item lg={6} md={6} xs={12}>
               <FormControl sx={{ marginTop: 1, marginBottom: 2 }} fullWidth variant="outlined">

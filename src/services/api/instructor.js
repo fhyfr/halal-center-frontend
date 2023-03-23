@@ -17,3 +17,32 @@ export const createNewInstructor = async (newInstructor) => {
 
   return response.data.message;
 };
+
+export const editInstructor = async (instructorId, updateInstructor) => {
+  const accessToken = getSession();
+
+  const response = await axios({
+    method: 'PUT',
+    url: `${NEXT_PUBLIC_API}/instructor/${instructorId}`,
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+    data: updateInstructor,
+  });
+
+  return response.data.message;
+};
+
+export const deleteInstructor = async (instructorId) => {
+  const accessToken = getSession();
+
+  const response = await axios({
+    method: 'DELETE',
+    url: `${NEXT_PUBLIC_API}/instructor/${instructorId}`,
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+
+  return response.data.message;
+};

@@ -14,6 +14,7 @@ import {
   Button,
 } from '@mui/material';
 import { useRouter } from 'next/router';
+import { deleteInstructor } from '../../services/api/instructor';
 
 export const InstructorListResults = ({ instructors }) => {
   const router = useRouter();
@@ -54,6 +55,21 @@ export const InstructorListResults = ({ instructors }) => {
         instructorId,
       },
     });
+  };
+
+  const handleDeleteInstructor = (instructorId) => {
+    const confirmation = confirm('Are you sure want to delete this instructor?');
+    if (confirmation) {
+      deleteInstructor(instructorId)
+        .then((res) => {
+          alert(res);
+          router.reload();
+        })
+        .catch((err) => {
+          alert(err.response.data?.message);
+        });
+    }
+    return;
   };
 
   if (instructors.error) {
@@ -148,10 +164,25 @@ export const InstructorListResults = ({ instructors }) => {
                           mr: 2,
                         }}
                         variant="contained"
+                        onClick={() => {
+                          router.push({
+                            pathname: '/instructor/edit',
+                            query: {
+                              id: instructor.id,
+                            },
+                          });
+                        }}
                       >
                         Update
                       </Button>
-                      <Button size="small" color="error" variant="contained">
+                      <Button
+                        size="small"
+                        color="error"
+                        variant="contained"
+                        onClick={() => {
+                          handleDeleteInstructor(instructor.id);
+                        }}
+                      >
                         Delete
                       </Button>
                     </Box>

@@ -48,11 +48,6 @@ const items = [
     title: 'Payments',
   },
   {
-    href: '#',
-    icon: <LocalOffer fontSize="small" />,
-    title: 'Promotions',
-  },
-  {
     href: '/category',
     icon: <Category fontSize="small" />,
     title: 'Categories',

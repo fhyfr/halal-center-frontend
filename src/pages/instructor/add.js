@@ -1,26 +1,15 @@
 import Head from 'next/head';
 import { Box, Container, Typography } from '@mui/material';
 import { DashboardLayout } from '../../components/dashboard-layout';
+import { AddInstructor } from '../../components/instructor/add-instructor';
 import { parseCookies } from '../../lib/auth-cookies';
 import axios from 'axios';
-import { EditEmployee } from '../../components/employee/edit-employee';
 
 const { NEXT_PUBLIC_API } = process.env;
 
-export const getServerSideProps = async ({ req, res, query }) => {
-  const { id } = query;
-  if (!id || id === null) {
-    return {
-      redirect: {
-        permanent: false,
-        destination: '/employee',
-      },
-      props: {},
-    };
-  }
-
+export const getServerSideProps = async ({ req, res }) => {
   const data = parseCookies(req);
-  let employee;
+  let courses;
 
   if (!data.user) {
     return {
@@ -36,30 +25,27 @@ export const getServerSideProps = async ({ req, res, query }) => {
   try {
     const response = await axios({
       method: 'GET',
-      url: `${NEXT_PUBLIC_API}/employee/${id}`,
+      url: `${NEXT_PUBLIC_API}/course?page=1&size=200`,
       headers: {
         Authorization: `Bearer ${user.accessToken}`,
       },
     });
-    if (response.status !== 200) {
-      throw new Error('failed to get data employee');
-    }
 
-    employee = response.data;
+    courses = response.data;
   } catch (err) {
-    employee = { error: { message: err.message } };
+    courses = { error: { message: err.message } };
   }
 
-  return { props: { employee } };
+  return { props: { courses } };
 };
 
-const Edit = (props) => {
-  const { employee } = props;
+const AddNew = (props) => {
+  const { courses } = props;
 
   return (
     <>
       <Head>
-        <title>Edit Employee</title>
+        <title>Add New Instructor</title>
       </Head>
       <Box
         component="main"
@@ -70,10 +56,10 @@ const Edit = (props) => {
       >
         <Container maxWidth="lg">
           <Typography sx={{ mb: 3 }} variant="h4">
-            Employee
+            Add New Instructor
           </Typography>
           <Box sx={{ pt: 3 }}>
-            <EditEmployee employee={employee} />
+            <AddInstructor courses={courses} />
           </Box>
         </Container>
       </Box>
@@ -81,6 +67,6 @@ const Edit = (props) => {
   );
 };
 
-Edit.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
+AddNew.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
 
-export default Edit;
+export default AddNew;

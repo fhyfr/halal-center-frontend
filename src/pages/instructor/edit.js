@@ -3,7 +3,7 @@ import { Box, Container, Typography } from '@mui/material';
 import { DashboardLayout } from '../../components/dashboard-layout';
 import { parseCookies } from '../../lib/auth-cookies';
 import axios from 'axios';
-import { EditEmployee } from '../../components/employee/edit-employee';
+import { EditInstructor } from '../../components/instructor/edit-instructor';
 
 const { NEXT_PUBLIC_API } = process.env;
 
@@ -13,14 +13,14 @@ export const getServerSideProps = async ({ req, res, query }) => {
     return {
       redirect: {
         permanent: false,
-        destination: '/employee',
+        destination: '/instructor',
       },
       props: {},
     };
   }
 
   const data = parseCookies(req);
-  let employee;
+  let instructor, courses;
 
   if (!data.user) {
     return {
@@ -36,30 +36,40 @@ export const getServerSideProps = async ({ req, res, query }) => {
   try {
     const response = await axios({
       method: 'GET',
-      url: `${NEXT_PUBLIC_API}/employee/${id}`,
+      url: `${NEXT_PUBLIC_API}/instructor/${id}`,
       headers: {
         Authorization: `Bearer ${user.accessToken}`,
       },
     });
     if (response.status !== 200) {
-      throw new Error('failed to get data employee');
+      throw new Error('failed to get data instructor');
     }
 
-    employee = response.data;
+    const responseCourse = await axios({
+      method: 'GET',
+      url: `${NEXT_PUBLIC_API}/course?page=1&size=200`,
+      headers: {
+        Authorization: `Bearer ${user.accessToken}`,
+      },
+    });
+
+    instructor = response.data;
+    courses = responseCourse.data;
   } catch (err) {
-    employee = { error: { message: err.message } };
+    instructor = { error: { message: err.message } };
+    courses = { error: { message: err.message } };
   }
 
-  return { props: { employee } };
+  return { props: { instructor, courses } };
 };
 
 const Edit = (props) => {
-  const { employee } = props;
+  const { instructor, courses } = props;
 
   return (
     <>
       <Head>
-        <title>Edit Employee</title>
+        <title>Edit Instructor</title>
       </Head>
       <Box
         component="main"
@@ -70,10 +80,10 @@ const Edit = (props) => {
       >
         <Container maxWidth="lg">
           <Typography sx={{ mb: 3 }} variant="h4">
-            Employee
+            Instructor
           </Typography>
           <Box sx={{ pt: 3 }}>
-            <EditEmployee employee={employee} />
+            <EditInstructor instructor={instructor} courses={courses} />
           </Box>
         </Container>
       </Box>

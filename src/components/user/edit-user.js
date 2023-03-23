@@ -38,7 +38,7 @@ export const EditUser = ({ user, roles }) => {
       username: Yup.string().min(2).max(255).required('Username is required'),
       email: Yup.string().email('Must be a valid email').max(255).required('Email is required'),
     }),
-    onSubmit: async (values) => {
+    onSubmit: (values, action) => {
       updateUser(user.id, values)
         .then((res) => {
           setInfo(res);
@@ -50,6 +50,7 @@ export const EditUser = ({ user, roles }) => {
         .catch((err) => {
           setErrMessage(err.response.data?.message);
           setInfo(undefined);
+          action.setSubmitting(false);
         });
     },
   });

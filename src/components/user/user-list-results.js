@@ -115,7 +115,7 @@ export const UserListResults = ({ users }) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {users.data.slice(0, limit).map((user) =>
+              {users?.data.slice(0, limit).map((user) =>
                 user.role.roleName === 'SUPER_ADMIN' ? (
                   ''
                 ) : (

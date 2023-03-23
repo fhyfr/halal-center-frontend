@@ -51,13 +51,14 @@ const Login = () => {
       email: Yup.string().email('Must be a valid email').max(255).required('Email is required'),
       password: Yup.string().max(255).required('Password is required'),
     }),
-    onSubmit: async (values) => {
+    onSubmit: (values, action) => {
       login(values.email, values.password)
         .then(() => {
           router.push('/');
         })
         .catch((err) => {
           setErrMessage(err.message);
+          action.setSubmitting(false);
         });
     },
   });

@@ -36,11 +36,12 @@ export const MutationEmployee = ({ departments, positions, employee }) => {
       positionId: Yup.number().required('Position is required'),
       departmentId: Yup.number().required('Department is required'),
     }),
-    onSubmit: async (values) => {
+    onSubmit: (values, action) => {
       mutationEmployee(employee.id, values)
         .then((res) => {
           setInfo(res);
           setErrMessage(undefined);
+
           setTimeout(() => {
             router.push('/employee');
           }, 2000);
@@ -48,6 +49,7 @@ export const MutationEmployee = ({ departments, positions, employee }) => {
         .catch((err) => {
           setErrMessage(err.response.data?.message);
           setInfo(undefined);
+          action.setSubmitting(false);
         });
     },
   });

@@ -62,7 +62,7 @@ export const AddCourse = ({ categories }) => {
       startDate: Yup.string().required(),
       endDate: Yup.string().required(),
     }),
-    onSubmit: async (values) => {
+    onSubmit: (values, action) => {
       let coursePrice;
 
       if (typeof price === 'number') {
@@ -93,6 +93,7 @@ export const AddCourse = ({ categories }) => {
         .catch((err) => {
           setErrMessage(err.response.data?.message);
           setInfo(undefined);
+          action.setSubmitting(false);
         });
     },
   });

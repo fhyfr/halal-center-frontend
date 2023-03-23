@@ -54,7 +54,7 @@ export const ResetPasswordUser = () => {
         'New password must match',
       ),
     }),
-    onSubmit: async (values) => {
+    onSubmit: (values, action) => {
       resetPasswordUser(query.userId, values.newPassword, values.newPasswordConfirmation)
         .then((res) => {
           setInfo(res);
@@ -67,6 +67,7 @@ export const ResetPasswordUser = () => {
         .catch((err) => {
           setErrMessage(err.response.data.message);
           setInfo(undefined);
+          action.setSubmitting(false);
         });
     },
   });

@@ -38,7 +38,7 @@ const items = [
     title: 'Courses',
   },
   {
-    href: '#',
+    href: '/instructor',
     icon: <People fontSize="small" />,
     title: 'Instructors',
   },
@@ -46,11 +46,6 @@ const items = [
     href: '#',
     icon: <Payment fontSize="small" />,
     title: 'Payments',
-  },
-  {
-    href: '#',
-    icon: <LocalOffer fontSize="small" />,
-    title: 'Promotions',
   },
   {
     href: '/category',

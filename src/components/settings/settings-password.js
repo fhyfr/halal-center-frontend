@@ -50,16 +50,17 @@ export const SettingsPassword = (props) => {
         'New password must match',
       ),
     }),
-    onSubmit: async (values) => {
+    onSubmit: (values, action) => {
       updatePassword(values.currentPassword, values.newPassword, values.newPasswordConfirmation)
         .then((res) => {
           setInfo(res);
           setErrMessage(undefined);
-          formik.resetForm();
+          action.resetForm();
         })
         .catch((err) => {
           setErrMessage(err.response.data.message);
           setInfo(undefined);
+          action.setSubmitting(false);
         });
     },
   });

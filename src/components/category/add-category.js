@@ -31,11 +31,12 @@ export const AddCategory = () => {
     validationSchema: Yup.object({
       categoryName: Yup.string().required('Category Name is required'),
     }),
-    onSubmit: async (values) => {
+    onSubmit: (values, action) => {
       createNewCategory(values.categoryName)
         .then((res) => {
           setInfo(res);
           setErrMessage(undefined);
+
           setTimeout(() => {
             router.push('/category');
           }, 2000);
@@ -43,6 +44,7 @@ export const AddCategory = () => {
         .catch((err) => {
           setErrMessage(err.response.data?.message);
           setInfo(undefined);
+          action.setSubmitting(false);
         });
     },
   });

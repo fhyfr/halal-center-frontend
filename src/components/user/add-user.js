@@ -49,11 +49,12 @@ export const AddUser = ({ roles }) => {
       email: Yup.string().email('Must be a valid email').max(255).required('Email is required'),
       password: Yup.string().min(8).max(255).required('Password is required'),
     }),
-    onSubmit: async (values) => {
+    onSubmit: (values, action) => {
       createNewUser(values)
         .then((res) => {
           setInfo(res);
           setErrMessage(undefined);
+
           setTimeout(() => {
             router.push('/user');
           }, 2000);
@@ -61,6 +62,7 @@ export const AddUser = ({ roles }) => {
         .catch((err) => {
           setErrMessage(err.response.data?.message);
           setInfo(undefined);
+          action.setSubmitting(false);
         });
     },
   });

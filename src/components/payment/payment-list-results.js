@@ -1,162 +1,291 @@
 import { useState } from 'react';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import PropTypes from 'prop-types';
-import { format } from 'date-fns';
 import {
-  Avatar,
   Box,
   Card,
-  Checkbox,
   Table,
   TableBody,
   TableCell,
   TableHead,
   TablePagination,
   TableRow,
-  Typography,
   Button,
+  Tabs,
+  Tab,
+  Typography,
 } from '@mui/material';
-import { getInitials } from '../../utils/get-initials';
+import { formatDate } from '../../utils/date-converter';
+import { useRouter } from 'next/router';
+import { KeyboardArrowDown, KeyboardArrowUp } from '@mui/icons-material';
+import { formatRupiahCurrency } from '../../utils/currency-converter';
 
-export const PaymentListResults = ({ payment, ...rest }) => {
-  const [selectedPaymentIds, setSelectedPaymentIds] = useState([]);
+export const PaymentListResults = ({ payments }) => {
+  const router = useRouter();
+
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(0);
+  const [valueType, setValueType] = useState('registration');
 
-  const handleSelectAll = (event) => {
-    let newSelectedPaymentIds;
+  const handleFilterType = (event, newValue) => {
+    const path = router.pathname;
+    const query = router.query;
+    query.type = newValue;
 
-    if (event.target.checked) {
-      newSelectedPaymentIds = payment.map((payment) => payment.id);
-    } else {
-      newSelectedPaymentIds = [];
-    }
+    setValueType(newValue);
 
-    setSelectedPaymentIds(newSelectedPaymentIds);
-  };
-
-  const handleSelectOne = (event, id) => {
-    const selectedIndex = selectedPaymentIds.indexOf(id);
-    let newSelectedPaymentIds = [];
-
-    if (selectedIndex === -1) {
-      newSelectedPaymentIds = newSelectedPaymentIds.concat(selectedPaymentIds, id);
-    } else if (selectedIndex === 0) {
-      newSelectedPaymentIds = newSelectedPaymentIds.concat(selectedPaymentIds.slice(1));
-    } else if (selectedIndex === selectedPaymentIds.length - 1) {
-      newSelectedPaymentIds = newSelectedPaymentIds.concat(selectedPaymentIds.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelectedPaymentIds = newSelectedPaymentIds.concat(
-        selectedPaymentIds.slice(0, selectedIndex),
-        selectedPaymentIds.slice(selectedIndex + 1),
-      );
-    }
-
-    setSelectedPaymentIds(newSelectedPaymentIds);
+    router.push({
+      pathname: path,
+      query: query,
+    });
   };
 
   const handleLimitChange = (event) => {
+    const path = router.pathname;
+    const query = router.query;
+    query.limit = event.target.value;
+
     setLimit(event.target.value);
+
+    router.push({
+      pathname: path,
+      query: query,
+    });
   };
 
   const handlePageChange = (event, newPage) => {
+    const path = router.pathname;
+    const query = router.query;
+    query.page = newPage + 1;
+
     setPage(newPage);
+
+    router.push({
+      pathname: path,
+      query: query,
+    });
   };
 
   return (
-    <Card {...rest}>
+    <Card>
+      <Box sx={{ maxWidth: 1050, marginY: 2 }}>
+        <Tabs value={valueType} onChange={handleFilterType} aria-label="wrapped label tabs example">
+          <Tab value="registration" label="Registration Users" />
+          <Tab value="course_utilities" label="Course Utilities" />
+        </Tabs>
+      </Box>
+
       <PerfectScrollbar>
         <Box sx={{ minWidth: 1050 }}>
           <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell padding="checkbox">
-                  <Checkbox
-                    checked={selectedPaymentIds.length === payment.length}
-                    color="primary"
-                    indeterminate={
-                      selectedPaymentIds.length > 0 && selectedPaymentIds.length < payment.length
-                    }
-                    onChange={handleSelectAll}
-                  />
-                </TableCell>
-                <TableCell>Course ID</TableCell>
-                <TableCell>User ID</TableCell>
-                <TableCell>Amount</TableCell>
-                <TableCell>Discount</TableCell>
-                <TableCell>Descriptions</TableCell>
-                <TableCell>Payment Method</TableCell>
-                <TableCell>Transaction Date</TableCell>
-                <TableCell>Status</TableCell>
-                <TableCell>Receipt Url</TableCell>
-                <TableCell>
-                  {' '}
-                  <Box
-                    sx={{
-                      display: 'flex',
-                      justifyContent: 'center',
-                    }}
-                  >
-                    Action
-                  </Box>
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {payment.slice(0, limit).map((payment) => (
-                <TableRow
-                  hover
-                  key={payment.id}
-                  selected={selectedPaymentIds.indexOf(payment.id) !== -1}
-                >
-                  <TableCell padding="checkbox">
-                    <Checkbox
-                      checked={selectedPaymentIds.indexOf(payment.id) !== -1}
-                      onChange={(event) => handleSelectOne(event, payment.id)}
-                      value="true"
-                    />
-                  </TableCell>
-
-                  <TableCell>{payment.courseId}</TableCell>
-                  <TableCell>{payment.userId}</TableCell>
-                  <TableCell>{payment.amount}</TableCell>
-                  <TableCell>{payment.discount}</TableCell>
-                  <TableCell>{payment.descriptions}</TableCell>
-                  <TableCell>{payment.paymentMethod}</TableCell>
-                  <TableCell>{payment.transactionDate}</TableCell>
-                  <TableCell>{payment.status}</TableCell>
-                  <TableCell>{payment.receiptUrl}</TableCell>
-                  <TableCell>
-                    <Box
-                      sx={{
-                        display: 'flex',
-                        justifyContent: 'center',
-                        mr: 2,
-                      }}
-                    >
-                      <Button
-                        color="secondary"
+            {valueType === 'registration' ? (
+              <>
+                <TableHead>
+                  <TableRow>
+                    <TableCell align="center">ID</TableCell>
+                    <TableCell>Course ID</TableCell>
+                    <TableCell>User ID</TableCell>
+                    <TableCell>Total</TableCell>
+                    <TableCell>Payment Method</TableCell>
+                    <TableCell>Transaction Date</TableCell>
+                    <TableCell>Status</TableCell>
+                    <TableCell>Receipt Url</TableCell>
+                    <TableCell>
+                      <Box
                         sx={{
-                          mr: 2,
+                          display: 'flex',
+                          justifyContent: 'center',
                         }}
-                        variant="contained"
                       >
-                        Update
-                      </Button>
-                      <Button color="error" variant="contained">
-                        Delete
-                      </Button>
-                    </Box>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
+                        Action
+                      </Box>
+                    </TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {payments.data?.slice(0, limit).map((payment) => (
+                    <TableRow hover key={payment.id}>
+                      <TableCell align="center">
+                        <Typography color="textPrimary" variant="body2">
+                          1
+                        </Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography color="textPrimary" variant="body2">
+                          {payment.courseId}
+                        </Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography color="textPrimary" variant="body2">
+                          {payment.userId}
+                        </Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography color="textPrimary" variant="body2">
+                          {formatRupiahCurrency(payment.amount - payment.discount)}
+                        </Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography color="textPrimary" variant="body2">
+                          {payment.paymentMethod}
+                        </Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography color="textPrimary" variant="body2">
+                          {formatDate(payment.transactionDate)}
+                        </Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography color="textPrimary" variant="body2">
+                          {payment.status}
+                        </Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography color="textPrimary" variant="body2">
+                          {payment.receiptUrl}
+                        </Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Box
+                          sx={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            mr: 2,
+                          }}
+                        >
+                          <Button
+                            color="primary"
+                            size="small"
+                            sx={{
+                              mr: 2,
+                            }}
+                            variant="contained"
+                          >
+                            Detail
+                          </Button>
+                          <Button
+                            color="secondary"
+                            sx={{
+                              mr: 2,
+                            }}
+                            variant="contained"
+                          >
+                            Update
+                          </Button>
+                          <Button color="error" variant="contained">
+                            Delete
+                          </Button>
+                        </Box>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </>
+            ) : (
+              <>
+                <TableHead>
+                  <TableRow>
+                    <TableCell align="center">ID</TableCell>
+                    <TableCell>Course ID</TableCell>
+                    <TableCell>Total</TableCell>
+                    <TableCell>Payment Method</TableCell>
+                    <TableCell>Transaction Date</TableCell>
+                    <TableCell>Status</TableCell>
+                    <TableCell>Receipt Url</TableCell>
+                    <TableCell>
+                      <Box
+                        sx={{
+                          display: 'flex',
+                          justifyContent: 'center',
+                        }}
+                      >
+                        Action
+                      </Box>
+                    </TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {payments.data?.slice(0, limit).map((payment) => (
+                    <TableRow hover key={payment.id}>
+                      <TableCell align="center">
+                        <Typography color="textPrimary" variant="body2">
+                          1
+                        </Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography color="textPrimary" variant="body2">
+                          {payment.courseId}
+                        </Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography color="textPrimary" variant="body2">
+                          {formatRupiahCurrency(payment.amount - payment.discount)}
+                        </Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography color="textPrimary" variant="body2">
+                          {payment.paymentMethod}
+                        </Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography color="textPrimary" variant="body2">
+                          {formatDate(payment.transactionDate)}
+                        </Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography color="textPrimary" variant="body2">
+                          {payment.status}
+                        </Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography color="textPrimary" variant="body2">
+                          {payment.receiptUrl}
+                        </Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Box
+                          sx={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            mr: 2,
+                          }}
+                        >
+                          <Button
+                            color="primary"
+                            size="small"
+                            sx={{
+                              mr: 2,
+                            }}
+                            variant="contained"
+                            onClick={() => handleDetailUser(user.id)}
+                          >
+                            Detail
+                          </Button>
+                          <Button
+                            color="secondary"
+                            sx={{
+                              mr: 2,
+                            }}
+                            variant="contained"
+                          >
+                            Update
+                          </Button>
+                          <Button color="error" variant="contained">
+                            Delete
+                          </Button>
+                        </Box>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </>
+            )}
           </Table>
         </Box>
       </PerfectScrollbar>
       <TablePagination
         component="div"
-        count={payment.length}
+        count={payments.itemCount}
         onPageChange={handlePageChange}
         onRowsPerPageChange={handleLimitChange}
         page={page}

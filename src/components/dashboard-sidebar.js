@@ -43,7 +43,7 @@ const items = [
     title: 'Instructors',
   },
   {
-    href: '#',
+    href: '/payment',
     icon: <Payment fontSize="small" />,
     title: 'Payments',
   },

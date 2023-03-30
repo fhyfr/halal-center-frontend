@@ -76,11 +76,6 @@ export const AddCourse = ({ categories }) => {
         price: coursePrice,
       });
 
-      Object.assign(values, {
-        banner,
-        price: coursePrice,
-      });
-
       createNewCourse(values)
         .then((res) => {
           setInfo(res);

@@ -13,7 +13,7 @@ export const getServerSideProps = async ({ req, res, query }) => {
   const size = query.limit || 6;
   const courseId = query.courseId;
   const userId = query.userId;
-  const type = query.type;
+  const type = query.type || 'registration';
 
   const data = parseCookies(req);
   if (!data.user) {
@@ -28,7 +28,7 @@ export const getServerSideProps = async ({ req, res, query }) => {
   const user = JSON.parse(data.user);
 
   let payments;
-  let queryParams = { page, size };
+  let queryParams = { page, size, type };
 
   if (type && type.length > 0) {
     Object.assign(queryParams, { type });

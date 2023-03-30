@@ -14,10 +14,10 @@ import {
   Tabs,
   Tab,
   Typography,
+  Link,
 } from '@mui/material';
-import { formatDate } from '../../utils/date-converter';
+import { formatDateWithoutHourMinutes } from '../../utils/date-converter';
 import { useRouter } from 'next/router';
-import { KeyboardArrowDown, KeyboardArrowUp } from '@mui/icons-material';
 import { formatRupiahCurrency } from '../../utils/currency-converter';
 
 export const PaymentListResults = ({ payments }) => {
@@ -132,7 +132,7 @@ export const PaymentListResults = ({ payments }) => {
                       </TableCell>
                       <TableCell>
                         <Typography color="textPrimary" variant="body2">
-                          {formatDate(payment.transactionDate)}
+                          {formatDateWithoutHourMinutes(payment.transactionDate)}
                         </Typography>
                       </TableCell>
                       <TableCell>
@@ -142,7 +142,9 @@ export const PaymentListResults = ({ payments }) => {
                       </TableCell>
                       <TableCell>
                         <Typography color="textPrimary" variant="body2">
-                          {payment.receiptUrl}
+                          <Link href={payment.receiptUrl} target="_blank" underline="hover">
+                            {payment.receiptUrl}
+                          </Link>
                         </Typography>
                       </TableCell>
                       <TableCell>
@@ -229,7 +231,7 @@ export const PaymentListResults = ({ payments }) => {
                       </TableCell>
                       <TableCell>
                         <Typography color="textPrimary" variant="body2">
-                          {formatDate(payment.transactionDate)}
+                          {formatDateWithoutHourMinutes(payment.transactionDate)}
                         </Typography>
                       </TableCell>
                       <TableCell>
@@ -239,7 +241,9 @@ export const PaymentListResults = ({ payments }) => {
                       </TableCell>
                       <TableCell>
                         <Typography color="textPrimary" variant="body2">
-                          {payment.receiptUrl}
+                          <Link href={payment.receiptUrl} target="_blank" underline="hover">
+                            {payment.receiptUrl}
+                          </Link>
                         </Typography>
                       </TableCell>
                       <TableCell>

@@ -16,3 +16,18 @@ export const createNewPayment = async (newPayment) => {
 
   return response.data.message;
 };
+
+export const editPayment = async (paymentId, updatePayment) => {
+  const accessToken = getSession();
+
+  const response = await axios({
+    method: 'PUT',
+    url: `${NEXT_PUBLIC_API}/payment/${paymentId}`,
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+    data: updatePayment,
+  });
+
+  return response.data.message;
+};

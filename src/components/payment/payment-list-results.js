@@ -171,6 +171,14 @@ export const PaymentListResults = ({ payments }) => {
                               mr: 2,
                             }}
                             variant="contained"
+                            onClick={() => {
+                              router.push({
+                                pathname: '/payment/edit',
+                                query: {
+                                  id: payment.id,
+                                },
+                              });
+                            }}
                           >
                             Update
                           </Button>
@@ -271,6 +279,14 @@ export const PaymentListResults = ({ payments }) => {
                               mr: 2,
                             }}
                             variant="contained"
+                            onClick={() => {
+                              router.push({
+                                pathname: '/payment/edit',
+                                query: {
+                                  id: payment.id,
+                                },
+                              });
+                            }}
                           >
                             Update
                           </Button>

@@ -31,3 +31,17 @@ export const editPayment = async (paymentId, updatePayment) => {
 
   return response.data.message;
 };
+
+export const deletePayment = async (paymentId) => {
+  const accessToken = getSession();
+
+  const response = await axios({
+    method: 'DELETE',
+    url: `${NEXT_PUBLIC_API}/payment/${paymentId}`,
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+
+  return response.data.message;
+};

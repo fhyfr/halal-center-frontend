@@ -19,6 +19,7 @@ import {
 import { formatDateWithoutHourMinutes } from '../../utils/date-converter';
 import { useRouter } from 'next/router';
 import { formatRupiahCurrency } from '../../utils/currency-converter';
+import { deletePayment } from '../../services/api/payment';
 
 export const PaymentListResults = ({ payments }) => {
   const router = useRouter();
@@ -64,6 +65,21 @@ export const PaymentListResults = ({ payments }) => {
       pathname: path,
       query: query,
     });
+  };
+
+  const handleDeletePayment = (paymentId) => {
+    const confirmation = confirm('Are you sure want to delete this payment?');
+    if (confirmation) {
+      deletePayment(paymentId)
+        .then((res) => {
+          alert(res);
+          router.push(`/payment?type=${valueType}`);
+        })
+        .catch((err) => {
+          alert(err.response.data?.message);
+        });
+    }
+    return;
   };
 
   return (
@@ -162,6 +178,14 @@ export const PaymentListResults = ({ payments }) => {
                               mr: 2,
                             }}
                             variant="contained"
+                            onClick={() => {
+                              router.push({
+                                pathname: '/payment/details',
+                                query: {
+                                  id: payment.id,
+                                },
+                              });
+                            }}
                           >
                             Detail
                           </Button>
@@ -171,6 +195,7 @@ export const PaymentListResults = ({ payments }) => {
                               mr: 2,
                             }}
                             variant="contained"
+                            size="small"
                             onClick={() => {
                               router.push({
                                 pathname: '/payment/edit',
@@ -182,7 +207,14 @@ export const PaymentListResults = ({ payments }) => {
                           >
                             Update
                           </Button>
-                          <Button color="error" variant="contained">
+                          <Button
+                            color="error"
+                            variant="contained"
+                            size="small"
+                            onClick={() => {
+                              handleDeletePayment(payment.id);
+                            }}
+                          >
                             Delete
                           </Button>
                         </Box>
@@ -269,7 +301,14 @@ export const PaymentListResults = ({ payments }) => {
                               mr: 2,
                             }}
                             variant="contained"
-                            onClick={() => handleDetailUser(user.id)}
+                            onClick={() => {
+                              router.push({
+                                pathname: '/payment/details',
+                                query: {
+                                  id: payment.id,
+                                },
+                              });
+                            }}
                           >
                             Detail
                           </Button>
@@ -279,6 +318,7 @@ export const PaymentListResults = ({ payments }) => {
                               mr: 2,
                             }}
                             variant="contained"
+                            size="small"
                             onClick={() => {
                               router.push({
                                 pathname: '/payment/edit',
@@ -290,7 +330,14 @@ export const PaymentListResults = ({ payments }) => {
                           >
                             Update
                           </Button>
-                          <Button color="error" variant="contained">
+                          <Button
+                            color="error"
+                            variant="contained"
+                            size="small"
+                            onClick={() => {
+                              handleDeletePayment(payment.id);
+                            }}
+                          >
                             Delete
                           </Button>
                         </Box>

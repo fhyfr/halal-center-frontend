@@ -13,8 +13,8 @@ import {
   Apartment,
   Category,
   FolderCopy,
+  FolderOpen,
   Groups,
-  LocalOffer,
   Payment,
   People,
   PermContactCalendar,
@@ -36,6 +36,11 @@ const items = [
     href: '/course',
     icon: <School fontSize="small" />,
     title: 'Courses',
+  },
+  {
+    href: '/document',
+    icon: <FolderOpen fontSize="small" />,
+    title: 'Documents',
   },
   {
     href: '/instructor',

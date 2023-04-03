@@ -1,7 +1,7 @@
 import Head from 'next/head';
 import { Box, Container } from '@mui/material';
-import { PaymentListResults } from '../../components/payment/payment-list-results';
-import { PaymentListToolbar } from '../../components/payment/payment-list-toolbar';
+import { DocumentListResults } from '../../components/document/document-list-results';
+import { DocumentListToolbar } from '../../components/document/document-list-toolbar';
 import { DashboardLayout } from '../../components/dashboard-layout';
 import { parseCookies } from '../../lib/auth-cookies';
 import axios from 'axios';
@@ -13,8 +13,9 @@ export const getServerSideProps = async ({ req, res, query }) => {
   const size = query.limit || 10;
   const courseId = query.courseId;
   const userId = query.userId;
-  const type = query.type || 'registration';
+  const type = query.type;
 
+  let documents = null;
   const data = parseCookies(req);
   if (!data.user) {
     return {
@@ -28,7 +29,7 @@ export const getServerSideProps = async ({ req, res, query }) => {
   const user = JSON.parse(data.user);
 
   let payments;
-  let queryParams = { page, size, type };
+  let queryParams = { page, size };
 
   if (type && type.length > 0) {
     Object.assign(queryParams, { type });
@@ -45,31 +46,31 @@ export const getServerSideProps = async ({ req, res, query }) => {
   try {
     const response = await axios({
       method: 'GET',
-      url: `${NEXT_PUBLIC_API}/payment`,
+      url: `${NEXT_PUBLIC_API}/document`,
       params: queryParams,
       headers: {
         Authorization: `Bearer ${user.accessToken}`,
       },
     });
     if (response.status !== 200) {
-      throw new Error('failed to get data payments');
+      throw new Error('failed to get data documents');
     }
 
-    payments = response.data;
+    documents = response.data;
   } catch (err) {
-    payments = { error: { message: err.message } };
+    documents = { error: { message: err.message } };
   }
 
-  return { props: { payments } };
+  return { props: { documents } };
 };
 
-const Payment = (props) => {
-  const { payments } = props;
+const Document = (props) => {
+  const { documents } = props;
 
   return (
     <>
       <Head>
-        <title>Payments</title>
+        <title>Documents | Halal Center</title>
       </Head>
       <Box
         component="main"
@@ -79,9 +80,9 @@ const Payment = (props) => {
         }}
       >
         <Container maxWidth={false}>
-          <PaymentListToolbar />
+          <DocumentListToolbar />
           <Box sx={{ mt: 3 }}>
-            <PaymentListResults payments={payments} />
+            <DocumentListResults documents={documents} />
           </Box>
         </Container>
       </Box>
@@ -89,6 +90,6 @@ const Payment = (props) => {
   );
 };
 
-Payment.getLayout = (payment) => <DashboardLayout>{payment}</DashboardLayout>;
+Document.getLayout = (document) => <DashboardLayout>{document}</DashboardLayout>;
 
-export default Payment;
+export default Document;

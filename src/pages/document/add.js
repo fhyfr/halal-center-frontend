@@ -6,7 +6,7 @@ import { AddDocument } from '../../components/document/add-document';
 const Page = () => (
   <>
     <Head>
-      <title>Add Document</title>
+      <title>Add New Document</title>
     </Head>
     <Box
       component="main"
@@ -17,7 +17,7 @@ const Page = () => (
     >
       <Container maxWidth="lg">
         <Typography sx={{ mb: 3 }} variant="h4">
-          Add Document
+          Document
         </Typography>
         <Box sx={{ pt: 3 }}>
           <AddDocument />

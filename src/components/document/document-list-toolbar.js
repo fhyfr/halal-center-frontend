@@ -7,58 +7,161 @@ import {
   InputAdornment,
   SvgIcon,
   Typography,
+  Grid,
+  FormControl,
+  InputLabel,
+  NativeSelect,
 } from '@mui/material';
 import { Search as SearchIcon } from '../../icons/search';
-import { Upload as UploadIcon } from '../../icons/upload';
-import { Download as DownloadIcon } from '../../icons/download';
+import { Add } from '@mui/icons-material';
+import { handleRedirectOnClick } from '../../utils/handle-event-button';
+import { useRouter } from 'next/router';
 
-export const DocumentListToolbar = (props) => (
-  <Box {...props}>
-    <Box
-      sx={{
-        alignItems: 'center',
-        display: 'flex',
-        justifyContent: 'space-between',
-        flexWrap: 'wrap',
-        m: -1,
-      }}
-    >
-      <Typography sx={{ m: 1 }} variant="h4">
-        Document
-      </Typography>
-      <Box sx={{ m: 1 }}>
-        <Button color="error" sx={{ mr: 1 }}>
-          Delete
-        </Button>
-        {/* <Button startIcon={<DownloadIcon fontSize="small" />} sx={{ mr: 1 }}>
-          Export
-        </Button> */}
-        <Button color="primary" variant="contained">
-          Add Document
-        </Button>
+export const DocumentListToolbar = (props) => {
+  const router = useRouter();
+
+  const handleFilterDocumentType = (event) => {
+    const path = router.pathname;
+    const query = router.query;
+    query.type = event.target.value;
+
+    router.push({
+      pathname: path,
+      query: query,
+    });
+  };
+
+  const handleFilterCourse = (event) => {
+    const path = router.pathname;
+    const query = router.query;
+    query.courseId = event.target.value;
+
+    router.push({
+      pathname: path,
+      query: query,
+    });
+  };
+
+  const handleFilterUser = (event) => {
+    const path = router.pathname;
+    const query = router.query;
+    query.userId = event.target.value;
+
+    router.push({
+      pathname: path,
+      query: query,
+    });
+  };
+
+  return (
+    <Box>
+      <Box
+        sx={{
+          alignItems: 'center',
+          display: 'flex',
+          justifyContent: 'space-between',
+          flexWrap: 'wrap',
+          m: -1,
+        }}
+      >
+        <Typography sx={{ m: 1 }} variant="h4">
+          Documents
+        </Typography>
+        <Box sx={{ m: 1 }}>
+          <Button
+            startIcon={
+              <SvgIcon fontSize="small">
+                <Add />
+              </SvgIcon>
+            }
+            color="primary"
+            variant="contained"
+            onClick={() => {
+              handleRedirectOnClick(router, '/document/add');
+            }}
+          >
+            Add New
+          </Button>
+        </Box>
+      </Box>
+      <Box sx={{ mt: 3 }}>
+        <Card>
+          <CardContent>
+            <Grid container spacing={2}>
+              <Grid item xs={12} md={3}>
+                <Box sx={{ maxWidth: 300 }}>
+                  <TextField
+                    fullWidth
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <SvgIcon color="action" fontSize="small">
+                            <SearchIcon />
+                          </SvgIcon>
+                        </InputAdornment>
+                      ),
+                    }}
+                    placeholder="Filter by Course ID"
+                    variant="outlined"
+                    type="number"
+                    onChange={handleFilterCourse}
+                  />
+                </Box>
+              </Grid>
+
+              <Grid item xs={12} md={3}>
+                <Box sx={{ maxWidth: 300 }}>
+                  <TextField
+                    fullWidth
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <SvgIcon color="action" fontSize="small">
+                            <SearchIcon />
+                          </SvgIcon>
+                        </InputAdornment>
+                      ),
+                    }}
+                    placeholder="Filter by User ID"
+                    variant="outlined"
+                    type="number"
+                    onChange={handleFilterUser}
+                  />
+                </Box>
+              </Grid>
+
+              <Grid item xs={12} md={3}>
+                <Box sx={{ maxWidth: 300 }}>
+                  <FormControl fullWidth>
+                    <InputLabel variant="standard" htmlFor="select-document-type">
+                      Document Type
+                    </InputLabel>
+                    <NativeSelect
+                      defaultValue=""
+                      inputProps={{
+                        name: 'document-type',
+                        id: 'select-document-type',
+                      }}
+                      onChange={handleFilterDocumentType}
+                    >
+                      <option disabled> -- Select Document Type -- </option>
+                      <option key="MODULE" value="MODULE">
+                        MODULE
+                      </option>
+                      <option key="CURRICULUM" value="CURRICULUM">
+                        CURRICULUM
+                      </option>
+                      <option key="CERTIFICATE" value="CERTIFICATE">
+                        CERTIFICATE
+                      </option>
+                    </NativeSelect>
+                  </FormControl>
+                </Box>
+              </Grid>
+            </Grid>
+          </CardContent>
+        </Card>
       </Box>
     </Box>
-    <Box sx={{ mt: 3 }}>
-      <Card>
-        <CardContent>
-          <Box sx={{ maxWidth: 500 }}>
-            <TextField
-              fullWidth
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <SvgIcon color="action" fontSize="small">
-                      <SearchIcon />
-                    </SvgIcon>
-                  </InputAdornment>
-                ),
-              }}
-              placeholder="Search document"
-              variant="outlined"
-            />
-          </Box>
-        </CardContent>
-      </Card>
-    </Box>
-  </Box>
-);
+  );
+};

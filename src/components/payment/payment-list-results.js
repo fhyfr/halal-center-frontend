@@ -82,6 +82,14 @@ export const PaymentListResults = ({ payments }) => {
     return;
   };
 
+  if (payments.error) {
+    return (
+      <Typography align="center" variant="h4" style={{ color: 'red' }}>
+        error, {payments.error.message}
+      </Typography>
+    );
+  }
+
   return (
     <Card>
       <Box sx={{ maxWidth: 1050, marginY: 2 }}>

@@ -10,7 +10,7 @@ const { NEXT_PUBLIC_API } = process.env;
 
 export const getServerSideProps = async ({ req, res, query }) => {
   const page = query.page || 1;
-  const size = query.limit || 6;
+  const size = query.limit || 10;
   const courseId = query.courseId;
   const userId = query.userId;
   const type = query.type || 'registration';

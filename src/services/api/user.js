@@ -64,3 +64,15 @@ export const resetPasswordUser = async (userId, newPassword, confirmNewPassword)
 
   return response.data.message;
 };
+
+export const getCurrentUser = async (accessToken) => {
+  const response = await axios({
+    method: 'GET',
+    url: `${NEXT_PUBLIC_API}/user/current/self`,
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+
+  return response.data;
+};

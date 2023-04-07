@@ -11,6 +11,7 @@ import { NavItem } from './nav-item';
 import {
   AccountCircle,
   Apartment,
+  Bookmarks,
   Category,
   FolderCopy,
   FolderOpen,
@@ -76,6 +77,11 @@ const items = [
     href: '/user/account',
     icon: <AccountCircle fontSize="small" />,
     title: 'Account',
+  },
+  {
+    href: '/user/course',
+    icon: <Bookmarks fontSize="small" />,
+    title: 'My Course',
   },
   {
     href: '#',

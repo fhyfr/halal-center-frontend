@@ -98,7 +98,7 @@ export const CourseCard = ({ user, course }) => {
           >
             <Category color="action" />
             <Typography color="textSecondary" display="inline" sx={{ pl: 1 }} variant="body2">
-              Category {course.category.categoryName}
+              Category {course.category ? course.category.categoryName : ''}
             </Typography>
           </Grid>
 

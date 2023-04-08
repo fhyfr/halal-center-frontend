@@ -192,15 +192,19 @@ export const CourseCard = ({ user, course }) => {
           >
             <Button
               size="small"
-              color="error"
+              color="info"
               variant="contained"
               onClick={() => {
-                handleDeleteCourse(course);
+                router.push({
+                  pathname: '/course/details',
+                  query: {
+                    courseId: course.id,
+                  },
+                });
               }}
             >
-              Delete Course
+              Detail Course
             </Button>
-
             <Button
               size="small"
               color="secondary"
@@ -215,6 +219,16 @@ export const CourseCard = ({ user, course }) => {
               }}
             >
               Update Course
+            </Button>
+            <Button
+              size="small"
+              color="error"
+              variant="contained"
+              onClick={() => {
+                handleDeleteCourse(course);
+              }}
+            >
+              Delete Course
             </Button>
           </Box>
         )}

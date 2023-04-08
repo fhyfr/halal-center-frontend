@@ -15,6 +15,7 @@ import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { formatDate, formatDateWithoutHourMinutes } from '../../../utils/date-converter';
+import { InfoOutlined } from '@mui/icons-material';
 
 export const MyCourseListResults = ({ courses }) => {
   const router = useRouter();
@@ -126,16 +127,21 @@ export const MyCourseListResults = ({ courses }) => {
                       sx={{
                         display: 'flex',
                         justifyContent: 'center',
-                        mr: 2,
                       }}
                     >
                       <Button
                         color="info"
                         size="small"
-                        sx={{
-                          mr: 2,
-                        }}
                         variant="contained"
+                        startIcon={<InfoOutlined />}
+                        onClick={() => {
+                          router.push({
+                            pathname: '/course/details',
+                            query: {
+                              courseId: course.id,
+                            },
+                          });
+                        }}
                       >
                         Detail
                       </Button>

@@ -1,0 +1,19 @@
+export const formatDate = (dateString) => {
+  const options = {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  };
+  return new Date(dateString).toLocaleDateString('ID', options);
+};
+
+export const formatDateWithoutHourMinutes = (dateString) => {
+  const options = {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  };
+  return new Date(dateString).toLocaleDateString('ID', options);
+};

@@ -21,7 +21,7 @@ import { Visibility, VisibilityOff } from '@mui/icons-material';
 import DrawerAppBar from '../../components/navbar';
 import Footer from '../../components/footer';
 import { useRouter } from 'next/router';
-import logo from '../../assets/images/logo_p3jph.jpg';
+import logo from '../../assets/images/logo_p3jph.png';
 import Image from 'next/image';
 import useAuth from '../../hooks/use-auth';
 import { useState } from 'react';
@@ -48,15 +48,16 @@ const Register = () => {
     },
     validationSchema: Yup.object({
       fullName: Yup.string().max(255).required('Full name is required'),
-      username: Yup.string().max(255).required('Username is required'),
+      username: Yup.string().min(2).max(255).required('Username is required'),
       email: Yup.string().email('Must be a valid email').max(255).required('Email is required'),
-      password: Yup.string().max(255).required('Password is required'),
+      password: Yup.string().min(8).max(255).required('Password is required'),
     }),
-    onSubmit: async (values) => {
+    onSubmit: (values, action) => {
       register(values.username, values.email, values.password, values.fullName)
         .then((res) => {
           setInfo(res);
           setErrMessage(undefined);
+
           setTimeout(() => {
             router.push('/auth/login');
           }, 3000);
@@ -64,6 +65,7 @@ const Register = () => {
         .catch((err) => {
           setErrMessage(err.message);
           setInfo(undefined);
+          action.setSubmitting(false);
         });
     },
   });
@@ -88,7 +90,7 @@ const Register = () => {
             <Grid item xs={6}>
               <Image width="500px" height="500px" layout="responsive" src={logo} priority="true" />
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={6} sx={{ marginTop: 5 }}>
               <Box
                 component="main"
                 sx={{

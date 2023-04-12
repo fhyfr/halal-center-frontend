@@ -114,7 +114,7 @@ export const InstructorDetails = ({ instructor, courses }) => {
 
       <Grid item lg={6} md={6} xs={12}>
         <Card>
-          <CardHeader subheader="List of course of instructor" title="Courses" />
+          <CardHeader subheader="List courses of instructor" title="Courses" />
           <Divider />
           <CardContent>
             {courses.length > 0

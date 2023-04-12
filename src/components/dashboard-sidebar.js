@@ -11,6 +11,7 @@ import { NavItem } from './nav-item';
 import {
   AccountCircle,
   Apartment,
+  Bookmarks,
   Category,
   FolderCopy,
   FolderOpen,
@@ -20,6 +21,8 @@ import {
   PermContactCalendar,
   School,
 } from '@mui/icons-material';
+
+// TODO: implement user access control on menu sidebar
 
 const items = [
   {
@@ -76,6 +79,11 @@ const items = [
     href: '/user/account',
     icon: <AccountCircle fontSize="small" />,
     title: 'Account',
+  },
+  {
+    href: '/user/course',
+    icon: <Bookmarks fontSize="small" />,
+    title: 'My Course',
   },
   {
     href: '#',

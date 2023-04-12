@@ -256,8 +256,8 @@ export const AddPayment = (props) => {
                     Course Utilities
                   </MenuItem>
                 </Select>
-                {Boolean(formik.touched.departmentId && formik.errors.departmentId) && (
-                  <FormHelperText error>{formik.errors.departmentId}</FormHelperText>
+                {Boolean(formik.touched.type && formik.errors.type) && (
+                  <FormHelperText error>{formik.errors.type}</FormHelperText>
                 )}
               </FormControl>
 
@@ -390,8 +390,8 @@ export const AddPayment = (props) => {
                     Cash
                   </MenuItem>
                 </Select>
-                {Boolean(formik.touched.departmentId && formik.errors.departmentId) && (
-                  <FormHelperText error>{formik.errors.departmentId}</FormHelperText>
+                {Boolean(formik.touched.paymentMethod && formik.errors.paymentMethod) && (
+                  <FormHelperText error>{formik.errors.paymentMethod}</FormHelperText>
                 )}
               </FormControl>
 

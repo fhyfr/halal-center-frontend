@@ -11,7 +11,9 @@ import axios from 'axios';
 const { NEXT_PUBLIC_API } = process.env;
 
 export const getServerSideProps = async ({ req, res, query }) => {
-  let userData;
+  let userData, courses;
+  const page = query.page || 1;
+  const size = query.limit || 20;
 
   const { userId } = query;
   if (!userId || userId === null) {
@@ -48,17 +50,35 @@ export const getServerSideProps = async ({ req, res, query }) => {
       throw new Error('failed to get data user');
     }
 
+    const responseCourse = await axios({
+      method: 'GET',
+      url: `${NEXT_PUBLIC_API}/course`,
+      params: {
+        page,
+        size,
+        userId,
+      },
+      headers: {
+        Authorization: `Bearer ${user.accessToken}`,
+      },
+    });
+    if (responseCourse.status !== 200) {
+      throw new Error('failed to get data courses');
+    }
+
     userData = response.data;
+    courses = responseCourse.data;
   } catch (err) {
     userData = { error: { message: err.message } };
+    courses = { error: { message: err.message } };
   }
 
-  return { props: { user: userData } };
+  return { props: { user: userData, courses } };
 };
 
 const Details = (props) => {
   const router = useRouter();
-  const { user } = props;
+  const { user, courses } = props;
 
   return (
     <>
@@ -93,7 +113,7 @@ const Details = (props) => {
             Member Details
           </Typography>
 
-          <MemberDetails user={user} />
+          <MemberDetails user={user} courses={courses} />
         </Container>
       </Box>
     </>

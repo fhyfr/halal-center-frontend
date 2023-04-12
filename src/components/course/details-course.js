@@ -27,7 +27,7 @@ import {
 } from '@mui/icons-material';
 import { formatRupiahCurrency } from '../../utils/currency-converter';
 
-export const CourseDetails = ({ course, instructors, user, documents, certificates }) => {
+export const CourseDetails = ({ course, instructors, user, documents, certificates, payments }) => {
   if (course.error) {
     return (
       <Typography align="center" variant="h4" style={{ color: 'red' }}>
@@ -60,8 +60,22 @@ export const CourseDetails = ({ course, instructors, user, documents, certificat
     );
   }
 
+  if (payments.error) {
+    return (
+      <Typography align="center" variant="h4" style={{ color: 'red' }}>
+        error, {payments.error.message}
+      </Typography>
+    );
+  }
+
   const quota = course.quota - course.totalRegistered;
   const currentDate = formatDateWithoutHourMinutes(new Date());
+  const isCoursePaid =
+    payments.itemCount > 0
+      ? course.type === 'PAID' &&
+        payments.data[0].type === 'REGISTRATION' &&
+        payments.data[0].status === 'SUCCESS'
+      : false;
 
   return (
     <Grid container spacing={3}>
@@ -238,7 +252,8 @@ export const CourseDetails = ({ course, instructors, user, documents, certificat
               </TableCell>
             </TableHead>
             <TableBody>
-              {documents.data?.length > 0 ? (
+              {(documents.data?.length > 0 && course.type === 'FREE') ||
+              (course.type === 'PAID' && isCoursePaid) ? (
                 documents.data?.map((document) => {
                   if (document.type !== 'CERTIFICATE') {
                     return (
@@ -277,7 +292,14 @@ export const CourseDetails = ({ course, instructors, user, documents, certificat
                 <>
                   <CardContent>
                     <Box>
-                      <Typography variant="subtitle1">Empty</Typography>
+                      {!isCoursePaid && course.type === 'PAID' ? (
+                        <Typography variant="subtitle2">
+                          You can download the module and curriculum if your payments is success
+                          (admin would check your payment)
+                        </Typography>
+                      ) : (
+                        <Typography variant="subtitle1">Empty</Typography>
+                      )}
                     </Box>
                   </CardContent>
                 </>
@@ -351,7 +373,14 @@ export const CourseDetails = ({ course, instructors, user, documents, certificat
                 <>
                   <CardContent>
                     <Box>
-                      <Typography variant="subtitle1">Empty</Typography>
+                      {currentDate < formatDateWithoutHourMinutes(course.endDate) ? (
+                        <Typography variant="subtitle1">Empty</Typography>
+                      ) : (
+                        <Typography variant="subtitle2">
+                          You can download your certificate for this course after the course is
+                          ended and you have fulfilled the requirements
+                        </Typography>
+                      )}
                     </Box>
                   </CardContent>
                 </>

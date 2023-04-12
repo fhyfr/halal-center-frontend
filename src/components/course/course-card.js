@@ -17,7 +17,7 @@ import LocalOfferIcon from '@mui/icons-material/LocalOffer';
 import { useRouter } from 'next/router';
 import { formatDateWithoutHourMinutes } from '../../utils/date-converter';
 import { formatRupiahCurrency } from '../../utils/currency-converter';
-import { Category } from '@mui/icons-material';
+import { Category, InfoOutlined, LoginOutlined } from '@mui/icons-material';
 import { deleteCourse, registerCourse } from '../../services/api/course';
 
 export const CourseCard = ({ user, course }) => {
@@ -54,7 +54,7 @@ export const CourseCard = ({ user, course }) => {
     return;
   };
 
-  const handleRegisterCourse = (courseId, user) => {
+  const handleRegisterCourse = (course, user) => {
     if (
       !user.phoneNumber ||
       user.phoneNumber === null ||
@@ -65,18 +65,30 @@ export const CourseCard = ({ user, course }) => {
     ) {
       alert('please complete your profile before register to this course!');
 
-      setTimeout(() => {
-        router.push('/user/account');
-      }, 1000);
+      router.push('/user/account');
     }
 
-    registerCourse(courseId)
-      .then((res) => {
-        alert(res);
-      })
-      .catch((err) => {
-        alert(err.response.data?.message);
+    if (course.type === 'FREE') {
+      registerCourse(course.id)
+        .then((res) => {
+          alert(res);
+
+          router.push({
+            pathname: '/course/details',
+            query: { courseId: course.id },
+          });
+        })
+        .catch((err) => {
+          alert(err.response.data?.message);
+        });
+    } else {
+      router.push({
+        pathname: '/course/payment',
+        query: {
+          courseId: course.id,
+        },
       });
+    }
   };
 
   return (
@@ -164,23 +176,43 @@ export const CourseCard = ({ user, course }) => {
               mt: 4,
             }}
           >
-            <Tooltip title={new Date(course.endDate) < new Date() ? 'course is expired' : ''}>
-              <span>
-                <Button
-                  size="medium"
-                  variant="contained"
-                  onClick={() => {
-                    handleRegisterCourse(course.id, user);
-                  }}
-                  disabled={new Date(course.endDate) < new Date()}
-                >
-                  {/* 
-                    TODO: complete this feature for register course by member
-                  */}
-                  Register Course
-                </Button>
-              </span>
-            </Tooltip>
+            {course.isRegistered ? (
+              <Tooltip title="You are already registered to this course">
+                <span>
+                  <Button
+                    color="info"
+                    size="medium"
+                    variant="contained"
+                    startIcon={<InfoOutlined />}
+                    onClick={() => {
+                      router.push({
+                        pathname: '/course/details',
+                        query: { courseId: course.id },
+                      });
+                    }}
+                  >
+                    Details Course
+                  </Button>
+                </span>
+              </Tooltip>
+            ) : (
+              <Tooltip title={new Date(course.endDate) < new Date() ? 'course is expired' : ''}>
+                <span>
+                  <Button
+                    color="primary"
+                    size="medium"
+                    variant="contained"
+                    startIcon={<LoginOutlined />}
+                    onClick={() => {
+                      handleRegisterCourse(course, user);
+                    }}
+                    disabled={new Date(course.endDate) < new Date() || course.isRegistered}
+                  >
+                    Register Course
+                  </Button>
+                </span>
+              </Tooltip>
+            )}
           </Box>
         ) : (
           <Box

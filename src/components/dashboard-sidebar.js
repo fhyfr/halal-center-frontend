@@ -22,6 +22,8 @@ import {
   School,
 } from '@mui/icons-material';
 
+// TODO: implement user access control on menu sidebar
+
 const items = [
   {
     href: '/',

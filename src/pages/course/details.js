@@ -11,7 +11,7 @@ import { getCurrentUser } from '../../services/api/user';
 const { NEXT_PUBLIC_API } = process.env;
 
 export const getServerSideProps = async ({ req, res, query }) => {
-  let course, instructors, documents, certificates;
+  let course, instructors, documents, certificates, payments;
 
   const { courseId } = query;
   if (!courseId || courseId === null) {
@@ -46,6 +46,7 @@ export const getServerSideProps = async ({ req, res, query }) => {
   }
 
   try {
+    // get course data
     const responseCourse = await axios({
       method: 'GET',
       url: `${NEXT_PUBLIC_API}/course/${courseId}`,
@@ -56,7 +57,9 @@ export const getServerSideProps = async ({ req, res, query }) => {
     if (responseCourse.status !== 200) {
       throw new Error('failed to get data course');
     }
+    course = responseCourse.data;
 
+    // get instructors data
     const responseInstructor = await axios({
       method: 'GET',
       url: `${NEXT_PUBLIC_API}/instructor`,
@@ -68,7 +71,9 @@ export const getServerSideProps = async ({ req, res, query }) => {
     if (responseInstructor.status !== 200) {
       throw new Error('failed to get data instructors');
     }
+    instructors = responseInstructor.data;
 
+    // get documents data
     const responseDocument = await axios({
       method: 'GET',
       url: `${NEXT_PUBLIC_API}/document`,
@@ -80,7 +85,9 @@ export const getServerSideProps = async ({ req, res, query }) => {
     if (responseDocument.status !== 200) {
       throw new Error('failed to get data documents');
     }
+    documents = responseDocument.data;
 
+    // get certificate data
     const responseCertificate = await axios({
       method: 'GET',
       url: `${NEXT_PUBLIC_API}/document`,
@@ -90,31 +97,43 @@ export const getServerSideProps = async ({ req, res, query }) => {
       },
     });
     if (responseCertificate.status !== 200) {
-      throw new Error('failed to get data certificate');
+      throw new Error('failed to get data certificates');
     }
-
-    course = responseCourse.data;
-    instructors = responseInstructor.data;
-    documents = responseDocument.data;
     certificates = responseCertificate.data;
+
+    // get payments data
+    const responsePayment = await axios({
+      method: 'GET',
+      url: `${NEXT_PUBLIC_API}/payment`,
+      params: { courseId: course.id, userId: currentUser.id },
+      headers: {
+        Authorization: `Bearer ${user.accessToken}`,
+      },
+    });
+    payments = responsePayment.data;
   } catch (err) {
     course = { error: { message: err.message } };
     instructors = { error: { message: err.message } };
     documents = { error: { message: err.message } };
     certificates = { error: { message: err.message } };
+    payments = { error: { message: err.message } };
   }
 
-  return { props: { course, instructors, user: currentUser, documents, certificates } };
+  return { props: { course, instructors, user: currentUser, documents, certificates, payments } };
 };
 
 const Details = (props) => {
   const router = useRouter();
-  const { course, instructors, user, documents, certificates } = props;
+  const { course, instructors, user, documents, certificates, payments } = props;
+
+  if (user.roleId === 3 && !course.isRegistered) {
+    router.push('/course');
+  }
 
   return (
     <>
       <Head>
-        <title>Course Details</title>
+        <title>Course Details | Halal Center</title>
       </Head>
       <Box
         component="main"
@@ -150,6 +169,7 @@ const Details = (props) => {
             user={user}
             documents={documents}
             certificates={certificates}
+            payments={payments}
           />
         </Container>
       </Box>

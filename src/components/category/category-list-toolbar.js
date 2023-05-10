@@ -57,7 +57,7 @@ export const CategoryListToolbar = (props) => {
             color="primary"
             variant="contained"
             onClick={() => {
-              handleRedirectOnClick(router, '/course/add');
+              handleRedirectOnClick(router, '/category/add');
             }}
           >
             Add New

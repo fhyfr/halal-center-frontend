@@ -42,7 +42,6 @@ export const PaymentCourse = ({ course, user }) => {
       amount: course.price,
       discount: 0,
       descriptions: 'User Course Registration',
-      paymentMethod: '',
       transactionDate: new Date().toISOString(),
       status: 'PENDING',
       receiptUrl: '',
@@ -53,7 +52,6 @@ export const PaymentCourse = ({ course, user }) => {
       userId: Yup.number().required('User id is required'),
       descriptions: Yup.string().required('Descriptions is required'),
       type: Yup.string().required('Type is required'),
-      paymentMethod: Yup.string().required('Payment method is required'),
       transactionDate: Yup.string().required(),
       status: Yup.string().required('Status is required'),
       receiptUrl: Yup.string().url().required('Receipt url is required'),
@@ -138,11 +136,10 @@ export const PaymentCourse = ({ course, user }) => {
               </Typography>
               <Divider />
               <Typography variant="body1" sx={{ marginTop: 2 }} maxWidth={600}>
-                Please make payment for this course according to the total to be paid above. <br />
-                For payment, you can use the bank transfer method or pay cash. For the bank transfer
-                method, please transfer to the following account according to the total above.
+                Please make a payment for this course according to the total to be paid above.
                 <br />
-                For payments via cash, please contact the course admin.
+                For payment, you can only use the bank transfer method. Please transfer to the
+                following account according to the total above.
               </Typography>
             </CardContent>
 
@@ -171,32 +168,6 @@ export const PaymentCourse = ({ course, user }) => {
 
             <CardContent>
               <Grid container sx={{ p: 2 }}>
-                <FormControl sx={{ marginTop: 1, marginBottom: 2 }} fullWidth variant="outlined">
-                  <InputLabel id="select-payment-method">Payment Method</InputLabel>
-                  <Select
-                    labelId="select-payment-method"
-                    id="select-payment-method"
-                    value={formik.values.paymentMethod}
-                    label="Payment Method"
-                    onChange={formik.handleChange}
-                    name="paymentMethod"
-                  >
-                    <MenuItem disabled key="" value="">
-                      --- Payment Method ---
-                    </MenuItem>
-                    <MenuItem key="CASH" value="CASH">
-                      Cash
-                    </MenuItem>
-
-                    <MenuItem key="BANK_TRANSFER" value="BANK_TRANSFER">
-                      Bank Transfer
-                    </MenuItem>
-                  </Select>
-                  {Boolean(formik.touched.paymentMethod && formik.errors.paymentMethod) && (
-                    <FormHelperText error>{formik.errors.paymentMethod}</FormHelperText>
-                  )}
-                </FormControl>
-
                 <FormControl sx={{ marginTop: 1, marginBottom: 2 }} fullWidth variant="outlined">
                   <Card>
                     <CardActions>

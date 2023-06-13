@@ -91,7 +91,7 @@ export const getServerSideProps = async ({ req, res, query }) => {
     const responseCertificate = await axios({
       method: 'GET',
       url: `${NEXT_PUBLIC_API}/document`,
-      params: { courseId, userId: currentUser.id, type: 'CERTIFICATE' },
+      params: { courseId, userId: currentUser.id, type: 'CERTIFICATE_MEMBER' },
       headers: {
         Authorization: `Bearer ${user.accessToken}`,
       },

@@ -3,6 +3,10 @@ import { getSession } from '../../contexts/jwt-auth-context';
 const { NEXT_PUBLIC_API } = process.env;
 
 export const createNewPayment = async (newPayment) => {
+  Object.assign(newPayment, {
+    paymentMethod: 'BANK_TRANSFER',
+  });
+
   const accessToken = getSession();
 
   const response = await axios({

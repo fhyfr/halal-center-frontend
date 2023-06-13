@@ -13,9 +13,11 @@ import { handleRedirectOnClick } from '../../utils/handle-event-button';
 import { Add } from '@mui/icons-material';
 import { useRouter } from 'next/router';
 import { Search as SearchIcon } from '../../icons/search';
+import useAuth from '../../hooks/use-auth';
 
 export const PaymentListToolbar = () => {
   const router = useRouter();
+  const { user } = useAuth();
 
   const handleFilterCourse = (event) => {
     const path = router.pathname;
@@ -53,22 +55,26 @@ export const PaymentListToolbar = () => {
         <Typography sx={{ m: 1 }} variant="h4">
           Payments
         </Typography>
-        <Box sx={{ m: 1 }}>
-          <Button
-            startIcon={
-              <SvgIcon fontSize="small">
-                <Add />
-              </SvgIcon>
-            }
-            color="primary"
-            variant="contained"
-            onClick={() => {
-              handleRedirectOnClick(router, '/payment/add');
-            }}
-          >
-            Add New
-          </Button>
-        </Box>
+        {user && user?.role.roleName === 'TREASURER' ? (
+          <Box sx={{ m: 1 }}>
+            <Button
+              startIcon={
+                <SvgIcon fontSize="small">
+                  <Add />
+                </SvgIcon>
+              }
+              color="primary"
+              variant="contained"
+              onClick={() => {
+                handleRedirectOnClick(router, '/payment/add');
+              }}
+            >
+              Add New
+            </Button>
+          </Box>
+        ) : (
+          ''
+        )}
       </Box>
       <Box sx={{ mt: 3 }}>
         <Card>

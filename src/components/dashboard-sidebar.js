@@ -21,8 +21,17 @@ import {
   PermContactCalendar,
   School,
 } from '@mui/icons-material';
+import useAuth from '../hooks/use-auth';
 
-// TODO: implement user access control on menu sidebar
+const permissions = {
+  TREASURER: ['Dashboard', 'Payments'],
+  STAFF_HRD: ['Dashboard', 'Positions', 'Departments', 'Employees'],
+  DIRECTOR: ['Dashboard', 'Payments', 'Courses', 'Report'],
+  SUPER_ADMIN: ['Dashboard', 'Users'],
+  VICE_DIRECTOR: ['Dashboard', 'Categories', 'Instructors', 'Documents'],
+  ADMIN_COURSE: ['Dashboard', 'Categories', 'Courses', 'Instructors', 'Documents'],
+  MEMBER: ['Dashboard', 'Courses', 'My Course', 'Account', 'Settings'],
+};
 
 const items = [
   {
@@ -104,6 +113,9 @@ export const DashboardSidebar = (props) => {
     defaultMatches: true,
     noSsr: false,
   });
+  const { user } = useAuth();
+
+  const userPermissions = permissions[user?.role?.roleName];
 
   useEffect(
     () => {
@@ -149,9 +161,13 @@ export const DashboardSidebar = (props) => {
           }}
         />
         <Box sx={{ flexGrow: 1 }}>
-          {items.map((item) => (
-            <NavItem key={item.title} icon={item.icon} href={item.href} title={item.title} />
-          ))}
+          {items.map((item) => {
+            if (userPermissions && userPermissions.includes(item.title)) {
+              return (
+                <NavItem key={item.title} icon={item.icon} href={item.href} title={item.title} />
+              );
+            }
+          })}
         </Box>
       </Box>
     </>

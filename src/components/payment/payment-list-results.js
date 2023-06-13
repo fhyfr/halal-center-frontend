@@ -20,6 +20,7 @@ import { formatDateWithoutHourMinutes } from '../../utils/date-converter';
 import { useRouter } from 'next/router';
 import { formatRupiahCurrency } from '../../utils/currency-converter';
 import { deletePayment } from '../../services/api/payment';
+import useAuth from '../../hooks/use-auth';
 
 export const PaymentListResults = ({ payments }) => {
   const router = useRouter();
@@ -27,6 +28,7 @@ export const PaymentListResults = ({ payments }) => {
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(0);
   const [valueType, setValueType] = useState('registration');
+  const { user } = useAuth();
 
   const handleFilterType = (event, newValue) => {
     const path = router.pathname;
@@ -197,34 +199,41 @@ export const PaymentListResults = ({ payments }) => {
                           >
                             Detail
                           </Button>
-                          <Button
-                            color="secondary"
-                            sx={{
-                              mr: 2,
-                            }}
-                            variant="contained"
-                            size="small"
-                            onClick={() => {
-                              router.push({
-                                pathname: '/payment/edit',
-                                query: {
-                                  id: payment.id,
-                                },
-                              });
-                            }}
-                          >
-                            Update
-                          </Button>
-                          <Button
-                            color="error"
-                            variant="contained"
-                            size="small"
-                            onClick={() => {
-                              handleDeletePayment(payment.id);
-                            }}
-                          >
-                            Delete
-                          </Button>
+                          {user && user?.role.roleName === 'TREASURER' ? (
+                            <Box>
+                              {' '}
+                              <Button
+                                color="secondary"
+                                sx={{
+                                  mr: 2,
+                                }}
+                                variant="contained"
+                                size="small"
+                                onClick={() => {
+                                  router.push({
+                                    pathname: '/payment/edit',
+                                    query: {
+                                      id: payment.id,
+                                    },
+                                  });
+                                }}
+                              >
+                                Update
+                              </Button>
+                              <Button
+                                color="error"
+                                variant="contained"
+                                size="small"
+                                onClick={() => {
+                                  handleDeletePayment(payment.id);
+                                }}
+                              >
+                                Delete
+                              </Button>{' '}
+                            </Box>
+                          ) : (
+                            ''
+                          )}
                         </Box>
                       </TableCell>
                     </TableRow>
@@ -320,34 +329,40 @@ export const PaymentListResults = ({ payments }) => {
                           >
                             Detail
                           </Button>
-                          <Button
-                            color="secondary"
-                            sx={{
-                              mr: 2,
-                            }}
-                            variant="contained"
-                            size="small"
-                            onClick={() => {
-                              router.push({
-                                pathname: '/payment/edit',
-                                query: {
-                                  id: payment.id,
-                                },
-                              });
-                            }}
-                          >
-                            Update
-                          </Button>
-                          <Button
-                            color="error"
-                            variant="contained"
-                            size="small"
-                            onClick={() => {
-                              handleDeletePayment(payment.id);
-                            }}
-                          >
-                            Delete
-                          </Button>
+                          {user && user?.role.roleName === 'TREASURER' ? (
+                            <Box>
+                              <Button
+                                color="secondary"
+                                sx={{
+                                  mr: 2,
+                                }}
+                                variant="contained"
+                                size="small"
+                                onClick={() => {
+                                  router.push({
+                                    pathname: '/payment/edit',
+                                    query: {
+                                      id: payment.id,
+                                    },
+                                  });
+                                }}
+                              >
+                                Update
+                              </Button>
+                              <Button
+                                color="error"
+                                variant="contained"
+                                size="small"
+                                onClick={() => {
+                                  handleDeletePayment(payment.id);
+                                }}
+                              >
+                                Delete
+                              </Button>
+                            </Box>
+                          ) : (
+                            ''
+                          )}
                         </Box>
                       </TableCell>
                     </TableRow>

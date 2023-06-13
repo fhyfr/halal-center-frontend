@@ -13,6 +13,7 @@ const { NEXT_PUBLIC_API } = process.env;
 export const getServerSideProps = async ({ req, res, query }) => {
   let instructor;
   let courses = [];
+  let documents = [];
 
   const { instructorId } = query;
   if (!instructorId || instructorId === null) {
@@ -38,6 +39,7 @@ export const getServerSideProps = async ({ req, res, query }) => {
   const user = JSON.parse(data.user);
 
   try {
+    // get instructor data
     const response = await axios({
       method: 'GET',
       url: `${NEXT_PUBLIC_API}/instructor/${instructorId}`,
@@ -49,6 +51,20 @@ export const getServerSideProps = async ({ req, res, query }) => {
       throw new Error('failed to get data instructor');
     }
     instructor = response.data;
+
+    // get documents data
+    const responseDocument = await axios({
+      method: 'GET',
+      url: `${NEXT_PUBLIC_API}/document`,
+      params: { instructorId },
+      headers: {
+        Authorization: `Bearer ${user.accessToken}`,
+      },
+    });
+    if (responseDocument.status !== 200) {
+      throw new Error('failed to get data documents');
+    }
+    documents = responseDocument.data;
 
     if (instructor.courseIds?.length > 0) {
       for (let iterator = 0; iterator < instructor.courseIds.length; iterator++) {
@@ -69,14 +85,15 @@ export const getServerSideProps = async ({ req, res, query }) => {
   } catch (err) {
     instructor = { error: { message: err.message } };
     courses = { error: { message: err.message } };
+    documents = { error: { message: err.message } };
   }
 
-  return { props: { instructor, courses } };
+  return { props: { instructor, courses, documents } };
 };
 
 const Details = (props) => {
   const router = useRouter();
-  const { instructor, courses } = props;
+  const { instructor, courses, documents } = props;
 
   return (
     <>
@@ -111,7 +128,7 @@ const Details = (props) => {
             Instructor Details
           </Typography>
 
-          <InstructorDetails instructor={instructor} courses={courses} />
+          <InstructorDetails instructor={instructor} courses={courses} documents={documents} />
         </Container>
       </Box>
     </>

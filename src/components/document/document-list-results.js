@@ -84,6 +84,7 @@ export const DocumentListResults = ({ documents }) => {
                 <TableCell>Type</TableCell>
                 <TableCell>Course ID</TableCell>
                 <TableCell>User ID</TableCell>
+                <TableCell>Instructor ID</TableCell>
                 <TableCell>URL</TableCell>
                 <TableCell>Created By</TableCell>
                 <TableCell align="center">Created Date</TableCell>
@@ -107,7 +108,6 @@ export const DocumentListResults = ({ documents }) => {
                       {document.id}
                     </Typography>
                   </TableCell>
-
                   <TableCell>
                     <Typography color="textPrimary" variant="body2">
                       {document.type}
@@ -121,6 +121,11 @@ export const DocumentListResults = ({ documents }) => {
                   <TableCell>
                     <Typography color="textPrimary" variant="body2">
                       {document.userId}
+                    </Typography>
+                  </TableCell>
+                  <TableCell>
+                    <Typography color="textPrimary" variant="body2">
+                      {document.instructorId}
                     </Typography>
                   </TableCell>
                   <TableCell>

@@ -255,7 +255,10 @@ export const CourseDetails = ({ course, instructors, user, documents, certificat
               {(documents.data?.length > 0 && course.type === 'FREE') ||
               (course.type === 'PAID' && isCoursePaid) ? (
                 documents.data?.map((document) => {
-                  if (document.type !== 'CERTIFICATE') {
+                  if (
+                    document.type !== 'CERTIFICATE_MEMBER' ||
+                    document.type !== 'CERTIFICATE_INSTRUCTOR'
+                  ) {
                     return (
                       <TableRow key={document.id}>
                         <TableCell>

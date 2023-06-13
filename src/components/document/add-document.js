@@ -33,13 +33,13 @@ export const AddDocument = () => {
     initialValues: {
       type: '',
       courseId: 0,
-      userId: 0,
       url: '',
     },
     validationSchema: Yup.object({
       type: Yup.string().required('Type is required'),
       courseId: Yup.number().required('Course id is required'),
       userId: Yup.number(),
+      instructorId: Yup.number(),
       url: Yup.string().url().required('Document url is required'),
     }),
     onSubmit: (values, action) => {
@@ -88,13 +88,11 @@ export const AddDocument = () => {
               {info}
             </Alert>
           )}
-
           {errMessage && (
             <Alert sx={{ marginBottom: 2 }} severity="error">
               {errMessage}
             </Alert>
           )}
-
           <CardActions>
             <Button
               color="primary"
@@ -114,14 +112,13 @@ export const AddDocument = () => {
               />
             </Button>
           </CardActions>
-
           <FormControl sx={{ marginTop: 1, marginBottom: 2 }} fullWidth variant="outlined">
-            <InputLabel id="select-payment-type">Payment Type</InputLabel>
+            <InputLabel id="select-document-type">Document Type</InputLabel>
             <Select
-              labelId="select-payment-type"
-              id="select-payment-type"
+              labelId="select-document-type"
+              id="select-document-type"
               value={formik.values.type}
-              label="Payment Type"
+              label="Document Type"
               onChange={formik.handleChange}
               name="type"
             >
@@ -134,15 +131,17 @@ export const AddDocument = () => {
               <MenuItem key="CURRICULUM" value="CURRICULUM">
                 CURRICULUM
               </MenuItem>
-              <MenuItem key="CERTIFICATE" value="CERTIFICATE">
-                CERTIFICATE
+              <MenuItem key="CERTIFICATE_MEMBER" value="CERTIFICATE_MEMBER">
+                CERTIFICATE_MEMBER
+              </MenuItem>
+              <MenuItem key="CERTIFICATE_INSTRUCTOR" value="CERTIFICATE_INSTRUCTOR">
+                CERTIFICATE_INSTRUCTOR
               </MenuItem>
             </Select>
             {Boolean(formik.touched.departmentId && formik.errors.departmentId) && (
               <FormHelperText error>{formik.errors.departmentId}</FormHelperText>
             )}
           </FormControl>
-
           <FormControl sx={{ marginY: 2 }} fullWidth variant="outlined">
             <InputLabel htmlFor="outlined-adornment-course-id">Course ID</InputLabel>
             <OutlinedInput
@@ -158,7 +157,6 @@ export const AddDocument = () => {
               <FormHelperText error>{formik.errors.courseId}</FormHelperText>
             )}
           </FormControl>
-
           <FormControl sx={{ marginY: 2 }} fullWidth variant="outlined">
             <InputLabel htmlFor="outlined-adornment-user-id">User ID</InputLabel>
             <OutlinedInput
@@ -169,10 +167,27 @@ export const AddDocument = () => {
               onBlur={formik.handleBlur}
               onChange={formik.handleChange}
               value={formik.values.userId}
-              disabled={formik.values.type !== 'CERTIFICATE'}
+              disabled={formik.values.type !== 'CERTIFICATE_MEMBER'}
             />
             {Boolean(formik.touched.userId && formik.errors.userId) && (
               <FormHelperText error>{formik.errors.userId}</FormHelperText>
+            )}
+          </FormControl>
+
+          <FormControl sx={{ marginY: 2 }} fullWidth variant="outlined">
+            <InputLabel htmlFor="outlined-adornment-instructor-id">Instructor ID</InputLabel>
+            <OutlinedInput
+              id="outlined-adornment-instructor-id"
+              label="Instructor ID"
+              name="instructorId"
+              type="number"
+              onBlur={formik.handleBlur}
+              onChange={formik.handleChange}
+              value={formik.values.instructorId}
+              disabled={formik.values.type !== 'CERTIFICATE_INSTRUCTOR'}
+            />
+            {Boolean(formik.touched.instructorId && formik.errors.instructorId) && (
+              <FormHelperText error>{formik.errors.instructorId}</FormHelperText>
             )}
           </FormControl>
 

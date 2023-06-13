@@ -13,6 +13,7 @@ export const getServerSideProps = async ({ req, res, query }) => {
   const size = query.limit || 10;
   const courseId = query.courseId;
   const userId = query.userId;
+  const instructorId = query.instructorId;
   const type = query.type;
 
   let documents = null;
@@ -41,6 +42,10 @@ export const getServerSideProps = async ({ req, res, query }) => {
 
   if (userId && userId > 0) {
     Object.assign(queryParams, { userId });
+  }
+
+  if (instructorId && instructorId > 0) {
+    Object.assign(queryParams, { instructorId });
   }
 
   try {

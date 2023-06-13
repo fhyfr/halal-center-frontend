@@ -53,6 +53,17 @@ export const DocumentListToolbar = (props) => {
     });
   };
 
+  const handleFilterInstructor = (event) => {
+    const path = router.pathname;
+    const query = router.query;
+    query.instructorId = event.target.value;
+
+    router.push({
+      pathname: path,
+      query: query,
+    });
+  };
+
   return (
     <Box>
       <Box
@@ -122,6 +133,27 @@ export const DocumentListToolbar = (props) => {
                         </InputAdornment>
                       ),
                     }}
+                    placeholder="Filter by Instructor ID"
+                    variant="outlined"
+                    type="number"
+                    onChange={handleFilterInstructor}
+                  />
+                </Box>
+              </Grid>
+
+              <Grid item xs={12} md={3}>
+                <Box sx={{ maxWidth: 300 }}>
+                  <TextField
+                    fullWidth
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <SvgIcon color="action" fontSize="small">
+                            <SearchIcon />
+                          </SvgIcon>
+                        </InputAdornment>
+                      ),
+                    }}
                     placeholder="Filter by User ID"
                     variant="outlined"
                     type="number"
@@ -151,8 +183,11 @@ export const DocumentListToolbar = (props) => {
                       <option key="CURRICULUM" value="CURRICULUM">
                         CURRICULUM
                       </option>
-                      <option key="CERTIFICATE" value="CERTIFICATE">
-                        CERTIFICATE
+                      <option key="CERTIFICATE_MEMBER" value="CERTIFICATE_MEMBER">
+                        CERTIFICATE_MEMBER
+                      </option>
+                      <option key="CERTIFICATE_INSTRUCTOR" value="CERTIFICATE_INSTRUCTOR">
+                        CERTIFICATE_INSTRUCTOR
                       </option>
                     </NativeSelect>
                   </FormControl>

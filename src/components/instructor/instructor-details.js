@@ -1,5 +1,6 @@
 import {
   Avatar,
+  Button,
   Card,
   CardContent,
   CardHeader,
@@ -7,12 +8,18 @@ import {
   Grid,
   Link,
   Stack,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
   Typography,
 } from '@mui/material';
 import { Box } from '@mui/system';
 import { formatDate, formatDateWithoutHourMinutes } from '../../utils/date-converter';
+import { Download } from '@mui/icons-material';
 
-export const InstructorDetails = ({ instructor, courses }) => {
+export const InstructorDetails = ({ instructor, courses, documents }) => {
   if (instructor.error) {
     return (
       <Typography align="center" variant="h4" style={{ color: 'red' }}>
@@ -117,23 +124,95 @@ export const InstructorDetails = ({ instructor, courses }) => {
           <CardHeader subheader="List courses of instructor" title="Courses" />
           <Divider />
           <CardContent>
-            {courses.length > 0
-              ? courses.map((course) => (
-                  <>
-                    <Stack sx={{ marginBottom: 2 }}>
-                      <Typography variant="h6">Course ID: {course.id}</Typography>
-                      <Typography variant="body1" gutterBottom>
-                        Title: {course.title}
-                      </Typography>
-                      <Typography variant="body1" gutterBottom>
-                        Date: {formatDateWithoutHourMinutes(course.startDate)} s/d{' '}
-                        {formatDateWithoutHourMinutes(course.endDate)}
-                      </Typography>
-                    </Stack>
-                  </>
-                ))
-              : ''}
+            {courses.length > 0 ? (
+              courses.map((course) => (
+                <>
+                  <Stack sx={{ marginBottom: 2 }}>
+                    <Typography variant="h6">Course ID: {course.id}</Typography>
+                    <Typography variant="body1" gutterBottom>
+                      Title: {course.title}
+                    </Typography>
+                    <Typography variant="body1" gutterBottom>
+                      Date: {formatDateWithoutHourMinutes(course.startDate)} s/d{' '}
+                      {formatDateWithoutHourMinutes(course.endDate)}
+                    </Typography>
+                  </Stack>
+                </>
+              ))
+            ) : (
+              <>
+                <CardContent>
+                  <Box>{<Typography variant="subtitle1">Empty</Typography>}</Box>
+                </CardContent>
+              </>
+            )}
           </CardContent>
+        </Card>
+      </Grid>
+
+      <Grid item lg={6} md={6} xs={12}>
+        <Card>
+          <CardHeader subheader="List certificates of instructor" title="Certificates" />
+          <Divider />
+
+          <Table>
+            <TableHead>
+              <TableCell align="center">Course ID</TableCell>
+              <TableCell>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                  }}
+                >
+                  Action
+                </Box>
+              </TableCell>
+            </TableHead>
+            <TableBody>
+              {documents.data?.length > 0 ? (
+                documents.data?.map((document) => {
+                  if (document.type === 'CERTIFICATE_INSTRUCTOR') {
+                    return (
+                      <TableRow key={document.id}>
+                        <TableCell align="center">
+                          <Typography>{document.instructorId}</Typography>
+                        </TableCell>
+                        <TableCell>
+                          <Box
+                            sx={{
+                              display: 'flex',
+                              justifyContent: 'center',
+                            }}
+                          >
+                            <Button
+                              color="secondary"
+                              size="small"
+                              sx={{
+                                mr: 2,
+                              }}
+                              variant="contained"
+                              startIcon={<Download />}
+                              href={document.url}
+                              target="_blank"
+                            >
+                              Download
+                            </Button>
+                          </Box>
+                        </TableCell>
+                      </TableRow>
+                    );
+                  }
+                })
+              ) : (
+                <>
+                  <CardContent>
+                    <Box>{<Typography variant="subtitle1">Empty</Typography>}</Box>
+                  </CardContent>
+                </>
+              )}
+            </TableBody>
+          </Table>
         </Card>
       </Grid>
     </Grid>

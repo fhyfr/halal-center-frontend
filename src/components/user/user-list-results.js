@@ -207,7 +207,7 @@ export const UserListResults = ({ users }) => {
                               });
                             }}
                           >
-                            Reset Password
+                            Update Password
                           </Button>
                         </Box>
                       )}

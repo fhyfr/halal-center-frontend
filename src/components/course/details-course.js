@@ -377,7 +377,7 @@ export const CourseDetails = ({ course, instructors, user, documents, certificat
                   <CardContent>
                     <Box>
                       {currentDate < formatDateWithoutHourMinutes(course.endDate) ? (
-                        <Typography variant="subtitle1">Empty</Typography>
+                        <Typography variant="subtitle1">Certificate not available</Typography>
                       ) : (
                         <Typography variant="subtitle2">
                           You can download your certificate for this course after the course is

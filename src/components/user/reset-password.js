@@ -76,8 +76,8 @@ export const ResetPasswordUser = () => {
     <form onSubmit={formik.handleSubmit}>
       <Card>
         <CardHeader
-          subheader="Fill out this form for reset user password"
-          title="Reset User Password"
+          subheader="Fill out this form for update user password"
+          title="Update User Password"
         />
         <Divider />
         <CardContent>
@@ -178,7 +178,7 @@ export const ResetPasswordUser = () => {
             color="primary"
             variant="contained"
           >
-            Reset Password
+            Update
           </Button>
         </Box>
       </Card>

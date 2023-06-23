@@ -61,7 +61,7 @@ export const CategoryListResults = ({ categories }) => {
   };
 
   const handleDeleteCategory = (categoryId) => {
-    const confirmation = confirm('Are you sure want to delete this department?');
+    const confirmation = confirm('Are you sure want to delete this category?');
     if (confirmation) {
       deleteCategory(categoryId)
         .then((res) => {

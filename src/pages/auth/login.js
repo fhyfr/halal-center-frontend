@@ -148,7 +148,7 @@ const Login = () => {
                     type="submit"
                     variant="contained"
                   >
-                    Sign In Now
+                    Login
                   </Button>
                 </Box>
 

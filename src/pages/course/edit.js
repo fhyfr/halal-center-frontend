@@ -8,8 +8,8 @@ import { EditCourse } from '../../components/course/edit-course';
 const { NEXT_PUBLIC_API } = process.env;
 
 export const getServerSideProps = async ({ req, res, query }) => {
-  const { id } = query;
-  if (!id || id === null) {
+  const { courseId } = query;
+  if (!courseId || courseId === null) {
     return {
       redirect: {
         permanent: false,
@@ -36,7 +36,7 @@ export const getServerSideProps = async ({ req, res, query }) => {
   try {
     const responseCourse = await axios({
       method: 'GET',
-      url: `${NEXT_PUBLIC_API}/course/${id}`,
+      url: `${NEXT_PUBLIC_API}/course/${courseId}`,
       headers: {
         Authorization: `Bearer ${user.accessToken}`,
       },

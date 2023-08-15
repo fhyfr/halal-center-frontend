@@ -31,7 +31,7 @@ const OTP = () => {
         setTimeout(() => {
           router.push({
             pathname: '/auth/reset-password',
-            query: { email: query.email, id: res.data.id },
+            query: { email: query.email, id: res.data.userId },
           });
         }, 2000);
       })

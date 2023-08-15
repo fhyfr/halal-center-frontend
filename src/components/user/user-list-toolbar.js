@@ -123,7 +123,7 @@ export const UserListToolbar = ({ roles }) => {
                         role.roleName === 'SUPER_ADMIN' ? (
                           ''
                         ) : (
-                          <option key={role.id} value={role.id}>
+                          <option key={role.roleId} value={role.roleId}>
                             {role.roleName}
                           </option>
                         ),

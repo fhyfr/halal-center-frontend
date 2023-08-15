@@ -42,7 +42,7 @@ export const CourseCard = ({ user, course }) => {
         return alert('error: course participant is not empty');
       }
 
-      deleteCourse(course.id)
+      deleteCourse(course.courseId)
         .then((res) => {
           alert(res);
           router.reload();
@@ -69,13 +69,13 @@ export const CourseCard = ({ user, course }) => {
     }
 
     if (course.type === 'FREE') {
-      registerCourse(course.id)
+      registerCourse(course.courseId)
         .then((res) => {
           alert(res);
 
           router.push({
             pathname: '/course/details',
-            query: { courseId: course.id },
+            query: { courseId: course.courseId },
           });
         })
         .catch((err) => {
@@ -85,7 +85,7 @@ export const CourseCard = ({ user, course }) => {
       router.push({
         pathname: '/course/payment',
         query: {
-          courseId: course.id,
+          courseId: course.courseId,
         },
       });
     }
@@ -160,7 +160,7 @@ export const CourseCard = ({ user, course }) => {
           <CardMedia component="img" height="auto" image={course.banner} alt={course.title} />
         </Box>
         <Typography align="left" color="textPrimary" gutterBottom variant="h5">
-          {course.title}
+          {`${course.title} - Batch ${course.batchNumber}`}
         </Typography>
         <Typography align="left" color="textPrimary" gutterBottom variant="h6">
           {course.subTitle}
@@ -187,7 +187,7 @@ export const CourseCard = ({ user, course }) => {
                     onClick={() => {
                       router.push({
                         pathname: '/course/details',
-                        query: { courseId: course.id },
+                        query: { courseId: course.courseId },
                       });
                     }}
                   >
@@ -230,7 +230,7 @@ export const CourseCard = ({ user, course }) => {
                 router.push({
                   pathname: '/course/details',
                   query: {
-                    courseId: course.id,
+                    courseId: course.courseId,
                   },
                 });
               }}
@@ -245,7 +245,7 @@ export const CourseCard = ({ user, course }) => {
                 router.push({
                   pathname: '/course/edit',
                   query: {
-                    id: course.id,
+                    courseId: course.courseId,
                   },
                 });
               }}

@@ -52,9 +52,10 @@ export const AddCourse = ({ categories }) => {
       endDate: '',
     },
     validationSchema: Yup.object({
-      categoryId: Yup.number().required('Category is required'),
+      categoryId: Yup.string().required('Category is required'),
       title: Yup.string().required('Title is required'),
       subTitle: Yup.string().required('Sub title is required'),
+      batchNumber: Yup.string().required('Batch number is required'),
       descriptions: Yup.string().required('Description is required'),
       type: Yup.string().required('Type is required'),
       level: Yup.string().required('Level is required'),
@@ -222,7 +223,7 @@ export const AddCourse = ({ categories }) => {
                   </MenuItem>
 
                   {categories.data.map((category) => (
-                    <MenuItem key={category.id} value={category.id}>
+                    <MenuItem key={category.categoryId} value={category.categoryId}>
                       {category.categoryName}
                     </MenuItem>
                   ))}
@@ -231,6 +232,7 @@ export const AddCourse = ({ categories }) => {
                   <FormHelperText error>{formik.errors.categoryId}</FormHelperText>
                 )}
               </FormControl>
+
               <FormControl sx={{ marginY: 2 }} fullWidth variant="outlined">
                 <InputLabel htmlFor="outlined-adornment-title">Title</InputLabel>
                 <OutlinedInput
@@ -260,6 +262,22 @@ export const AddCourse = ({ categories }) => {
                 />
                 {Boolean(formik.touched.subTitle && formik.errors.subTitle) && (
                   <FormHelperText error>{formik.errors.subTitle}</FormHelperText>
+                )}
+              </FormControl>
+
+              <FormControl sx={{ marginY: 2 }} fullWidth variant="outlined">
+                <InputLabel htmlFor="outlined-adornment-batch-number">Batch Number</InputLabel>
+                <OutlinedInput
+                  id="outlined-adornment-batch-number"
+                  label="Batch Number"
+                  name="batchNumber"
+                  type="number"
+                  onBlur={formik.handleBlur}
+                  onChange={formik.handleChange}
+                  value={formik.values.batchNumber}
+                />
+                {Boolean(formik.touched.batchNumber && formik.errors.batchNumber) && (
+                  <FormHelperText error>{formik.errors.batchNumber}</FormHelperText>
                 )}
               </FormControl>
 

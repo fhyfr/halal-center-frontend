@@ -8,8 +8,8 @@ import { EditInstructor } from '../../components/instructor/edit-instructor';
 const { NEXT_PUBLIC_API } = process.env;
 
 export const getServerSideProps = async ({ req, res, query }) => {
-  const { id } = query;
-  if (!id || id === null) {
+  const { instructorId } = query;
+  if (!instructorId || instructorId === null) {
     return {
       redirect: {
         permanent: false,
@@ -20,7 +20,7 @@ export const getServerSideProps = async ({ req, res, query }) => {
   }
 
   const data = parseCookies(req);
-  let instructor, courses;
+  let instructor, courses, provinces, cities;
 
   if (!data.user) {
     return {
@@ -36,7 +36,7 @@ export const getServerSideProps = async ({ req, res, query }) => {
   try {
     const response = await axios({
       method: 'GET',
-      url: `${NEXT_PUBLIC_API}/instructor/${id}`,
+      url: `${NEXT_PUBLIC_API}/instructor/${instructorId}`,
       headers: {
         Authorization: `Bearer ${user.accessToken}`,
       },
@@ -53,18 +53,39 @@ export const getServerSideProps = async ({ req, res, query }) => {
       },
     });
 
+    const responseProvinces = await axios({
+      method: 'GET',
+      url: `${NEXT_PUBLIC_API}/province?page=1&size=200`,
+      headers: {
+        Authorization: `Bearer ${user.accessToken}`,
+      },
+    });
+
+    const responseCities = await axios({
+      method: 'GET',
+      url: `${NEXT_PUBLIC_API}/city?page=1&size=200`,
+      params: { provinceId: response.data.provinceId },
+      headers: {
+        Authorization: `Bearer ${user.accessToken}`,
+      },
+    });
+
     instructor = response.data;
     courses = responseCourse.data;
+    provinces = responseProvinces.data;
+    cities = responseCities.data;
   } catch (err) {
     instructor = { error: { message: err.message } };
     courses = { error: { message: err.message } };
+    provinces = { error: { message: err.message } };
+    cities = { error: { message: err.message } };
   }
 
-  return { props: { instructor, courses } };
+  return { props: { instructor, courses, provinces, cities } };
 };
 
 const Edit = (props) => {
-  const { instructor, courses } = props;
+  const { instructor, courses, provinces, cities } = props;
 
   return (
     <>
@@ -83,7 +104,12 @@ const Edit = (props) => {
             Instructor
           </Typography>
           <Box sx={{ pt: 3 }}>
-            <EditInstructor instructor={instructor} courses={courses} />
+            <EditInstructor
+              instructor={instructor}
+              courses={courses}
+              provinces={provinces}
+              cities={cities}
+            />
           </Box>
         </Container>
       </Box>

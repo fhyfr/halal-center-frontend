@@ -106,10 +106,10 @@ export const InstructorListResults = ({ instructors }) => {
             </TableHead>
             <TableBody>
               {instructors.data.slice(0, limit).map((instructor) => (
-                <TableRow hover key={instructor.id}>
+                <TableRow hover key={instructor.instructorId}>
                   <TableCell align="center">
                     <Typography color="textPrimary" variant="body2">
-                      {instructor.id}
+                      {instructor.instructorId}
                     </Typography>
                   </TableCell>
 
@@ -152,7 +152,7 @@ export const InstructorListResults = ({ instructors }) => {
                           mr: 2,
                         }}
                         variant="contained"
-                        onClick={() => handleDetailInstructor(instructor.id)}
+                        onClick={() => handleDetailInstructor(instructor.instructorId)}
                       >
                         Detail
                       </Button>
@@ -168,7 +168,7 @@ export const InstructorListResults = ({ instructors }) => {
                           router.push({
                             pathname: '/instructor/edit',
                             query: {
-                              id: instructor.id,
+                              instructorId: instructor.instructorId,
                             },
                           });
                         }}
@@ -180,7 +180,7 @@ export const InstructorListResults = ({ instructors }) => {
                         color="error"
                         variant="contained"
                         onClick={() => {
-                          handleDeleteInstructor(instructor.id);
+                          handleDeleteInstructor(instructor.instructorId);
                         }}
                       >
                         Delete

@@ -108,10 +108,10 @@ export const CategoryListResults = ({ categories }) => {
             </TableHead>
             <TableBody>
               {categories.data.slice(0, limit).map((category) => (
-                <TableRow hover key={category.id}>
+                <TableRow hover key={category.categoryId}>
                   <TableCell align="center">
                     <Typography color="textPrimary" variant="body2">
-                      {category.id}
+                      {category.categoryId}
                     </Typography>
                   </TableCell>
                   <TableCell>
@@ -139,7 +139,9 @@ export const CategoryListResults = ({ categories }) => {
                           mr: 2,
                         }}
                         variant="contained"
-                        onClick={() => handleUpdateCategory(category.id, category.categoryName)}
+                        onClick={() =>
+                          handleUpdateCategory(category.categoryId, category.categoryName)
+                        }
                       >
                         Update
                       </Button>
@@ -151,7 +153,7 @@ export const CategoryListResults = ({ categories }) => {
                             color="error"
                             variant="contained"
                             onClick={() => {
-                              handleDeleteCategory(category.id);
+                              handleDeleteCategory(category.categoryId);
                             }}
                           >
                             Delete

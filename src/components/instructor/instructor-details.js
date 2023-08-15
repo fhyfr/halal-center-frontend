@@ -19,7 +19,7 @@ import { Box } from '@mui/system';
 import { formatDate, formatDateWithoutHourMinutes } from '../../utils/date-converter';
 import { Download } from '@mui/icons-material';
 
-export const InstructorDetails = ({ instructor, courses, documents }) => {
+export const InstructorDetails = ({ instructor, courses, certificates }) => {
   if (instructor.error) {
     return (
       <Typography align="center" variant="h4" style={{ color: 'red' }}>
@@ -48,7 +48,9 @@ export const InstructorDetails = ({ instructor, courses, documents }) => {
               <Avatar sx={{ width: 80, height: 80 }} src={instructor.profilePicture}></Avatar>
               <Box>
                 <Typography variant="h5">{instructor.username}</Typography>
-                <Typography variant="subtitle1">Instructor ID: {instructor.id}</Typography>
+                <Typography variant="subtitle1">
+                  Instructor ID: {instructor.instructorId}
+                </Typography>
               </Box>
             </Stack>
           </CardContent>
@@ -60,6 +62,7 @@ export const InstructorDetails = ({ instructor, courses, documents }) => {
             </Typography>
           </CardContent>
           <Divider />
+
           <CardContent sx={{ marginY: -2 }}>
             <Typography variant="h6">Email</Typography>
             <Typography variant="body1" gutterBottom>
@@ -67,6 +70,7 @@ export const InstructorDetails = ({ instructor, courses, documents }) => {
             </Typography>
           </CardContent>
           <Divider />
+
           <CardContent sx={{ marginY: -2 }}>
             <Typography variant="h6">Phone Number</Typography>
             <Typography variant="body1" gutterBottom>
@@ -74,6 +78,23 @@ export const InstructorDetails = ({ instructor, courses, documents }) => {
             </Typography>
           </CardContent>
           <Divider />
+
+          <CardContent sx={{ marginY: -2 }}>
+            <Typography variant="h6">Province</Typography>
+            <Typography variant="body1" gutterBottom>
+              {instructor.province ? instructor.province.name : 'empty'}
+            </Typography>
+          </CardContent>
+          <Divider />
+
+          <CardContent sx={{ marginY: -2 }}>
+            <Typography variant="h6">City</Typography>
+            <Typography variant="body1" gutterBottom>
+              {instructor.city ? instructor.city.name : 'empty'}
+            </Typography>
+          </CardContent>
+          <Divider />
+
           <CardContent sx={{ marginY: -2 }}>
             <Typography variant="h6" gutterBottom>
               Address
@@ -83,6 +104,7 @@ export const InstructorDetails = ({ instructor, courses, documents }) => {
             </Typography>
           </CardContent>
           <Divider />
+
           <CardContent sx={{ marginY: -2 }}>
             <Typography variant="h6">Facebook</Typography>
             <Typography variant="body1" gutterBottom>
@@ -96,6 +118,7 @@ export const InstructorDetails = ({ instructor, courses, documents }) => {
             </Typography>
           </CardContent>
           <Divider />
+
           <CardContent sx={{ marginY: -2 }}>
             <Typography variant="h6">LinkedIn</Typography>
             <Typography variant="body1" gutterBottom>
@@ -109,6 +132,7 @@ export const InstructorDetails = ({ instructor, courses, documents }) => {
             </Typography>
           </CardContent>
           <Divider />
+
           <CardContent sx={{ marginY: -2 }}>
             <Typography variant="h6">Last Updated</Typography>
             <Typography variant="body1" gutterBottom>
@@ -128,7 +152,7 @@ export const InstructorDetails = ({ instructor, courses, documents }) => {
               courses.map((course) => (
                 <>
                   <Stack sx={{ marginBottom: 2 }}>
-                    <Typography variant="h6">Course ID: {course.id}</Typography>
+                    <Typography variant="h6">Course ID: {course.courseId}</Typography>
                     <Typography variant="body1" gutterBottom>
                       Title: {course.title}
                     </Typography>
@@ -170,13 +194,13 @@ export const InstructorDetails = ({ instructor, courses, documents }) => {
               </TableCell>
             </TableHead>
             <TableBody>
-              {documents.data?.length > 0 ? (
-                documents.data?.map((document) => {
-                  if (document.type === 'CERTIFICATE_INSTRUCTOR') {
+              {certificates.data?.length > 0 ? (
+                certificates.data?.map((certificate) => {
+                  if (certificate.type === 'CERTIFICATE_INSTRUCTOR') {
                     return (
-                      <TableRow key={document.id}>
+                      <TableRow key={certificate.certificateId}>
                         <TableCell align="center">
-                          <Typography>{document.instructorId}</Typography>
+                          <Typography>{certificate.instructorId}</Typography>
                         </TableCell>
                         <TableCell>
                           <Box
@@ -193,7 +217,7 @@ export const InstructorDetails = ({ instructor, courses, documents }) => {
                               }}
                               variant="contained"
                               startIcon={<Download />}
-                              href={document.url}
+                              href={certificate.url}
                               target="_blank"
                             >
                               Download

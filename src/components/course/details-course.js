@@ -27,7 +27,7 @@ import {
 } from '@mui/icons-material';
 import { formatRupiahCurrency } from '../../utils/currency-converter';
 
-export const CourseDetails = ({ course, instructors, user, documents, certificates, payments }) => {
+export const CourseDetails = ({ course, instructors, user, modules, certificates, payments }) => {
   if (course.error) {
     return (
       <Typography align="center" variant="h4" style={{ color: 'red' }}>
@@ -44,10 +44,10 @@ export const CourseDetails = ({ course, instructors, user, documents, certificat
     );
   }
 
-  if (documents.error) {
+  if (modules.error) {
     return (
       <Typography align="center" variant="h4" style={{ color: 'red' }}>
-        error, {documents.error.message}
+        error, {modules.error.message}
       </Typography>
     );
   }
@@ -230,16 +230,12 @@ export const CourseDetails = ({ course, instructors, user, documents, certificat
       </Grid>
       <Grid item lg={6} md={6} xs={12}>
         <Card>
-          <CardHeader
-            subheader="Module and Curriculum of the Course"
-            title="Module and Curriculum"
-          />
+          <CardHeader subheader="Module of the Course" title="Module" />
           <Divider />
 
           <Table>
             <TableHead>
-              <TableCell align="left">Document ID</TableCell>
-              <TableCell align="left">Type</TableCell>
+              <TableCell align="left">Module ID</TableCell>
               <TableCell>
                 <Box
                   sx={{
@@ -252,53 +248,49 @@ export const CourseDetails = ({ course, instructors, user, documents, certificat
               </TableCell>
             </TableHead>
             <TableBody>
-              {(documents.data?.length > 0 && course.type === 'FREE') ||
+              {(modules.data?.length > 0 && course.type === 'FREE') ||
               (course.type === 'PAID' && isCoursePaid) ? (
-                documents.data?.map((document) => {
-                  if (
-                    document.type !== 'CERTIFICATE_MEMBER' ||
-                    document.type !== 'CERTIFICATE_INSTRUCTOR'
-                  ) {
-                    return (
-                      <TableRow key={document.id}>
-                        <TableCell>
-                          <Typography>{document.id}</Typography>
-                        </TableCell>
-                        <TableCell>{document.type}</TableCell>
-                        <TableCell>
-                          <Box
+                modules.data?.map((module) => {
+                  return (
+                    <TableRow key={module.moduleId}>
+                      <TableCell>
+                        <Typography>{module.moduleId}</Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Box
+                          sx={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                          }}
+                        >
+                          <Button
+                            color="secondary"
+                            size="small"
                             sx={{
-                              display: 'flex',
-                              justifyContent: 'center',
+                              mr: 2,
                             }}
+                            variant="contained"
+                            startIcon={<Download />}
+                            href={module.url}
+                            target="_blank"
                           >
-                            <Button
-                              color="secondary"
-                              size="small"
-                              sx={{
-                                mr: 2,
-                              }}
-                              variant="contained"
-                              startIcon={<Download />}
-                              href={document.url}
-                              target="_blank"
-                            >
-                              Download
-                            </Button>
-                          </Box>
-                        </TableCell>
-                      </TableRow>
-                    );
-                  }
+                            Download
+                          </Button>
+                        </Box>
+                      </TableCell>
+                    </TableRow>
+                  );
                 })
               ) : (
                 <>
                   <CardContent>
                     <Box>
-                      {!isCoursePaid && course.type === 'PAID' ? (
+                      {!isCoursePaid &&
+                      course.type === 'PAID' &&
+                      user?.role?.roleName === 'MEMBER' ? (
                         <Typography variant="subtitle2">
-                          You can download the module and curriculum if your payments is success
-                          (admin would check your payment)
+                          You can download the modules if your payment is succeed (admin would check
+                          your payment)
                         </Typography>
                       ) : (
                         <Typography variant="subtitle1">Empty</Typography>
@@ -318,7 +310,7 @@ export const CourseDetails = ({ course, instructors, user, documents, certificat
 
           <Table>
             <TableHead>
-              <TableCell align="left">Document ID</TableCell>
+              <TableCell align="left">Certificate ID</TableCell>
               <TableCell align="left">Type</TableCell>
               <TableCell align="left">Username</TableCell>
               <TableCell>
@@ -340,9 +332,9 @@ export const CourseDetails = ({ course, instructors, user, documents, certificat
                     currentDate > formatDateWithoutHourMinutes(course.endDate)
                   ) {
                     return (
-                      <TableRow key={certificate.id}>
+                      <TableRow key={certificate.certificateId}>
                         <TableCell>
-                          <Typography>{certificate.id}</Typography>
+                          <Typography>{certificate.certificateId}</Typography>
                         </TableCell>
                         <TableCell>{certificate.type}</TableCell>
                         <TableCell>{user.username}</TableCell>

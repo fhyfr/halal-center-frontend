@@ -11,7 +11,7 @@ import { getCurrentUser } from '../../services/api/user';
 const { NEXT_PUBLIC_API } = process.env;
 
 export const getServerSideProps = async ({ req, res, query }) => {
-  let course, instructors, documents, certificates, payments;
+  let course, instructors, modules, certificates, payments;
 
   const { courseId } = query;
   if (!courseId || courseId === null) {
@@ -73,25 +73,25 @@ export const getServerSideProps = async ({ req, res, query }) => {
     }
     instructors = responseInstructor.data;
 
-    // get documents data
-    const responseDocument = await axios({
+    // get module data
+    const responseModule = await axios({
       method: 'GET',
-      url: `${NEXT_PUBLIC_API}/document`,
+      url: `${NEXT_PUBLIC_API}/module`,
       params: { courseId },
       headers: {
         Authorization: `Bearer ${user.accessToken}`,
       },
     });
-    if (responseDocument.status !== 200) {
-      throw new Error('failed to get data documents');
+    if (responseModule.status !== 200) {
+      throw new Error('failed to get data modules');
     }
-    documents = responseDocument.data;
+    modules = responseModule.data;
 
     // get certificate data
     const responseCertificate = await axios({
       method: 'GET',
-      url: `${NEXT_PUBLIC_API}/document`,
-      params: { courseId, userId: currentUser.id, type: 'CERTIFICATE_MEMBER' },
+      url: `${NEXT_PUBLIC_API}/certificate`,
+      params: { courseId, userId: currentUser.userId, type: 'CERTIFICATE_MEMBER' },
       headers: {
         Authorization: `Bearer ${user.accessToken}`,
       },
@@ -104,8 +104,8 @@ export const getServerSideProps = async ({ req, res, query }) => {
     // get payments data
     const responsePayment = await axios({
       method: 'GET',
-      url: `${NEXT_PUBLIC_API}/payment`,
-      params: { courseId: course.id, userId: currentUser.id },
+      url: `${NEXT_PUBLIC_API}/registration-payment`,
+      params: { courseId: course.courseId, userId: currentUser.userId },
       headers: {
         Authorization: `Bearer ${user.accessToken}`,
       },
@@ -114,17 +114,17 @@ export const getServerSideProps = async ({ req, res, query }) => {
   } catch (err) {
     course = { error: { message: err.message } };
     instructors = { error: { message: err.message } };
-    documents = { error: { message: err.message } };
+    modules = { error: { message: err.message } };
     certificates = { error: { message: err.message } };
     payments = { error: { message: err.message } };
   }
 
-  return { props: { course, instructors, user: currentUser, documents, certificates, payments } };
+  return { props: { course, instructors, user: currentUser, modules, certificates, payments } };
 };
 
 const Details = (props) => {
   const router = useRouter();
-  const { course, instructors, user, documents, certificates, payments } = props;
+  const { course, instructors, user, modules, certificates, payments } = props;
 
   if (user.roleId === 3 && !course.isRegistered) {
     router.push('/course');
@@ -167,7 +167,7 @@ const Details = (props) => {
             course={course}
             instructors={instructors}
             user={user}
-            documents={documents}
+            modules={modules}
             certificates={certificates}
             payments={payments}
           />

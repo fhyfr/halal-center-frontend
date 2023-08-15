@@ -156,7 +156,7 @@ export const UserListResults = ({ users }) => {
                               mr: 2,
                             }}
                             variant="contained"
-                            onClick={() => handleDetailUser(user.id)}
+                            onClick={() => handleDetailUser(user.userId)}
                           >
                             Detail
                           </Button>

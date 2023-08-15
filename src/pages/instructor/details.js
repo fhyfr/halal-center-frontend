@@ -13,7 +13,7 @@ const { NEXT_PUBLIC_API } = process.env;
 export const getServerSideProps = async ({ req, res, query }) => {
   let instructor;
   let courses = [];
-  let documents = [];
+  let certificates = [];
 
   const { instructorId } = query;
   if (!instructorId || instructorId === null) {
@@ -52,19 +52,19 @@ export const getServerSideProps = async ({ req, res, query }) => {
     }
     instructor = response.data;
 
-    // get documents data
-    const responseDocument = await axios({
+    // get certificates data
+    const responseCertificate = await axios({
       method: 'GET',
-      url: `${NEXT_PUBLIC_API}/document`,
+      url: `${NEXT_PUBLIC_API}/certificate`,
       params: { instructorId },
       headers: {
         Authorization: `Bearer ${user.accessToken}`,
       },
     });
-    if (responseDocument.status !== 200) {
-      throw new Error('failed to get data documents');
+    if (responseCertificate.status !== 200) {
+      throw new Error('failed to get data certificates');
     }
-    documents = responseDocument.data;
+    certificates = responseCertificate.data;
 
     if (instructor.courseIds?.length > 0) {
       for (let iterator = 0; iterator < instructor.courseIds.length; iterator++) {
@@ -83,17 +83,19 @@ export const getServerSideProps = async ({ req, res, query }) => {
       }
     }
   } catch (err) {
+    console.log(err);
+
     instructor = { error: { message: err.message } };
     courses = { error: { message: err.message } };
-    documents = { error: { message: err.message } };
+    certificates = { error: { message: err.message } };
   }
 
-  return { props: { instructor, courses, documents } };
+  return { props: { instructor, courses, certificates } };
 };
 
 const Details = (props) => {
   const router = useRouter();
-  const { instructor, courses, documents } = props;
+  const { instructor, courses, certificates } = props;
 
   return (
     <>
@@ -128,7 +130,11 @@ const Details = (props) => {
             Instructor Details
           </Typography>
 
-          <InstructorDetails instructor={instructor} courses={courses} documents={documents} />
+          <InstructorDetails
+            instructor={instructor}
+            courses={courses}
+            certificates={certificates}
+          />
         </Container>
       </Box>
     </>

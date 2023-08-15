@@ -9,7 +9,7 @@ const { NEXT_PUBLIC_API } = process.env;
 
 export const getServerSideProps = async ({ req, res }) => {
   const data = parseCookies(req);
-  let courses;
+  let courses, provinces, cities;
 
   if (!data.user) {
     return {
@@ -32,15 +32,26 @@ export const getServerSideProps = async ({ req, res }) => {
     });
 
     courses = response.data;
+
+    const responseProvinces = await axios({
+      method: 'GET',
+      url: `${NEXT_PUBLIC_API}/province?page=1&size=200`,
+      headers: {
+        Authorization: `Bearer ${user.accessToken}`,
+      },
+    });
+
+    provinces = responseProvinces.data;
   } catch (err) {
     courses = { error: { message: err.message } };
+    provinces = { error: { message: err.message } };
   }
 
-  return { props: { courses } };
+  return { props: { courses, provinces } };
 };
 
 const AddNew = (props) => {
-  const { courses } = props;
+  const { courses, provinces } = props;
 
   return (
     <>
@@ -59,7 +70,7 @@ const AddNew = (props) => {
             Add New Instructor
           </Typography>
           <Box sx={{ pt: 3 }}>
-            <AddInstructor courses={courses} />
+            <AddInstructor courses={courses} provinces={provinces} />
           </Box>
         </Container>
       </Box>

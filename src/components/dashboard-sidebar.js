@@ -61,21 +61,6 @@ const items = [
     title: 'Categories',
   },
   {
-    href: '/department',
-    icon: <Apartment fontSize="small" />,
-    title: 'Departments',
-  },
-  {
-    href: '/position',
-    icon: <PermContactCalendar fontSize="small" />,
-    title: 'Positions',
-  },
-  {
-    href: '/employee',
-    icon: <Groups fontSize="small" />,
-    title: 'Employees',
-  },
-  {
     href: '/user/account',
     icon: <AccountCircle fontSize="small" />,
     title: 'Account',

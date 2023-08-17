@@ -230,7 +230,7 @@ export const CourseDetails = ({ course, instructors, user, modules, certificates
       </Grid>
       <Grid item lg={6} md={6} xs={12}>
         <Card>
-          <CardHeader subheader="Module of the Course" title="Module" />
+          <CardHeader subheader="Modules of the Course" title="Modules" />
           <Divider />
 
           <Table>
@@ -289,8 +289,8 @@ export const CourseDetails = ({ course, instructors, user, modules, certificates
                       course.type === 'PAID' &&
                       user?.role?.roleName === 'MEMBER' ? (
                         <Typography variant="subtitle2">
-                          You can download the modules if your payment is succeed (admin would check
-                          your payment)
+                          You can download the modules if your payments is success (admin would
+                          check your payment)
                         </Typography>
                       ) : (
                         <Typography variant="subtitle1">Empty</Typography>

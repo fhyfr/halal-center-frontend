@@ -116,12 +116,12 @@ export const AddDocument = () => {
           </CardActions>
 
           <FormControl sx={{ marginTop: 1, marginBottom: 2 }} fullWidth variant="outlined">
-            <InputLabel id="select-payment-type">Payment Type</InputLabel>
+            <InputLabel id="select-document-type">Document Type</InputLabel>
             <Select
-              labelId="select-payment-type"
-              id="select-payment-type"
+              labelId="select-document-type"
+              id="select-document-type"
               value={formik.values.type}
-              label="Payment Type"
+              label="Document Type"
               onChange={formik.handleChange}
               name="type"
             >
@@ -130,9 +130,6 @@ export const AddDocument = () => {
               </MenuItem>
               <MenuItem key="MODULE" value="MODULE">
                 MODULE
-              </MenuItem>
-              <MenuItem key="CURRICULUM" value="CURRICULUM">
-                CURRICULUM
               </MenuItem>
               <MenuItem key="CERTIFICATE" value="CERTIFICATE">
                 CERTIFICATE

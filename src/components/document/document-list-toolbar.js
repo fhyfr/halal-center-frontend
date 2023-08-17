@@ -148,9 +148,6 @@ export const DocumentListToolbar = (props) => {
                       <option key="MODULE" value="MODULE">
                         MODULE
                       </option>
-                      <option key="CURRICULUM" value="CURRICULUM">
-                        CURRICULUM
-                      </option>
                       <option key="CERTIFICATE" value="CERTIFICATE">
                         CERTIFICATE
                       </option>

@@ -230,15 +230,12 @@ export const CourseDetails = ({ course, instructors, user, documents, certificat
       </Grid>
       <Grid item lg={6} md={6} xs={12}>
         <Card>
-          <CardHeader
-            subheader="Module and Curriculum of the Course"
-            title="Module and Curriculum"
-          />
+          <CardHeader subheader="Modules of the Course" title="Modules" />
           <Divider />
 
           <Table>
             <TableHead>
-              <TableCell align="left">Document ID</TableCell>
+              <TableCell align="left">Module ID</TableCell>
               <TableCell align="left">Type</TableCell>
               <TableCell>
                 <Box
@@ -292,10 +289,12 @@ export const CourseDetails = ({ course, instructors, user, documents, certificat
                 <>
                   <CardContent>
                     <Box>
-                      {!isCoursePaid && course.type === 'PAID' ? (
+                      {!isCoursePaid &&
+                      course.type === 'PAID' &&
+                      user?.role?.roleName === 'MEMBER' ? (
                         <Typography variant="subtitle2">
-                          You can download the module and curriculum if your payments is success
-                          (admin would check your payment)
+                          You can download the modules if your payments is success (admin would
+                          check your payment)
                         </Typography>
                       ) : (
                         <Typography variant="subtitle1">Empty</Typography>
@@ -315,7 +314,7 @@ export const CourseDetails = ({ course, instructors, user, documents, certificat
 
           <Table>
             <TableHead>
-              <TableCell align="left">Document ID</TableCell>
+              <TableCell align="left">Certificate ID</TableCell>
               <TableCell align="left">Type</TableCell>
               <TableCell align="left">Username</TableCell>
               <TableCell>

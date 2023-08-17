@@ -50,19 +50,25 @@ export const AccountPopover = (props) => {
         }}
       >
         <Typography variant="overline">Account</Typography>
-        <NextLink href="/user/account">
-          <Link
-            to="/user/account"
-            underline="hover"
-            sx={{
-              cursor: 'pointer',
-            }}
-          >
-            <Typography color="textSecondary" variant="body2">
-              {user ? user.username : 'username'}
-            </Typography>
-          </Link>
-        </NextLink>
+        {user && user?.role?.roleName === 'MEMBER' ? (
+          <NextLink href="/user/account">
+            <Link
+              to="/user/account"
+              underline="hover"
+              sx={{
+                cursor: 'pointer',
+              }}
+            >
+              <Typography color="textSecondary" variant="body2">
+                {user ? user.username : 'username'}
+              </Typography>
+            </Link>
+          </NextLink>
+        ) : (
+          <Typography color="textSecondary" variant="body2">
+            {user ? user.username : 'username'}
+          </Typography>
+        )}
       </Box>
       <MenuList
         disablePadding

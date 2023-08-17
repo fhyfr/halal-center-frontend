@@ -128,12 +128,6 @@ export const AccountProfileDetails = (props) => {
                 <Typography color="textPrimary" gutterBottom variant="h5">
                   {user ? user.fullName : ''}
                 </Typography>
-                <Typography color="textSecondary" variant="body2">
-                  {user ? user.address : ''}
-                </Typography>
-                <Typography color="textSecondary" variant="body2">
-                  GMT+7
-                </Typography>
               </Box>
             </CardContent>
             <Divider />

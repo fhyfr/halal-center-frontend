@@ -1,3 +1,4 @@
 module.exports = {
-  reactStrictMode: true
+  reactStrictMode: true,
+  staticPageGenerationTimeout: 120, // seconds
 };

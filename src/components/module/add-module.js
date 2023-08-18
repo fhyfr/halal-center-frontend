@@ -19,11 +19,11 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { FileUpload, PhotoCamera } from '@mui/icons-material';
 import { uploadDocument } from '../../services/api/file';
-import { createNewDocument } from '../../services/api/document';
+import { createNewModule } from '../../services/api/module';
 import { useRouter } from 'next/router';
 import { handleRedirectOnClick } from '../../utils/handle-event-button';
 
-export const AddDocument = () => {
+export const AddModule = () => {
   const router = useRouter();
 
   const [info, setInfo] = useState(undefined);
@@ -47,7 +47,7 @@ export const AddDocument = () => {
         delete values.userId;
       }
 
-      createNewDocument(values)
+      createNewModule(values)
         .then((res) => {
           setInfo(res);
           setErrMessage(undefined);
@@ -80,7 +80,7 @@ export const AddDocument = () => {
   return (
     <form onSubmit={formik.handleSubmit}>
       <Card>
-        <CardHeader subheader="Fill out this form for add new document" title="Add New Document" />
+        <CardHeader subheader="Fill out this form for add new module" title="Add New Module" />
         <Divider />
         <CardContent>
           {info && (
@@ -101,7 +101,7 @@ export const AddDocument = () => {
               component="label"
               endIcon={<FileUpload />}
             >
-              Upload Document
+              Upload Module
               <input
                 id="upload-document-id"
                 name="url"
@@ -223,7 +223,7 @@ export const AddDocument = () => {
             color="error"
             variant="text"
             onClick={() => {
-              handleRedirectOnClick(router, '/document');
+              handleRedirectOnClick(router, '/module');
             }}
           >
             Cancel

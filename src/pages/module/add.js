@@ -1,12 +1,12 @@
 import Head from 'next/head';
 import { Box, Container, Typography } from '@mui/material';
 import { DashboardLayout } from '../../components/dashboard-layout';
-import { AddDepartment } from '../../components/department/add-department';
+import { AddModule } from '../../components/module/add-module';
 
 const Page = () => (
   <>
     <Head>
-      <title>Add New Department</title>
+      <title>Add New Module</title>
     </Head>
     <Box
       component="main"
@@ -17,10 +17,10 @@ const Page = () => (
     >
       <Container maxWidth="lg">
         <Typography sx={{ mb: 3 }} variant="h4">
-          Department
+          Module
         </Typography>
         <Box sx={{ pt: 3 }}>
-          <AddDepartment />
+          <AddModule />
         </Box>
       </Container>
     </Box>

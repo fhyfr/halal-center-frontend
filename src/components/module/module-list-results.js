@@ -12,11 +12,13 @@ import {
   TableRow,
   Button,
   Typography,
+  Link,
 } from '@mui/material';
 import { useRouter } from 'next/router';
-import { deleteEmployee } from '../../services/api/employee';
+import { formatDate } from '../../utils/date-converter';
+import { deleteModule } from '../../services/api/module';
 
-export const EmployeeListResults = ({ employees }) => {
+export const ModuleListResults = ({ documents }) => {
   const router = useRouter();
 
   const [limit, setLimit] = useState(10);
@@ -48,10 +50,10 @@ export const EmployeeListResults = ({ employees }) => {
     });
   };
 
-  const handleDeleteEmployee = (employeeId) => {
-    const confirmation = confirm('Are you sure want to delete this employee?');
+  const handleDeleteModule = (moduleId) => {
+    const confirmation = confirm('Are you sure want to delete this module?');
     if (confirmation) {
-      deleteEmployee(employeeId)
+      deleteModule(moduleId)
         .then((res) => {
           alert(res);
           router.reload();
@@ -63,10 +65,10 @@ export const EmployeeListResults = ({ employees }) => {
     return;
   };
 
-  if (employees.error) {
+  if (documents.error) {
     return (
       <Typography align="center" variant="h4" style={{ color: 'red' }}>
-        error, {employees.error.message}
+        error, {documents.error.message}
       </Typography>
     );
   }
@@ -79,12 +81,13 @@ export const EmployeeListResults = ({ employees }) => {
             <TableHead>
               <TableRow>
                 <TableCell align="center">ID</TableCell>
-                <TableCell>Department</TableCell>
-                <TableCell>Position</TableCell>
-                <TableCell>NIK</TableCell>
-                <TableCell>Full Name</TableCell>
-                <TableCell>Gender</TableCell>
-                <TableCell>Phone Number</TableCell>
+                <TableCell>Type</TableCell>
+                <TableCell>Course ID</TableCell>
+                <TableCell>User ID</TableCell>
+                <TableCell>Instructor ID</TableCell>
+                <TableCell>URL</TableCell>
+                <TableCell>Created By</TableCell>
+                <TableCell align="center">Created Date</TableCell>
                 <TableCell>
                   <Box
                     sx={{
@@ -98,41 +101,48 @@ export const EmployeeListResults = ({ employees }) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {employees.data?.slice(0, limit).map((employee) => (
-                <TableRow hover key={employee.id}>
+              {documents.data?.slice(0, limit).map((document) => (
+                <TableRow hover key={document.id}>
                   <TableCell align="center">
                     <Typography color="textPrimary" variant="body2">
-                      {employee.id}
+                      {document.id}
                     </Typography>
                   </TableCell>
                   <TableCell>
                     <Typography color="textPrimary" variant="body2">
-                      {employee.department.departmentName}
+                      {document.type}
                     </Typography>
                   </TableCell>
                   <TableCell>
                     <Typography color="textPrimary" variant="body2">
-                      {employee.position.positionName}
+                      {document.courseId}
                     </Typography>
                   </TableCell>
                   <TableCell>
                     <Typography color="textPrimary" variant="body2">
-                      {employee.nik}
+                      {document.userId}
                     </Typography>
                   </TableCell>
                   <TableCell>
                     <Typography color="textPrimary" variant="body2">
-                      {employee.fullName}
+                      {document.instructorId}
                     </Typography>
                   </TableCell>
                   <TableCell>
                     <Typography color="textPrimary" variant="body2">
-                      {employee.gender}
+                      <Link href={document.url} target="_blank" underline="hover">
+                        {document.url}
+                      </Link>
                     </Typography>
                   </TableCell>
                   <TableCell>
                     <Typography color="textPrimary" variant="body2">
-                      {employee.phoneNumber}
+                      {document.createdBy}
+                    </Typography>
+                  </TableCell>
+                  <TableCell>
+                    <Typography color="textPrimary" variant="body2">
+                      {formatDate(document.createdAt)}
                     </Typography>
                   </TableCell>
                   <TableCell>
@@ -140,69 +150,15 @@ export const EmployeeListResults = ({ employees }) => {
                       sx={{
                         display: 'flex',
                         justifyContent: 'center',
-                        mr: 1,
+                        mr: 2,
                       }}
                     >
-                      <Button
-                        color="warning"
-                        sx={{
-                          mr: 1,
-                        }}
-                        variant="contained"
-                        size="small"
-                        onClick={() => {
-                          router.push({
-                            pathname: '/employee/mutation',
-                            query: {
-                              id: employee.id,
-                            },
-                          });
-                        }}
-                      >
-                        Mutation
-                      </Button>
-                      <Button
-                        color="secondary"
-                        sx={{
-                          mr: 1,
-                        }}
-                        variant="contained"
-                        size="small"
-                        onClick={() => {
-                          router.push({
-                            pathname: '/employee/edit',
-                            query: {
-                              id: employee.id,
-                            },
-                          });
-                        }}
-                      >
-                        Update
-                      </Button>
-                      <Button
-                        color="primary"
-                        sx={{
-                          mr: 1,
-                        }}
-                        variant="contained"
-                        size="small"
-                        onClick={() => {
-                          router.push({
-                            pathname: '/employee/details',
-                            query: {
-                              id: employee.id,
-                            },
-                          });
-                        }}
-                      >
-                        Detail
-                      </Button>
                       <Button
                         color="error"
                         variant="contained"
                         size="small"
                         onClick={() => {
-                          handleDeleteEmployee(employee.id);
+                          handleDeleteModule(document.id);
                         }}
                       >
                         Delete
@@ -217,7 +173,7 @@ export const EmployeeListResults = ({ employees }) => {
       </PerfectScrollbar>
       <TablePagination
         component="div"
-        count={employees.itemCount}
+        count={documents.itemCount}
         onPageChange={handlePageChange}
         onRowsPerPageChange={handleLimitChange}
         page={page}
@@ -228,6 +184,6 @@ export const EmployeeListResults = ({ employees }) => {
   );
 };
 
-EmployeeListResults.propTypes = {
-  employees: PropTypes.array.isRequired,
+ModuleListResults.propTypes = {
+  document: PropTypes.array.isRequired,
 };

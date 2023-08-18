@@ -10,27 +10,26 @@ import { Logo } from './logo';
 import { NavItem } from './nav-item';
 import {
   AccountCircle,
-  Apartment,
   Bookmarks,
+  CardMembership,
   Category,
   FolderCopy,
-  FolderOpen,
-  Groups,
-  Payment,
+  LibraryBooks,
   People,
-  PermContactCalendar,
   School,
+  Sell,
+  ShoppingCartCheckout,
 } from '@mui/icons-material';
 import useAuth from '../hooks/use-auth';
 
 const permissions = {
-  TREASURER: ['Dashboard', 'Payments'],
-  STAFF_HRD: ['Dashboard', 'Positions', 'Departments', 'Employees'],
-  DIRECTOR: ['Dashboard', 'Payments', 'Courses', 'Report'],
+  TREASURER: ['Dashboard', 'Registration Payments', 'Operational Payments'],
+  DIRECTOR: ['Dashboard', 'Registration Payments', 'Operational Payments', 'Courses', 'Report'],
   SUPER_ADMIN: ['Dashboard', 'Users'],
-  VICE_DIRECTOR: ['Dashboard', 'Categories', 'Instructors', 'Documents'],
-  ADMIN_COURSE: ['Dashboard', 'Categories', 'Courses', 'Instructors', 'Documents'],
+  VICE_DIRECTOR: ['Dashboard', 'Categories', 'Instructors', 'Modules', 'Certificates'],
+  ADMIN_COURSE: ['Dashboard', 'Categories', 'Courses', 'Instructors', 'Modules', 'Certificates'],
   MEMBER: ['Dashboard', 'Courses', 'My Course', 'Account', 'Settings'],
+  INSTRUCTOR: ['Dashboard', 'Courses', 'Modules', 'Certificates'],
 };
 
 const items = [
@@ -50,9 +49,14 @@ const items = [
     title: 'Courses',
   },
   {
-    href: '/document',
-    icon: <FolderOpen fontSize="small" />,
-    title: 'Documents',
+    href: '/module',
+    icon: <LibraryBooks fontSize="small" />,
+    title: 'Modules',
+  },
+  {
+    href: '/certificate',
+    icon: <CardMembership fontSize="small" />,
+    title: 'Certificates',
   },
   {
     href: '/instructor',
@@ -60,9 +64,14 @@ const items = [
     title: 'Instructors',
   },
   {
-    href: '/payment',
-    icon: <Payment fontSize="small" />,
-    title: 'Payments',
+    href: '/registration-payment',
+    icon: <Sell fontSize="small" />,
+    title: 'Registration Payments',
+  },
+  {
+    href: '/operational-payment',
+    icon: <ShoppingCartCheckout fontSize="small" />,
+    title: 'Operational Payments',
   },
   {
     href: '/category',

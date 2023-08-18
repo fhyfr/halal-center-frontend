@@ -1,7 +1,7 @@
 import Head from 'next/head';
 import { Box, Container } from '@mui/material';
-import { DocumentListResults } from '../../components/document/document-list-results';
-import { DocumentListToolbar } from '../../components/document/document-list-toolbar';
+import { ModuleListResults } from '../../components/module/module-list-results';
+import { ModuleListToolbar } from '../../components/module/module-list-toolbar';
 import { DashboardLayout } from '../../components/dashboard-layout';
 import { parseCookies } from '../../lib/auth-cookies';
 import axios from 'axios';
@@ -69,13 +69,13 @@ export const getServerSideProps = async ({ req, res, query }) => {
   return { props: { documents } };
 };
 
-const Document = (props) => {
+const Module = (props) => {
   const { documents } = props;
 
   return (
     <>
       <Head>
-        <title>Documents | Halal Center</title>
+        <title>Modules | Halal Center</title>
       </Head>
       <Box
         component="main"
@@ -85,9 +85,9 @@ const Document = (props) => {
         }}
       >
         <Container maxWidth={false}>
-          <DocumentListToolbar />
+          <ModuleListToolbar />
           <Box sx={{ mt: 3 }}>
-            <DocumentListResults documents={documents} />
+            <ModuleListResults documents={documents} />
           </Box>
         </Container>
       </Box>
@@ -95,6 +95,6 @@ const Document = (props) => {
   );
 };
 
-Document.getLayout = (document) => <DashboardLayout>{document}</DashboardLayout>;
+Module.getLayout = (module) => <DashboardLayout>{module}</DashboardLayout>;
 
-export default Document;
+export default Module;

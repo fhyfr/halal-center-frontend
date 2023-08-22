@@ -19,11 +19,11 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { FileUpload, PhotoCamera } from '@mui/icons-material';
 import { uploadDocument } from '../../services/api/file';
-import { createNewModule } from '../../services/api/module';
 import { useRouter } from 'next/router';
 import { handleRedirectOnClick } from '../../utils/handle-event-button';
+import { createNewCertificate } from '../../services/api/certificate';
 
-export const AddModule = () => {
+export const AddCertificate = () => {
   const router = useRouter();
 
   const [info, setInfo] = useState(undefined);
@@ -32,20 +32,20 @@ export const AddModule = () => {
   const formik = useFormik({
     initialValues: {
       courseId: '',
-      url: 'upload module to fill this document url',
+      url: 'upload certificate to fill this document url',
     },
     validationSchema: Yup.object({
       courseId: Yup.string().required('Course id is required'),
       url: Yup.string().url().required('Document url is required'),
     }),
     onSubmit: (values, action) => {
-      createNewModule(values)
+      createNewCertificate(values)
         .then((res) => {
           setInfo(res);
           setErrMessage(undefined);
 
           setTimeout(() => {
-            router.push('/module');
+            router.push('/certificate');
           }, 2000);
         })
         .catch((err) => {
@@ -56,7 +56,7 @@ export const AddModule = () => {
     },
   });
 
-  const handleUploadModule = async (event) => {
+  const handleUploadCertificate = async (event) => {
     uploadDocument(event.target.files[0])
       .then((res) => {
         setInfo(res.message);
@@ -72,7 +72,10 @@ export const AddModule = () => {
   return (
     <form onSubmit={formik.handleSubmit}>
       <Card>
-        <CardHeader subheader="Fill out this form for add new module" title="Add New Module" />
+        <CardHeader
+          subheader="Fill out this form for add new certificate"
+          title="Add New Certificate"
+        />
         <Divider />
         <CardContent>
           {info && (
@@ -93,14 +96,14 @@ export const AddModule = () => {
               component="label"
               endIcon={<FileUpload />}
             >
-              Upload Module
+              Upload Certificate
               <input
-                id="upload-module-id"
+                id="upload-certificate-id"
                 name="url"
                 hidden
                 accept="application/pdf"
                 type="file"
-                onChange={handleUploadModule}
+                onChange={handleUploadCertificate}
               />
             </Button>
           </CardActions>
@@ -153,7 +156,7 @@ export const AddModule = () => {
             color="error"
             variant="text"
             onClick={() => {
-              handleRedirectOnClick(router, '/module');
+              handleRedirectOnClick(router, '/certificate');
             }}
           >
             Cancel

@@ -68,7 +68,7 @@ export const UserListResults = ({ users }) => {
   };
 
   const handleDeleteUser = (userId) => {
-    const confirmation = confirm('Are you sure want to delete this user?');
+    const confirmation = confirm('Are you sure to delete this user?');
     if (confirmation) {
       deleteUser(userId)
         .then((res) => {

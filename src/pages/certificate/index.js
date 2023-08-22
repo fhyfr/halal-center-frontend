@@ -1,10 +1,10 @@
 import Head from 'next/head';
 import { Box, Container } from '@mui/material';
-import { ModuleListResults } from '../../components/module/module-list-results';
-import { ModuleListToolbar } from '../../components/module/module-list-toolbar';
 import { DashboardLayout } from '../../components/dashboard-layout';
 import { parseCookies } from '../../lib/auth-cookies';
 import axios from 'axios';
+import { CertificateListToolbar } from '../../components/certificate/certificate-list-toolbar';
+import { CertificateListResults } from '../../components/certificate/certificate-list-results';
 
 const { NEXT_PUBLIC_API } = process.env;
 
@@ -13,7 +13,7 @@ export const getServerSideProps = async ({ req, res, query }) => {
   const size = query.limit || 10;
   const courseId = query.courseId;
 
-  let modules = null;
+  let certificates = null;
   const data = parseCookies(req);
   if (!data.user) {
     return {
@@ -35,31 +35,31 @@ export const getServerSideProps = async ({ req, res, query }) => {
   try {
     const response = await axios({
       method: 'GET',
-      url: `${NEXT_PUBLIC_API}/module`,
+      url: `${NEXT_PUBLIC_API}/certificate`,
       params: queryParams,
       headers: {
         Authorization: `Bearer ${user.accessToken}`,
       },
     });
     if (response.status !== 200) {
-      throw new Error('failed to get data modules');
+      throw new Error('failed to get data certificates');
     }
 
-    modules = response.data;
+    certificates = response.data;
   } catch (err) {
-    modules = { error: { message: err.message } };
+    certificates = { error: { message: err.message } };
   }
 
-  return { props: { modules: modules } };
+  return { props: { certificates: certificates } };
 };
 
-const Module = (props) => {
-  const { modules } = props;
+const Certificate = (props) => {
+  const { certificates } = props;
 
   return (
     <>
       <Head>
-        <title>Modules | Halal Center</title>
+        <title>Certificates | Halal Center</title>
       </Head>
       <Box
         component="main"
@@ -69,9 +69,9 @@ const Module = (props) => {
         }}
       >
         <Container maxWidth={false}>
-          <ModuleListToolbar />
+          <CertificateListToolbar />
           <Box sx={{ mt: 3 }}>
-            <ModuleListResults modules={modules} />
+            <CertificateListResults certificates={certificates} />
           </Box>
         </Container>
       </Box>
@@ -79,6 +79,6 @@ const Module = (props) => {
   );
 };
 
-Module.getLayout = (module) => <DashboardLayout>{module}</DashboardLayout>;
+Certificate.getLayout = (certificate) => <DashboardLayout>{certificate}</DashboardLayout>;
 
-export default Module;
+export default Certificate;

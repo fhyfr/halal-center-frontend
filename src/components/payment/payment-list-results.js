@@ -70,7 +70,7 @@ export const PaymentListResults = ({ payments }) => {
   };
 
   const handleDeletePayment = (paymentId) => {
-    const confirmation = confirm('Are you sure want to delete this payment?');
+    const confirmation = confirm('Are you sure to delete this payment?');
     if (confirmation) {
       deletePayment(paymentId)
         .then((res) => {

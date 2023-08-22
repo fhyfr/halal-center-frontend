@@ -14,7 +14,7 @@ import { Add } from '@mui/icons-material';
 import { handleRedirectOnClick } from '../../utils/handle-event-button';
 import { useRouter } from 'next/router';
 
-export const ModuleListToolbar = (props) => {
+export const CertificateListToolbar = (props) => {
   const router = useRouter();
 
   const handleFilterCourse = (event) => {
@@ -40,7 +40,7 @@ export const ModuleListToolbar = (props) => {
         }}
       >
         <Typography sx={{ m: 1 }} variant="h4">
-          Modules
+          Certificates
         </Typography>
         <Box sx={{ m: 1 }}>
           <Button
@@ -52,7 +52,7 @@ export const ModuleListToolbar = (props) => {
             color="primary"
             variant="contained"
             onClick={() => {
-              handleRedirectOnClick(router, '/module/add');
+              handleRedirectOnClick(router, '/certificate/add');
             }}
           >
             Add New

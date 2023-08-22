@@ -32,7 +32,7 @@ export const CourseCard = ({ user, course }) => {
   const handleDeleteCourse = (course) => {
     const now = new Date();
 
-    const confirmation = confirm('Are you sure want to delete this course?');
+    const confirmation = confirm('Are you sure to delete this course?');
     if (confirmation) {
       if (new Date(course.endDate) > now) {
         return alert('error: course still running');

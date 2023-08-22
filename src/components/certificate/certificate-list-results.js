@@ -16,9 +16,9 @@ import {
 } from '@mui/material';
 import { useRouter } from 'next/router';
 import { formatDate } from '../../utils/date-converter';
-import { deleteModule } from '../../services/api/module';
+import { deleteCertificate } from '../../services/api/certificate';
 
-export const ModuleListResults = ({ modules }) => {
+export const CertificateListResults = ({ certificates }) => {
   const router = useRouter();
 
   const [limit, setLimit] = useState(10);
@@ -50,10 +50,10 @@ export const ModuleListResults = ({ modules }) => {
     });
   };
 
-  const handleDeleteModule = (moduleId) => {
-    const confirmation = confirm('Are you sure to delete this module?');
+  const handleDeleteCertificate = (certificateId) => {
+    const confirmation = confirm('Are you sure to delete this certificate?');
     if (confirmation) {
-      deleteModule(moduleId)
+      deleteCertificate(certificateId)
         .then((res) => {
           alert(res);
           router.reload();
@@ -65,10 +65,10 @@ export const ModuleListResults = ({ modules }) => {
     return;
   };
 
-  if (modules.error) {
+  if (certificates.error) {
     return (
       <Typography align="center" variant="h4" style={{ color: 'red' }}>
-        error, {modules.error.message}
+        error, {certificates.error.message}
       </Typography>
     );
   }
@@ -98,33 +98,33 @@ export const ModuleListResults = ({ modules }) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {modules.data?.slice(0, limit).map((module) => (
-                <TableRow hover key={module.moduleId}>
+              {certificates.data?.slice(0, limit).map((certificate) => (
+                <TableRow hover key={certificate.certificateId}>
                   <TableCell align="center">
                     <Typography color="textPrimary" variant="body2">
-                      {module.moduleId}
+                      {certificate.certificateId}
                     </Typography>
                   </TableCell>
                   <TableCell>
                     <Typography color="textPrimary" variant="body2">
-                      {module.courseId}
+                      {certificate.courseId}
                     </Typography>
                   </TableCell>
                   <TableCell>
                     <Typography color="textPrimary" variant="body2">
-                      <Link href={module.url} target="_blank" underline="hover">
-                        {module.url}
+                      <Link href={certificate.url} target="_blank" underline="hover">
+                        {certificate.url}
                       </Link>
                     </Typography>
                   </TableCell>
                   <TableCell>
                     <Typography color="textPrimary" variant="body2">
-                      {module.createdBy}
+                      {certificate.createdBy}
                     </Typography>
                   </TableCell>
                   <TableCell>
                     <Typography color="textPrimary" variant="body2">
-                      {formatDate(module.createdAt)}
+                      {formatDate(certificate.createdAt)}
                     </Typography>
                   </TableCell>
                   <TableCell>
@@ -140,7 +140,7 @@ export const ModuleListResults = ({ modules }) => {
                         variant="contained"
                         size="small"
                         onClick={() => {
-                          handleDeleteModule(module.moduleId);
+                          handleDeleteCertificate(certificate.certificateId);
                         }}
                       >
                         Delete
@@ -155,7 +155,7 @@ export const ModuleListResults = ({ modules }) => {
       </PerfectScrollbar>
       <TablePagination
         component="div"
-        count={modules.itemCount}
+        count={certificates.itemCount}
         onPageChange={handlePageChange}
         onRowsPerPageChange={handleLimitChange}
         page={page}
@@ -166,6 +166,6 @@ export const ModuleListResults = ({ modules }) => {
   );
 };
 
-ModuleListResults.propTypes = {
-  modules: PropTypes.array.isRequired,
+CertificateListResults.propTypes = {
+  certificates: PropTypes.array.isRequired,
 };

@@ -14,8 +14,19 @@ import { Add } from '@mui/icons-material';
 import { useRouter } from 'next/router';
 import { Search as SearchIcon } from '../../icons/search';
 
-export const PaymentListToolbar = () => {
+export const RegistrationPaymentListToolbar = () => {
   const router = useRouter();
+
+  const handleFilterRegistration = (event) => {
+    const path = router.pathname;
+    const query = router.query;
+    query.registrationId = event.target.value;
+
+    router.push({
+      pathname: path,
+      query: query,
+    });
+  };
 
   const handleFilterCourse = (event) => {
     const path = router.pathname;
@@ -51,7 +62,7 @@ export const PaymentListToolbar = () => {
         }}
       >
         <Typography sx={{ m: 1 }} variant="h4">
-          Payments
+          Registration Payments
         </Typography>
         <Box sx={{ m: 1 }}>
           <Button
@@ -63,7 +74,7 @@ export const PaymentListToolbar = () => {
             color="primary"
             variant="contained"
             onClick={() => {
-              handleRedirectOnClick(router, '/payment/add');
+              handleRedirectOnClick(router, '/registration-payment/add');
             }}
           >
             Add New
@@ -74,6 +85,27 @@ export const PaymentListToolbar = () => {
         <Card>
           <CardContent>
             <Grid container spacing={2}>
+              <Grid item xs={12} md={3}>
+                <Box sx={{ maxWidth: 300 }}>
+                  <TextField
+                    fullWidth
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <SvgIcon color="action" fontSize="small">
+                            <SearchIcon />
+                          </SvgIcon>
+                        </InputAdornment>
+                      ),
+                    }}
+                    placeholder="Filter by Registration ID"
+                    variant="outlined"
+                    type="number"
+                    onChange={handleFilterRegistration}
+                  />
+                </Box>
+              </Grid>
+
               <Grid item xs={12} md={3}>
                 <Box sx={{ maxWidth: 300 }}>
                   <TextField
@@ -111,7 +143,6 @@ export const PaymentListToolbar = () => {
                     placeholder="Filter by User ID"
                     variant="outlined"
                     type="number"
-                    disabled={router.query.type === 'course_utilities'}
                     onChange={handleFilterUser}
                   />
                 </Box>

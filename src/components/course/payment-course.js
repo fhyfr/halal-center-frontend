@@ -24,7 +24,7 @@ import * as Yup from 'yup';
 import { uploadImage } from '../../services/api/file';
 import { handleRedirectOnClick } from '../../utils/handle-event-button';
 import { formatRupiahCurrency } from '../../utils/currency-converter';
-import { createNewPayment } from '../../services/api/payment';
+import { createNewRegistrationPayment } from '../../services/api/registration-payment';
 import { registerCourse } from '../../services/api/course';
 
 export const PaymentCourse = ({ course, user }) => {
@@ -61,7 +61,7 @@ export const PaymentCourse = ({ course, user }) => {
           Object.assign(values, {
             registrationId: res.data.id,
           });
-          createNewPayment(values);
+          createNewRegistrationPayment(values);
 
           setInfo(res.message);
           setErrMessage(undefined);

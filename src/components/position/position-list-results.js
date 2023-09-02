@@ -61,7 +61,7 @@ export const PositionListResults = ({ positions }) => {
   };
 
   const handleDeletePosition = (positionId) => {
-    const confirmation = confirm('Are you sure want to delete this position?');
+    const confirmation = confirm('Are you sure to delete this position?');
     if (confirmation) {
       deletePosition(positionId)
         .then((res) => {

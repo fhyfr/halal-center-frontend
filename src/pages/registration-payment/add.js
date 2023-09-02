@@ -1,13 +1,13 @@
 import Head from 'next/head';
 import { Box, Container, Typography } from '@mui/material';
 import { DashboardLayout } from '../../components/dashboard-layout';
-import { AddPayment } from '../../components/payment/add-payment';
+import { AddRegistrationPayment } from '../../components/registration-payment/add-registration-payment';
 
 const AddNew = () => {
   return (
     <>
       <Head>
-        <title>Add New Payment</title>
+        <title>Add New Registration Payment</title>
       </Head>
       <Box
         component="main"
@@ -18,10 +18,10 @@ const AddNew = () => {
       >
         <Container maxWidth="lg">
           <Typography sx={{ mb: 3 }} variant="h4">
-            Payment
+            Registration Payment
           </Typography>
           <Box sx={{ pt: 3 }}>
-            <AddPayment />
+            <AddRegistrationPayment />
           </Box>
         </Container>
       </Box>

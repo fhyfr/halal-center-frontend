@@ -6,19 +6,19 @@ import { handleRedirectOnClick } from '../../utils/handle-event-button';
 import { useRouter } from 'next/router';
 import { parseCookies } from '../../lib/auth-cookies';
 import axios from 'axios';
-import { PaymentDetails } from '../../components/payment/details-payment';
+import { RegistrationPaymentDetails } from '../../components/registration-payment/details-registration-payment';
 
 const { NEXT_PUBLIC_API } = process.env;
 
 export const getServerSideProps = async ({ req, res, query }) => {
-  let paymentData;
+  let registrationPaymentData, userData, courseData;
 
   const { id } = query;
   if (!id || id === null) {
     return {
       redirect: {
         permanent: false,
-        destination: '/payment',
+        destination: '/registration-payment',
       },
       props: {},
     };
@@ -37,33 +37,59 @@ export const getServerSideProps = async ({ req, res, query }) => {
   const user = JSON.parse(data.user);
 
   try {
-    const response = await axios({
+    const responseRegistrationPayment = await axios({
       method: 'GET',
       url: `${NEXT_PUBLIC_API}/registration-payment/${id}`,
       headers: {
         Authorization: `Bearer ${user.accessToken}`,
       },
     });
-    if (response.status !== 200) {
-      throw new Error('failed to get data payment');
+    if (responseRegistrationPayment.status !== 200) {
+      throw new Error('failed to get data registration payment');
     }
 
-    paymentData = response.data;
+    const responseCourse = await axios({
+      method: 'GET',
+      url: `${NEXT_PUBLIC_API}/course/${responseRegistrationPayment.data.registration?.courseId}`,
+      headers: {
+        Authorization: `Bearer ${user.accessToken}`,
+      },
+    });
+    if (responseCourse.status !== 200) {
+      throw new Error('failed to get data course');
+    }
+
+    const responseUser = await axios({
+      method: 'GET',
+      url: `${NEXT_PUBLIC_API}/user/${responseRegistrationPayment.data.registration?.userId}`,
+      headers: {
+        Authorization: `Bearer ${user.accessToken}`,
+      },
+    });
+    if (responseUser.status !== 200) {
+      throw new Error('failed to get data user');
+    }
+
+    registrationPaymentData = responseRegistrationPayment.data;
+    courseData = responseCourse.data;
+    userData = responseUser.data;
   } catch (err) {
-    paymentData = { error: { message: err.message } };
+    registrationPaymentData = { error: { message: err.message } };
+    courseData = { error: { message: err.message } };
+    userData = { error: { message: err.message } };
   }
 
-  return { props: { payment: paymentData } };
+  return { props: { registrationPaymentData, courseData, userData } };
 };
 
 const Details = (props) => {
   const router = useRouter();
-  const { payment } = props;
+  const { registrationPaymentData, courseData, userData } = props;
 
   return (
     <>
       <Head>
-        <title>Payment Details</title>
+        <title>Registration Payment Details</title>
       </Head>
       <Box
         component="main"
@@ -83,17 +109,21 @@ const Details = (props) => {
               color="primary"
               variant="contained"
               onClick={() => {
-                handleRedirectOnClick(router, '/payment');
+                handleRedirectOnClick(router, '/registration-payment');
               }}
             >
               Back
             </Button>
           </Box>
           <Typography sx={{ mb: 3 }} variant="h4">
-            Payment Details
+            Registration Payment Details
           </Typography>
 
-          <PaymentDetails payment={payment} />
+          <RegistrationPaymentDetails
+            registrationPayment={registrationPaymentData}
+            course={courseData}
+            user={userData}
+          />
         </Container>
       </Box>
     </>

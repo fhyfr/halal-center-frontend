@@ -3,8 +3,7 @@ import { Box, Container, Typography } from '@mui/material';
 import { DashboardLayout } from '../../components/dashboard-layout';
 import { parseCookies } from '../../lib/auth-cookies';
 import axios from 'axios';
-import { EditEmployee } from '../../components/employee/edit-employee';
-import { EditPayment } from '../../components/payment/edit-payment';
+import { EditRegistrationPayment } from '../../components/registration-payment/edit-registration-payment';
 
 const { NEXT_PUBLIC_API } = process.env;
 
@@ -14,14 +13,14 @@ export const getServerSideProps = async ({ req, res, query }) => {
     return {
       redirect: {
         permanent: false,
-        destination: '/payment',
+        destination: '/registration-payment',
       },
       props: {},
     };
   }
 
   const data = parseCookies(req);
-  let payment;
+  let registrationPayment;
 
   if (!data.user) {
     return {
@@ -43,24 +42,24 @@ export const getServerSideProps = async ({ req, res, query }) => {
       },
     });
     if (response.status !== 200) {
-      throw new Error('failed to get data payment');
+      throw new Error('failed to get data registration payment');
     }
 
-    payment = response.data;
+    registrationPayment = response.data;
   } catch (err) {
-    payment = { error: { message: err.message } };
+    registrationPayment = { error: { message: err.message } };
   }
 
-  return { props: { payment } };
+  return { props: { registrationPayment: registrationPayment } };
 };
 
 const Edit = (props) => {
-  const { payment } = props;
+  const { registrationPayment } = props;
 
   return (
     <>
       <Head>
-        <title>Edit Payment</title>
+        <title>Edit Registration Payment</title>
       </Head>
       <Box
         component="main"
@@ -71,10 +70,10 @@ const Edit = (props) => {
       >
         <Container maxWidth="lg">
           <Typography sx={{ mb: 3 }} variant="h4">
-            Employee
+            Registration Payment
           </Typography>
           <Box sx={{ pt: 3 }}>
-            <EditPayment payment={payment} />
+            <EditRegistrationPayment registrationPayment={registrationPayment} />
           </Box>
         </Container>
       </Box>

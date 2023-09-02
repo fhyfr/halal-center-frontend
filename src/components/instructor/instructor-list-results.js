@@ -58,7 +58,7 @@ export const InstructorListResults = ({ instructors }) => {
   };
 
   const handleDeleteInstructor = (instructorId) => {
-    const confirmation = confirm('Are you sure want to delete this instructor?');
+    const confirmation = confirm('Are you sure to delete this instructor?');
     if (confirmation) {
       deleteInstructor(instructorId)
         .then((res) => {

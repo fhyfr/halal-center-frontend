@@ -1,7 +1,7 @@
 import Head from 'next/head';
 import { Box, Container } from '@mui/material';
-import { PaymentListResults } from '../../components/payment/payment-list-results';
-import { PaymentListToolbar } from '../../components/payment/payment-list-toolbar';
+import { RegistrationPaymentListResults } from '../../components/registration-payment/registration-payment-list-results';
+import { RegistrationPaymentListToolbar } from '../../components/registration-payment/registration-payment-list-toolbar';
 import { DashboardLayout } from '../../components/dashboard-layout';
 import { parseCookies } from '../../lib/auth-cookies';
 import axios from 'axios';
@@ -12,8 +12,8 @@ export const getServerSideProps = async ({ req, res, query }) => {
   const page = query.page || 1;
   const size = query.limit || 10;
   const courseId = query.courseId;
+  const registrationId = query.registrationId;
   const userId = query.userId;
-  const type = query.type || 'registration';
 
   const data = parseCookies(req);
   if (!data.user) {
@@ -27,15 +27,15 @@ export const getServerSideProps = async ({ req, res, query }) => {
   }
   const user = JSON.parse(data.user);
 
-  let payments;
-  let queryParams = { page, size, type };
-
-  if (type && type.length > 0) {
-    Object.assign(queryParams, { type });
-  }
+  let registrationPayments;
+  let queryParams = { page, size };
 
   if (courseId && courseId > 0) {
     Object.assign(queryParams, { courseId });
+  }
+
+  if (registrationId && registrationId > 0) {
+    Object.assign(queryParams, { registrationId });
   }
 
   if (userId && userId > 0) {
@@ -52,24 +52,24 @@ export const getServerSideProps = async ({ req, res, query }) => {
       },
     });
     if (response.status !== 200) {
-      throw new Error('failed to get data payments');
+      throw new Error('failed to get data registration payments');
     }
 
-    payments = response.data;
+    registrationPayments = response.data;
   } catch (err) {
-    payments = { error: { message: err.message } };
+    registrationPayments = { error: { message: err.message } };
   }
 
-  return { props: { payments } };
+  return { props: { registrationPayments: registrationPayments } };
 };
 
-const Payment = (props) => {
-  const { payments } = props;
+const RegistrationPayment = (props) => {
+  const { registrationPayments } = props;
 
   return (
     <>
       <Head>
-        <title>Payments</title>
+        <title>Registration Payments</title>
       </Head>
       <Box
         component="main"
@@ -79,9 +79,9 @@ const Payment = (props) => {
         }}
       >
         <Container maxWidth={false}>
-          <PaymentListToolbar />
+          <RegistrationPaymentListToolbar />
           <Box sx={{ mt: 3 }}>
-            <PaymentListResults payments={payments} />
+            <RegistrationPaymentListResults registrationPayments={registrationPayments} />
           </Box>
         </Container>
       </Box>
@@ -89,6 +89,8 @@ const Payment = (props) => {
   );
 };
 
-Payment.getLayout = (payment) => <DashboardLayout>{payment}</DashboardLayout>;
+RegistrationPayment.getLayout = (registrationPayment) => (
+  <DashboardLayout>{registrationPayment}</DashboardLayout>
+);
 
-export default Payment;
+export default RegistrationPayment;

@@ -49,7 +49,7 @@ export const EmployeeListResults = ({ employees }) => {
   };
 
   const handleDeleteEmployee = (employeeId) => {
-    const confirmation = confirm('Are you sure want to delete this employee?');
+    const confirmation = confirm('Are you sure to delete this employee?');
     if (confirmation) {
       deleteEmployee(employeeId)
         .then((res) => {

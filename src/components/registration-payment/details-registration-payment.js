@@ -3,11 +3,27 @@ import { formatRupiahCurrency } from '../../utils/currency-converter';
 import { formatDate, formatDateWithoutHourMinutes } from '../../utils/date-converter';
 import { Box } from '@mui/system';
 
-export const PaymentDetails = ({ payment }) => {
-  if (payment.error) {
+export const RegistrationPaymentDetails = ({ registrationPayment, course, user }) => {
+  if (registrationPayment.error) {
     return (
       <Typography align="center" variant="h4" style={{ color: 'red' }}>
-        error, {payment.error.message}
+        error, {registrationPayment.error.message}
+      </Typography>
+    );
+  }
+
+  if (course.error) {
+    return (
+      <Typography align="center" variant="h4" style={{ color: 'red' }}>
+        error, {course.error.message}
+      </Typography>
+    );
+  }
+
+  if (user.error) {
+    return (
+      <Typography align="center" variant="h4" style={{ color: 'red' }}>
+        error, {user.error.message}
       </Typography>
     );
   }
@@ -27,7 +43,7 @@ export const PaymentDetails = ({ payment }) => {
               >
                 <CardMedia
                   component="img"
-                  src={payment.receiptUrl}
+                  src={registrationPayment.receiptUrl}
                   sx={{
                     width: 600,
                   }}
@@ -42,58 +58,44 @@ export const PaymentDetails = ({ payment }) => {
       <Grid container spacing={2} sx={{ marginBottom: 3 }}>
         <Grid item lg={6} md={6} xs={12}>
           <CardContent sx={{ marginY: -2 }}>
-            <Typography variant="h6">Payment Type</Typography>
+            <Typography variant="h6">Course</Typography>
             <Typography variant="body1" gutterBottom>
-              {payment.type}
+              ID: {registrationPayment.registration.courseId}
+            </Typography>
+            <Typography variant="body1" gutterBottom>
+              Title: {`${course.title} - Batch ${course.batchNumber}`}
+            </Typography>
+            <Typography variant="body1" gutterBottom>
+              Type: {course.type}
+            </Typography>
+            <Typography variant="body1" gutterBottom>
+              Total Participants: {course.totalRegistered}
+            </Typography>
+            <Typography variant="body1" gutterBottom>
+              Date: {formatDateWithoutHourMinutes(course.startDate)} s/d{' '}
+              {formatDateWithoutHourMinutes(course.endDate)}
             </Typography>
           </CardContent>
           <Divider />
 
           <CardContent sx={{ marginY: -2 }}>
-            <Typography variant="h6">Course</Typography>
+            <Typography variant="h6">User</Typography>
             <Typography variant="body1" gutterBottom>
-              ID: {payment.courseId}
+              ID: {user.id}
             </Typography>
             <Typography variant="body1" gutterBottom>
-              Title: {`${payment.course.title} - Batch ${payment.course.batchNumber}`}
+              Username: {user.username}
             </Typography>
             <Typography variant="body1" gutterBottom>
-              Type: {payment.course.type}
-            </Typography>
-            <Typography variant="body1" gutterBottom>
-              Total Participants: {payment.course.totalRegistered}
-            </Typography>
-            <Typography variant="body1" gutterBottom>
-              Date: {formatDateWithoutHourMinutes(payment.course.startDate)} s/d{' '}
-              {formatDateWithoutHourMinutes(payment.course.endDate)}
+              Email: {user.email}
             </Typography>
           </CardContent>
           <Divider />
-
-          {payment.type === 'REGISTRATION' ? (
-            <>
-              <CardContent sx={{ marginY: -2 }}>
-                <Typography variant="h6">User</Typography>
-                <Typography variant="body1" gutterBottom>
-                  ID: {payment.user.id}
-                </Typography>
-                <Typography variant="body1" gutterBottom>
-                  Username: {payment.user.username}
-                </Typography>
-                <Typography variant="body1" gutterBottom>
-                  Email: {payment.user.email}
-                </Typography>
-              </CardContent>
-              <Divider />
-            </>
-          ) : (
-            ''
-          )}
 
           <CardContent sx={{ marginY: -2 }}>
             <Typography variant="h6">Amount</Typography>
             <Typography variant="body1" gutterBottom>
-              {formatRupiahCurrency(payment.amount)}
+              {formatRupiahCurrency(registrationPayment.amount)}
             </Typography>
           </CardContent>
           <Divider />
@@ -102,7 +104,7 @@ export const PaymentDetails = ({ payment }) => {
           <CardContent sx={{ marginY: -2 }}>
             <Typography variant="h6">Discount</Typography>
             <Typography variant="body1" gutterBottom>
-              {formatRupiahCurrency(payment.discount)}
+              {formatRupiahCurrency(registrationPayment.discount)}
             </Typography>
           </CardContent>
           <Divider />
@@ -112,7 +114,7 @@ export const PaymentDetails = ({ payment }) => {
           <CardContent sx={{ marginY: -2 }}>
             <Typography variant="h6">Total</Typography>
             <Typography variant="body1" gutterBottom>
-              {formatRupiahCurrency(payment.amount - payment.discount)}
+              {formatRupiahCurrency(registrationPayment.amount - registrationPayment.discount)}
             </Typography>
           </CardContent>
           <Divider />
@@ -120,7 +122,7 @@ export const PaymentDetails = ({ payment }) => {
           <CardContent sx={{ marginY: -2 }}>
             <Typography variant="h6">Descriptions</Typography>
             <Typography variant="body1" gutterBottom>
-              {payment.descriptions}
+              {registrationPayment.descriptions}
             </Typography>
           </CardContent>
           <Divider />
@@ -130,7 +132,7 @@ export const PaymentDetails = ({ payment }) => {
               Payment Method
             </Typography>
             <Typography variant="body1" gutterBottom>
-              {payment.paymentMethod}
+              {registrationPayment.paymentMethod}
             </Typography>
           </CardContent>
           <Divider />
@@ -138,7 +140,7 @@ export const PaymentDetails = ({ payment }) => {
           <CardContent sx={{ marginY: -2 }}>
             <Typography variant="h6">Transaction Date</Typography>
             <Typography variant="body1" gutterBottom>
-              {formatDateWithoutHourMinutes(payment.transactionDate)}
+              {formatDateWithoutHourMinutes(registrationPayment.transactionDate)}
             </Typography>
           </CardContent>
           <Divider />
@@ -146,17 +148,7 @@ export const PaymentDetails = ({ payment }) => {
           <CardContent sx={{ marginY: -2 }}>
             <Typography variant="h6">Payment Status</Typography>
             <Typography variant="body1" gutterBottom>
-              {payment.status}
-            </Typography>
-          </CardContent>
-          <Divider />
-
-          <CardContent sx={{ marginY: -2 }}>
-            <Typography variant="h6">Receipt URL</Typography>
-            <Typography variant="body1" gutterBottom>
-              <Link href={payment.receiptUrl} target="_blank" underline="hover">
-                {payment.receiptUrl}
-              </Link>
+              {registrationPayment.status}
             </Typography>
           </CardContent>
           <Divider />
@@ -164,7 +156,19 @@ export const PaymentDetails = ({ payment }) => {
           <CardContent sx={{ marginY: -2 }}>
             <Typography variant="h6">Last Updated</Typography>
             <Typography variant="body1" gutterBottom>
-              {formatDate(payment.updatedAt)}
+              {formatDate(registrationPayment.updatedAt)}
+            </Typography>
+          </CardContent>
+          <Divider />
+        </Grid>
+
+        <Grid item lg={12} md={12} xs={12}>
+          <CardContent sx={{ marginY: -2 }}>
+            <Typography variant="h6">Receipt URL</Typography>
+            <Typography variant="body1" gutterBottom>
+              <Link href={registrationPayment.receiptUrl} target="_blank" underline="hover">
+                {registrationPayment.receiptUrl}
+              </Link>
             </Typography>
           </CardContent>
           <Divider />

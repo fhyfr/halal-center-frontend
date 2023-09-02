@@ -61,7 +61,7 @@ export const DepartmentListResults = ({ departments }) => {
   };
 
   const handleDeleteDepartment = (departmentId) => {
-    const confirmation = confirm('Are you sure want to delete this department?');
+    const confirmation = confirm('Are you sure to delete this department?');
     if (confirmation) {
       deleteDepartment(departmentId)
         .then((res) => {

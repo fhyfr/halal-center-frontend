@@ -51,7 +51,7 @@ export const DocumentListResults = ({ documents }) => {
   };
 
   const handleDeleteDocument = (documentId) => {
-    const confirmation = confirm('Are you sure want to delete this document?');
+    const confirmation = confirm('Are you sure to delete this document?');
     if (confirmation) {
       deleteDocument(documentId)
         .then((res) => {

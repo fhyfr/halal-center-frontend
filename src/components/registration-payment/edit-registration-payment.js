@@ -28,34 +28,28 @@ import { CancelRounded, PhotoCamera } from '@mui/icons-material';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { uploadImage } from '../../services/api/file';
-import { editPayment } from '../../services/api/payment';
+import { editRegistrationPayment } from '../../services/api/registration-payment';
 
-export const EditPayment = ({ payment }) => {
+export const EditRegistrationPayment = ({ registrationPayment }) => {
   const router = useRouter();
 
   const [info, setInfo] = useState(undefined);
   const [errMessage, setErrMessage] = useState(undefined);
-  const [amount, setAmount] = useState(0);
-  const [discount, setDiscount] = useState(0);
-  const [receipt, setReceipt] = useState(payment.receiptUrl);
+  const [amount, setAmount] = useState(registrationPayment.amount);
+  const [discount, setDiscount] = useState(registrationPayment.discount);
+  const [receipt, setReceipt] = useState(registrationPayment.receiptUrl);
 
   const formik = useFormik({
     initialValues: {
-      courseId: payment.courseId,
-      userId: payment.userId || 0,
-      descriptions: payment.descriptions,
-      type: payment.type,
-      paymentMethod: payment.paymentMethod,
-      transactionDate: payment.transactionDate,
-      status: payment.status,
-      receiptUrl: payment.receiptUrl,
+      registrationId: registrationPayment.registrationId,
+      descriptions: registrationPayment.descriptions,
+      transactionDate: registrationPayment.transactionDate,
+      status: registrationPayment.status,
+      receiptUrl: registrationPayment.receiptUrl,
     },
     validationSchema: Yup.object({
-      courseId: Yup.number().required('Course id is required'),
-      userId: Yup.number(),
+      registrationId: Yup.number().required('Registration id is required'),
       descriptions: Yup.string().required('Descriptions is required'),
-      type: Yup.string().required('Type is required'),
-      paymentMethod: Yup.string().required('Payment method is required'),
       transactionDate: Yup.string().required(),
       status: Yup.string().required('Status is required'),
       receiptUrl: Yup.string().url().required('Receipt url is required'),
@@ -75,22 +69,18 @@ export const EditPayment = ({ payment }) => {
         paymentDiscount = parseInt(discount.replace(/[^0-9\.]/gi, ''), 10);
       }
 
-      if (values.userId === 0 && values.type === 'COURSE_UTILITIES') {
-        delete values.userId;
-      }
-
       Object.assign(values, {
         amount: paymentAmount,
         discount: paymentDiscount,
       });
 
-      editPayment(payment.id, values)
+      editRegistrationPayment(registrationPayment.id, values)
         .then((res) => {
           setInfo(res);
           setErrMessage(undefined);
 
           setTimeout(() => {
-            router.push('/payment');
+            router.push('/registration-payment');
           }, 2000);
         })
         .catch((err) => {
@@ -172,7 +162,10 @@ export const EditPayment = ({ payment }) => {
   return (
     <form onSubmit={formik.handleSubmit}>
       <Card>
-        <CardHeader subheader="Fill out this form for edit payment" title="Edit Payment" />
+        <CardHeader
+          subheader="Fill out this form for edit registration payment"
+          title="Edit Registration Payment"
+        />
         <Divider />
         <CardContent>
           <Grid container spacing={2} sx={{ marginBottom: 3 }}>
@@ -235,62 +228,21 @@ export const EditPayment = ({ payment }) => {
 
           <Grid container spacing={3}>
             <Grid item lg={6} md={6} xs={12}>
-              <FormControl sx={{ marginTop: 1, marginBottom: 2 }} fullWidth variant="outlined">
-                <InputLabel id="select-payment-type">Payment Type</InputLabel>
-                <Select
-                  labelId="select-payment-type"
-                  id="select-payment-type"
-                  value={formik.values.type}
-                  label="Payment Type"
-                  onChange={formik.handleChange}
-                  name="type"
-                >
-                  <MenuItem disabled key="" value="">
-                    --- Select Type ---
-                  </MenuItem>
-                  <MenuItem key="registration" value="REGISTRATION">
-                    Registration
-                  </MenuItem>
-
-                  <MenuItem key="course_utilities" value="COURSE_UTILITIES">
-                    Course Utilities
-                  </MenuItem>
-                </Select>
-                {Boolean(formik.touched.departmentId && formik.errors.departmentId) && (
-                  <FormHelperText error>{formik.errors.departmentId}</FormHelperText>
-                )}
-              </FormControl>
-
               <FormControl sx={{ marginY: 2 }} fullWidth variant="outlined">
-                <InputLabel htmlFor="outlined-adornment-course-id">Course ID</InputLabel>
+                <InputLabel htmlFor="outlined-adornment-registration-id">
+                  Registration ID
+                </InputLabel>
                 <OutlinedInput
-                  id="outlined-adornment-course-id"
-                  label="Course ID"
-                  name="courseId"
+                  id="outlined-adornment-registration-id"
+                  label="Registration ID"
+                  name="registrationId"
                   type="number"
                   onBlur={formik.handleBlur}
                   onChange={formik.handleChange}
-                  value={formik.values.courseId}
+                  value={formik.values.registrationId}
                 />
-                {Boolean(formik.touched.courseId && formik.errors.courseId) && (
-                  <FormHelperText error>{formik.errors.courseId}</FormHelperText>
-                )}
-              </FormControl>
-
-              <FormControl sx={{ marginY: 2 }} fullWidth variant="outlined">
-                <InputLabel htmlFor="outlined-adornment-user-id">User ID</InputLabel>
-                <OutlinedInput
-                  id="outlined-adornment-user-id"
-                  label="User ID"
-                  name="userId"
-                  type="number"
-                  onBlur={formik.handleBlur}
-                  onChange={formik.handleChange}
-                  value={formik.values.type === 'COURSE_UTILITIES' ? 0 : formik.values.userId}
-                  disabled={formik.values.type === 'COURSE_UTILITIES'}
-                />
-                {Boolean(formik.touched.userId && formik.errors.userId) && (
-                  <FormHelperText error>{formik.errors.userId}</FormHelperText>
+                {Boolean(formik.touched.registrationId && formik.errors.registrationId) && (
+                  <FormHelperText error>{formik.errors.registrationId}</FormHelperText>
                 )}
               </FormControl>
 
@@ -351,9 +303,7 @@ export const EditPayment = ({ payment }) => {
                   }}
                 />
               </FormControl>
-            </Grid>
 
-            <Grid item lg={6} md={6} xs={12}>
               <FormControl sx={{ marginTop: 1, marginBottom: 2 }} fullWidth variant="outlined">
                 <InputLabel htmlFor="outlined-adornment-descriptions">Descriptions</InputLabel>
                 <OutlinedInput
@@ -369,32 +319,9 @@ export const EditPayment = ({ payment }) => {
                   <FormHelperText error>{formik.errors.descriptions}</FormHelperText>
                 )}
               </FormControl>
+            </Grid>
 
-              <FormControl sx={{ marginY: 2 }} fullWidth variant="outlined">
-                <InputLabel id="select-payment-method">Payment Method</InputLabel>
-                <Select
-                  labelId="select-payment-method"
-                  id="select-payment-method"
-                  value={formik.values.paymentMethod}
-                  label="Payment Method"
-                  onChange={formik.handleChange}
-                  name="paymentMethod"
-                >
-                  <MenuItem disabled key="" value="">
-                    --- Select Payment Method ---
-                  </MenuItem>
-                  <MenuItem key="bank_transfer" value="BANK_TRANSFER">
-                    Bank Transfer
-                  </MenuItem>
-                  <MenuItem key="cash" value="CASH">
-                    Cash
-                  </MenuItem>
-                </Select>
-                {Boolean(formik.touched.departmentId && formik.errors.departmentId) && (
-                  <FormHelperText error>{formik.errors.departmentId}</FormHelperText>
-                )}
-              </FormControl>
-
+            <Grid item lg={6} md={6} xs={12}>
               <Stack
                 sx={{ marginX: 2, marginTop: 2, marginBottom: 2 }}
                 alignItems="center"
@@ -428,17 +355,19 @@ export const EditPayment = ({ payment }) => {
               </Stack>
 
               <FormControl sx={{ marginY: 2 }} fullWidth variant="outlined">
-                <InputLabel id="select-payment-status">Payment Status</InputLabel>
+                <InputLabel id="select-registration-payment-status">
+                  Registration Payment Status
+                </InputLabel>
                 <Select
-                  labelId="select-payment-status"
-                  id="select-payment-status"
+                  labelId="select-registration-payment-status"
+                  id="select-registration-payment-status"
                   value={formik.values.status}
-                  label="Payment Status"
+                  label="Registration Payment Status"
                   onChange={formik.handleChange}
                   name="status"
                 >
                   <MenuItem disabled key="" value="">
-                    --- Select Payment Status ---
+                    --- Select Registration Payment Status ---
                   </MenuItem>
                   <MenuItem key="PENDING" value="PENDING">
                     PENDING

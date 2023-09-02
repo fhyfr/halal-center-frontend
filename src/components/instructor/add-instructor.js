@@ -190,7 +190,7 @@ export const AddInstructor = ({ courses }) => {
                       <ListItemIcon>
                         <Checkbox checked={selected.indexOf(course.id) > -1} />
                       </ListItemIcon>
-                      <ListItemText primary={course.title} />
+                      <ListItemText primary={`${course.title} - Batch ${course.batchNumber}`} />
                     </MenuItem>
                   ))}
                 </Select>

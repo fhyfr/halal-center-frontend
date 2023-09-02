@@ -101,16 +101,16 @@ export const getServerSideProps = async ({ req, res, query }) => {
     }
     certificates = responseCertificate.data;
 
-    // get payments data
-    const responsePayment = await axios({
+    // get registration payment data
+    const responseRegistrationPayment = await axios({
       method: 'GET',
-      url: `${NEXT_PUBLIC_API}/payment`,
+      url: `${NEXT_PUBLIC_API}/registration-payment`,
       params: { courseId: course.id, userId: currentUser.id },
       headers: {
         Authorization: `Bearer ${user.accessToken}`,
       },
     });
-    payments = responsePayment.data;
+    payments = responseRegistrationPayment.data;
   } catch (err) {
     course = { error: { message: err.message } };
     instructors = { error: { message: err.message } };

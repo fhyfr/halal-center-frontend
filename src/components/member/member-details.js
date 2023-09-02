@@ -163,7 +163,7 @@ export const MemberDetails = ({ user, courses }) => {
                       <TableCell align="center">
                         <Typography>{course.id}</Typography>
                       </TableCell>
-                      <TableCell>{course.title}</TableCell>
+                      <TableCell>{`${course.title} - Batch ${course.batchNumber}`}</TableCell>
                       <TableCell>{formatDateWithoutHourMinutes(course.registeredAt)}</TableCell>
                     </TableRow>
                   </>

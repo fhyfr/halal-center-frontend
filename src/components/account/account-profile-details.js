@@ -13,7 +13,9 @@ import {
   FormHelperText,
   Grid,
   InputLabel,
+  MenuItem,
   OutlinedInput,
+  Select,
   Typography,
 } from '@mui/material';
 import useAuth from '../../hooks/use-auth';
@@ -24,8 +26,9 @@ import { updateProfile } from '../../services/api/member';
 import { PhotoCamera } from '@mui/icons-material';
 import { uploadImage } from '../../services/api/file';
 import { useRouter } from 'next/router';
+import { getCitiesByProvinceId } from '../../services/api/city';
 
-export const AccountProfileDetails = (props) => {
+export const AccountProfileDetails = ({ provinces, cities }) => {
   const { user } = useAuth();
   const router = useRouter();
 
@@ -54,6 +57,9 @@ export const AccountProfileDetails = (props) => {
   const [info, setInfo] = useState(undefined);
   const [errMessage, setErrMessage] = useState(undefined);
   const [profilePictureUrl, setProfilePictureUrl] = useState(undefined);
+  const [selectedProvinceId, setSelectedProvinceId] = useState(user.provinceId);
+  const [selectedCityId, setSelectedCityId] = useState(user.cityId);
+  const [citiesData, setCitiesData] = useState(cities);
 
   const formik = useFormik({
     initialValues,
@@ -68,6 +74,18 @@ export const AccountProfileDetails = (props) => {
     onSubmit: (values, action) => {
       if (profilePictureUrl) {
         values.profilePicture = profilePictureUrl;
+      }
+
+      if (selectedProvinceId) {
+        Object.assign(values, {
+          provinceId: selectedProvinceId,
+        });
+      }
+
+      if (selectedCityId) {
+        Object.assign(values, {
+          cityId: selectedCityId,
+        });
       }
 
       updateProfile(values)
@@ -100,11 +118,40 @@ export const AccountProfileDetails = (props) => {
       });
   };
 
+  const handleChangeProvinceId = async (event) => {
+    const value = event.target.value;
+    setSelectedProvinceId(value);
+
+    const cities = await getCitiesByProvinceId(value);
+    setCitiesData(cities);
+  };
+
+  const handleChangeCityId = (event) => {
+    const value = event.target.value;
+    setSelectedCityId(value);
+  };
+
+  if (provinces.error) {
+    return (
+      <Typography align="center" variant="h4" style={{ color: 'red' }}>
+        error, {provinces.error.message}
+      </Typography>
+    );
+  }
+
+  if (cities.error) {
+    return (
+      <Typography align="center" variant="h4" style={{ color: 'red' }}>
+        error, {cities.error.message}
+      </Typography>
+    );
+  }
+
   return (
     <form autoComplete="off" onSubmit={formik.handleSubmit}>
       <Grid container spacing={3}>
         <Grid item lg={4} md={6} xs={12}>
-          <Card {...props}>
+          <Card>
             <CardContent>
               <Box
                 sx={{
@@ -230,6 +277,45 @@ export const AccountProfileDetails = (props) => {
                     {Boolean(formik.touched.phoneNumber && formik.errors.phoneNumber) && (
                       <FormHelperText error>{formik.errors.phoneNumber}</FormHelperText>
                     )}
+                  </FormControl>
+                </Grid>
+                <Grid item md={6} xs={12}>
+                  <FormControl fullWidth variant="outlined">
+                    <InputLabel id="single-select-province">Province</InputLabel>
+                    <Select
+                      labelId="single-select-province"
+                      value={selectedProvinceId}
+                      label="Province"
+                      onChange={handleChangeProvinceId}
+                      name="provinceId"
+                      required
+                    >
+                      {provinces.data.map((province) => (
+                        <MenuItem key={province.id} value={province.id}>
+                          {province.name}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Grid>
+
+                <Grid item md={6} xs={12}>
+                  <FormControl fullWidth variant="outlined">
+                    <InputLabel id="single-select-city">City</InputLabel>
+                    <Select
+                      labelId="single-select-city"
+                      value={selectedCityId}
+                      label="City"
+                      onChange={handleChangeCityId}
+                      name="cityId"
+                      required
+                    >
+                      {citiesData?.data?.map((city) => (
+                        <MenuItem key={city.id} value={city.id}>
+                          {city.name}
+                        </MenuItem>
+                      ))}
+                    </Select>
                   </FormControl>
                 </Grid>
                 <Grid item md={6} xs={12}>

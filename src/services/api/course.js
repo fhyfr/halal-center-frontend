@@ -58,5 +58,5 @@ export const registerCourse = async (courseId) => {
     },
   });
 
-  return response.data.message;
+  return response.data;
 };

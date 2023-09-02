@@ -129,10 +129,15 @@ export const CourseDetails = ({ course, instructors, user, documents, certificat
                 pb: 2,
               }}
             >
-              <CardMedia component="img" height="auto" image={course.banner} alt={course.title} />
+              <CardMedia
+                component="img"
+                height="auto"
+                image={course.banner}
+                alt={`${course.title} - Batch ${course.batchNumber}`}
+              />
             </Box>
             <Typography align="left" color="textPrimary" gutterBottom variant="h5">
-              {course.title}
+              {`${course.title} - Batch ${course.batchNumber}`}
             </Typography>
             <Typography align="left" color="textPrimary" gutterBottom variant="h6">
               {course.subTitle}

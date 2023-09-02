@@ -45,7 +45,7 @@ export const getServerSideProps = async ({ req, res, query }) => {
   try {
     const response = await axios({
       method: 'GET',
-      url: `${NEXT_PUBLIC_API}/payment`,
+      url: `${NEXT_PUBLIC_API}/registration-payment`,
       params: queryParams,
       headers: {
         Authorization: `Bearer ${user.accessToken}`,

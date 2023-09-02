@@ -7,7 +7,7 @@ export const createNewPayment = async (newPayment) => {
 
   const response = await axios({
     method: 'POST',
-    url: `${NEXT_PUBLIC_API}/payment`,
+    url: `${NEXT_PUBLIC_API}/registration-payment`,
     headers: {
       Authorization: `Bearer ${accessToken}`,
     },
@@ -22,7 +22,7 @@ export const editPayment = async (paymentId, updatePayment) => {
 
   const response = await axios({
     method: 'PUT',
-    url: `${NEXT_PUBLIC_API}/payment/${paymentId}`,
+    url: `${NEXT_PUBLIC_API}/registration-payment/${paymentId}`,
     headers: {
       Authorization: `Bearer ${accessToken}`,
     },
@@ -37,7 +37,7 @@ export const deletePayment = async (paymentId) => {
 
   const response = await axios({
     method: 'DELETE',
-    url: `${NEXT_PUBLIC_API}/payment/${paymentId}`,
+    url: `${NEXT_PUBLIC_API}/registration-payment/${paymentId}`,
     headers: {
       Authorization: `Bearer ${accessToken}`,
     },

@@ -123,7 +123,7 @@ export const InstructorDetails = ({ instructor, courses }) => {
                     <Stack sx={{ marginBottom: 2 }}>
                       <Typography variant="h6">Course ID: {course.id}</Typography>
                       <Typography variant="body1" gutterBottom>
-                        Title: {course.title}
+                        Title: {`${course.title} - Batch ${course.batchNumber}`}
                       </Typography>
                       <Typography variant="body1" gutterBottom>
                         Date: {formatDateWithoutHourMinutes(course.startDate)} s/d{' '}

@@ -121,7 +121,7 @@ export const InstructorListToolbar = ({ courses }) => {
                       <option disabled> -- Select Course -- </option>
                       {courses.data?.map((course) => (
                         <option key={course.id} value={course.id}>
-                          {course.title}
+                          {`${course.title} - Batch ${course.batchNumber}`}
                         </option>
                       ))}
                     </NativeSelect>

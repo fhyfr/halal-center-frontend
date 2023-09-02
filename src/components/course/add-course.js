@@ -43,6 +43,7 @@ export const AddCourse = ({ categories }) => {
     initialValues: {
       categoryId: '',
       title: '',
+      batchNumber: '',
       subTitle: '',
       descriptions: '',
       type: '',
@@ -53,6 +54,7 @@ export const AddCourse = ({ categories }) => {
     },
     validationSchema: Yup.object({
       categoryId: Yup.number().required('Category is required'),
+      batchNumber: Yup.number().min(1).required('Batch number is required'),
       title: Yup.string().required('Title is required'),
       subTitle: Yup.string().required('Sub title is required'),
       descriptions: Yup.string().required('Description is required'),
@@ -244,6 +246,22 @@ export const AddCourse = ({ categories }) => {
                 />
                 {Boolean(formik.touched.title && formik.errors.title) && (
                   <FormHelperText error>{formik.errors.title}</FormHelperText>
+                )}
+              </FormControl>
+
+              <FormControl sx={{ marginY: 2 }} fullWidth variant="outlined">
+                <InputLabel htmlFor="outlined-adornment-batch-number">Batch Number</InputLabel>
+                <OutlinedInput
+                  id="outlined-adornment-batch-number"
+                  label="Batch Number"
+                  name="batchNumber"
+                  type="number"
+                  onBlur={formik.handleBlur}
+                  onChange={formik.handleChange}
+                  value={formik.values.batchNumber}
+                />
+                {Boolean(formik.touched.batchNumber && formik.errors.batchNumber) && (
+                  <FormHelperText error>{formik.errors.batchNumber}</FormHelperText>
                 )}
               </FormControl>
 

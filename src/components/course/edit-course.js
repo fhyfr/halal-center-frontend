@@ -29,7 +29,7 @@ import { CancelRounded, PhotoCamera } from '@mui/icons-material';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { uploadImage } from '../../services/api/file';
-import { createNewCourse, editCourse } from '../../services/api/course';
+import { editCourse } from '../../services/api/course';
 
 export const EditCourse = ({ course, categories }) => {
   const router = useRouter();
@@ -43,6 +43,7 @@ export const EditCourse = ({ course, categories }) => {
   const formik = useFormik({
     initialValues: {
       categoryId: course.categoryId,
+      batchNumber: course.batchNumber,
       title: course.title,
       subTitle: course.subTitle,
       descriptions: course.descriptions,
@@ -54,6 +55,7 @@ export const EditCourse = ({ course, categories }) => {
     },
     validationSchema: Yup.object({
       categoryId: Yup.number().required('Category is required'),
+      batchNumber: Yup.number().min(1).required('Batch number is required'),
       title: Yup.string().required('Title is required'),
       subTitle: Yup.string().required('Sub title is required'),
       descriptions: Yup.string().required('Description is required'),
@@ -257,6 +259,22 @@ export const EditCourse = ({ course, categories }) => {
                 />
                 {Boolean(formik.touched.title && formik.errors.title) && (
                   <FormHelperText error>{formik.errors.title}</FormHelperText>
+                )}
+              </FormControl>
+
+              <FormControl sx={{ marginY: 2 }} fullWidth variant="outlined">
+                <InputLabel htmlFor="outlined-adornment-batch-number">Batch Number</InputLabel>
+                <OutlinedInput
+                  id="outlined-adornment-batch-number"
+                  label="Batch Number"
+                  name="batchNumber"
+                  type="number"
+                  onBlur={formik.handleBlur}
+                  onChange={formik.handleChange}
+                  value={formik.values.batchNumber}
+                />
+                {Boolean(formik.touched.batchNumber && formik.errors.batchNumber) && (
+                  <FormHelperText error>{formik.errors.batchNumber}</FormHelperText>
                 )}
               </FormControl>
 

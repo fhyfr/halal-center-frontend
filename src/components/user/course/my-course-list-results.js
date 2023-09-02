@@ -98,7 +98,7 @@ export const MyCourseListResults = ({ courses }) => {
                   </TableCell>
                   <TableCell>
                     <Typography color="textPrimary" variant="body2">
-                      {course.title}
+                      {`${course.title} - Batch ${course.batchNumber}`}
                     </Typography>
                   </TableCell>
                   <TableCell>

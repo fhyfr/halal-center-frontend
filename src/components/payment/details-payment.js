@@ -55,7 +55,7 @@ export const PaymentDetails = ({ payment }) => {
               ID: {payment.courseId}
             </Typography>
             <Typography variant="body1" gutterBottom>
-              Title: {payment.course.title}
+              Title: {`${payment.course.title} - Batch ${payment.course.batchNumber}`}
             </Typography>
             <Typography variant="body1" gutterBottom>
               Type: {payment.course.type}

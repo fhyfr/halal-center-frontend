@@ -11,19 +11,17 @@ import {
   FormControl,
   FormHelperText,
   InputLabel,
-  MenuItem,
   OutlinedInput,
-  Select,
 } from '@mui/material';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { FileUpload, PhotoCamera } from '@mui/icons-material';
 import { uploadDocument } from '../../services/api/file';
-import { createNewDocument } from '../../services/api/document';
+import { createNewModule } from '../../services/api/module';
 import { useRouter } from 'next/router';
 import { handleRedirectOnClick } from '../../utils/handle-event-button';
 
-export const AddDocument = () => {
+export const AddModule = () => {
   const router = useRouter();
 
   const [info, setInfo] = useState(undefined);
@@ -31,29 +29,21 @@ export const AddDocument = () => {
 
   const formik = useFormik({
     initialValues: {
-      type: '',
       courseId: 0,
-      userId: 0,
       url: '',
     },
     validationSchema: Yup.object({
-      type: Yup.string().required('Type is required'),
       courseId: Yup.number().required('Course id is required'),
-      userId: Yup.number(),
-      url: Yup.string().url().required('Document url is required'),
+      url: Yup.string().url().required('Module url is required'),
     }),
     onSubmit: (values, action) => {
-      if (values.userId === 0 && values.type !== 'CERTIFICATE') {
-        delete values.userId;
-      }
-
-      createNewDocument(values)
+      createNewModule(values)
         .then((res) => {
           setInfo(res);
           setErrMessage(undefined);
 
           setTimeout(() => {
-            router.push('/document');
+            router.push('/module');
           }, 2000);
         })
         .catch((err) => {
@@ -64,7 +54,7 @@ export const AddDocument = () => {
     },
   });
 
-  const handleUploadDocument = async (event) => {
+  const handleUploadModule = async (event) => {
     uploadDocument(event.target.files[0])
       .then((res) => {
         setInfo(res.message);
@@ -80,7 +70,7 @@ export const AddDocument = () => {
   return (
     <form onSubmit={formik.handleSubmit}>
       <Card>
-        <CardHeader subheader="Fill out this form for add new document" title="Add New Document" />
+        <CardHeader subheader="Fill out this form for add new module" title="Add New Module" />
         <Divider />
         <CardContent>
           {info && (
@@ -103,42 +93,17 @@ export const AddDocument = () => {
               component="label"
               endIcon={<FileUpload />}
             >
-              Upload Document
+              Upload Module
               <input
-                id="upload-document-id"
+                id="upload-module-id"
                 name="url"
                 hidden
                 accept="application/pdf"
                 type="file"
-                onChange={handleUploadDocument}
+                onChange={handleUploadModule}
               />
             </Button>
           </CardActions>
-
-          <FormControl sx={{ marginTop: 1, marginBottom: 2 }} fullWidth variant="outlined">
-            <InputLabel id="select-document-type">Document Type</InputLabel>
-            <Select
-              labelId="select-document-type"
-              id="select-document-type"
-              value={formik.values.type}
-              label="Document Type"
-              onChange={formik.handleChange}
-              name="type"
-            >
-              <MenuItem disabled key="" value="">
-                --- Select Type ---
-              </MenuItem>
-              <MenuItem key="MODULE" value="MODULE">
-                MODULE
-              </MenuItem>
-              <MenuItem key="CERTIFICATE" value="CERTIFICATE">
-                CERTIFICATE
-              </MenuItem>
-            </Select>
-            {Boolean(formik.touched.departmentId && formik.errors.departmentId) && (
-              <FormHelperText error>{formik.errors.departmentId}</FormHelperText>
-            )}
-          </FormControl>
 
           <FormControl sx={{ marginY: 2 }} fullWidth variant="outlined">
             <InputLabel htmlFor="outlined-adornment-course-id">Course ID</InputLabel>
@@ -157,27 +122,10 @@ export const AddDocument = () => {
           </FormControl>
 
           <FormControl sx={{ marginY: 2 }} fullWidth variant="outlined">
-            <InputLabel htmlFor="outlined-adornment-user-id">User ID</InputLabel>
+            <InputLabel htmlFor="outlined-adornment-module-url">Module URL</InputLabel>
             <OutlinedInput
-              id="outlined-adornment-user-id"
-              label="User ID"
-              name="userId"
-              type="number"
-              onBlur={formik.handleBlur}
-              onChange={formik.handleChange}
-              value={formik.values.userId}
-              disabled={formik.values.type !== 'CERTIFICATE'}
-            />
-            {Boolean(formik.touched.userId && formik.errors.userId) && (
-              <FormHelperText error>{formik.errors.userId}</FormHelperText>
-            )}
-          </FormControl>
-
-          <FormControl sx={{ marginY: 2 }} fullWidth variant="outlined">
-            <InputLabel htmlFor="outlined-adornment-document-url">Document URL</InputLabel>
-            <OutlinedInput
-              id="outlined-adornment-document-url"
-              label="Document URL"
+              id="outlined-adornment-module-url"
+              label="Module URL"
               name="url"
               type="text"
               onBlur={formik.handleBlur}
@@ -205,7 +153,7 @@ export const AddDocument = () => {
             color="error"
             variant="text"
             onClick={() => {
-              handleRedirectOnClick(router, '/document');
+              handleRedirectOnClick(router, '/module');
             }}
           >
             Cancel

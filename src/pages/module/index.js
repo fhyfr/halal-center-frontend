@@ -1,10 +1,10 @@
 import Head from 'next/head';
 import { Box, Container } from '@mui/material';
-import { DocumentListResults } from '../../components/document/document-list-results';
-import { DocumentListToolbar } from '../../components/document/document-list-toolbar';
 import { DashboardLayout } from '../../components/dashboard-layout';
 import { parseCookies } from '../../lib/auth-cookies';
 import axios from 'axios';
+import { ModuleListToolbar } from '../../components/module/module-list-toolbar';
+import { ModuleListResults } from '../../components/module/module-list-results';
 
 const { NEXT_PUBLIC_API } = process.env;
 
@@ -12,10 +12,8 @@ export const getServerSideProps = async ({ req, res, query }) => {
   const page = query.page || 1;
   const size = query.limit || 10;
   const courseId = query.courseId;
-  const userId = query.userId;
-  const type = query.type;
 
-  let documents = null;
+  let modules = null;
   const data = parseCookies(req);
   if (!data.user) {
     return {
@@ -28,49 +26,40 @@ export const getServerSideProps = async ({ req, res, query }) => {
   }
   const user = JSON.parse(data.user);
 
-  let payments;
   let queryParams = { page, size };
-
-  if (type && type.length > 0) {
-    Object.assign(queryParams, { type });
-  }
 
   if (courseId && courseId > 0) {
     Object.assign(queryParams, { courseId });
   }
 
-  if (userId && userId > 0) {
-    Object.assign(queryParams, { userId });
-  }
-
   try {
     const response = await axios({
       method: 'GET',
-      url: `${NEXT_PUBLIC_API}/document`,
+      url: `${NEXT_PUBLIC_API}/module`,
       params: queryParams,
       headers: {
         Authorization: `Bearer ${user.accessToken}`,
       },
     });
     if (response.status !== 200) {
-      throw new Error('failed to get data documents');
+      throw new Error('failed to get data modules');
     }
 
-    documents = response.data;
+    modules = response.data;
   } catch (err) {
-    documents = { error: { message: err.message } };
+    modules = { error: { message: err.message } };
   }
 
-  return { props: { documents } };
+  return { props: { modules } };
 };
 
-const Document = (props) => {
-  const { documents } = props;
+const Module = (props) => {
+  const { modules } = props;
 
   return (
     <>
       <Head>
-        <title>Documents | Halal Center</title>
+        <title>Modules | Halal Center</title>
       </Head>
       <Box
         component="main"
@@ -80,9 +69,9 @@ const Document = (props) => {
         }}
       >
         <Container maxWidth={false}>
-          <DocumentListToolbar />
+          <ModuleListToolbar />
           <Box sx={{ mt: 3 }}>
-            <DocumentListResults documents={documents} />
+            <ModuleListResults modules={modules} />
           </Box>
         </Container>
       </Box>
@@ -90,6 +79,6 @@ const Document = (props) => {
   );
 };
 
-Document.getLayout = (document) => <DashboardLayout>{document}</DashboardLayout>;
+Module.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
 
-export default Document;
+export default Module;

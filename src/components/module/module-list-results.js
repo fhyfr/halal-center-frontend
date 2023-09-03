@@ -16,9 +16,9 @@ import {
 } from '@mui/material';
 import { useRouter } from 'next/router';
 import { formatDate } from '../../utils/date-converter';
-import { deleteDocument } from '../../services/api/document';
+import { deleteModule } from '../../services/api/module';
 
-export const DocumentListResults = ({ documents }) => {
+export const ModuleListResults = ({ modules }) => {
   const router = useRouter();
 
   const [limit, setLimit] = useState(10);
@@ -50,10 +50,10 @@ export const DocumentListResults = ({ documents }) => {
     });
   };
 
-  const handleDeleteDocument = (documentId) => {
-    const confirmation = confirm('Are you sure to delete this document?');
+  const handleDeleteModule = (moduleId) => {
+    const confirmation = confirm('Are you sure to delete this module?');
     if (confirmation) {
-      deleteDocument(documentId)
+      deleteModule(moduleId)
         .then((res) => {
           alert(res);
           router.reload();
@@ -65,10 +65,10 @@ export const DocumentListResults = ({ documents }) => {
     return;
   };
 
-  if (documents.error) {
+  if (modules.error) {
     return (
       <Typography align="center" variant="h4" style={{ color: 'red' }}>
-        error, {documents.error.message}
+        error, {modules.error.message}
       </Typography>
     );
   }
@@ -81,9 +81,7 @@ export const DocumentListResults = ({ documents }) => {
             <TableHead>
               <TableRow>
                 <TableCell align="center">ID</TableCell>
-                <TableCell>Type</TableCell>
                 <TableCell>Course ID</TableCell>
-                <TableCell>User ID</TableCell>
                 <TableCell>URL</TableCell>
                 <TableCell>Created By</TableCell>
                 <TableCell align="center">Created Date</TableCell>
@@ -100,44 +98,33 @@ export const DocumentListResults = ({ documents }) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {documents.data?.slice(0, limit).map((document) => (
-                <TableRow hover key={document.id}>
+              {modules.data?.slice(0, limit).map((module) => (
+                <TableRow hover key={module.id}>
                   <TableCell align="center">
                     <Typography color="textPrimary" variant="body2">
-                      {document.id}
-                    </Typography>
-                  </TableCell>
-
-                  <TableCell>
-                    <Typography color="textPrimary" variant="body2">
-                      {document.type}
+                      {module.id}
                     </Typography>
                   </TableCell>
                   <TableCell>
                     <Typography color="textPrimary" variant="body2">
-                      {document.courseId}
+                      {module.courseId}
                     </Typography>
                   </TableCell>
                   <TableCell>
                     <Typography color="textPrimary" variant="body2">
-                      {document.userId}
-                    </Typography>
-                  </TableCell>
-                  <TableCell>
-                    <Typography color="textPrimary" variant="body2">
-                      <Link href={document.url} target="_blank" underline="hover">
-                        {document.url}
+                      <Link href={module.url} target="_blank" underline="hover">
+                        {module.url}
                       </Link>
                     </Typography>
                   </TableCell>
                   <TableCell>
                     <Typography color="textPrimary" variant="body2">
-                      {document.createdBy}
+                      {module.createdBy}
                     </Typography>
                   </TableCell>
                   <TableCell>
                     <Typography color="textPrimary" variant="body2">
-                      {formatDate(document.createdAt)}
+                      {formatDate(module.createdAt)}
                     </Typography>
                   </TableCell>
                   <TableCell>
@@ -153,7 +140,7 @@ export const DocumentListResults = ({ documents }) => {
                         variant="contained"
                         size="small"
                         onClick={() => {
-                          handleDeleteDocument(document.id);
+                          handleDeleteModule(module.id);
                         }}
                       >
                         Delete
@@ -168,7 +155,7 @@ export const DocumentListResults = ({ documents }) => {
       </PerfectScrollbar>
       <TablePagination
         component="div"
-        count={documents.itemCount}
+        count={modules.itemCount}
         onPageChange={handlePageChange}
         onRowsPerPageChange={handleLimitChange}
         page={page}
@@ -179,6 +166,6 @@ export const DocumentListResults = ({ documents }) => {
   );
 };
 
-DocumentListResults.propTypes = {
-  document: PropTypes.array.isRequired,
+ModuleListResults.propTypes = {
+  modules: PropTypes.array.isRequired,
 };

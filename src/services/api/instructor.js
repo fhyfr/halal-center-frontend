@@ -18,12 +18,12 @@ export const createNewInstructor = async (newInstructor) => {
   return response.data.message;
 };
 
-export const editInstructor = async (instructorId, updateInstructor) => {
+export const editInstructor = async (id, updateInstructor) => {
   const accessToken = getSession();
 
   const response = await axios({
     method: 'PUT',
-    url: `${NEXT_PUBLIC_API}/instructor/${instructorId}`,
+    url: `${NEXT_PUBLIC_API}/instructor/${id}`,
     headers: {
       Authorization: `Bearer ${accessToken}`,
     },
@@ -33,12 +33,12 @@ export const editInstructor = async (instructorId, updateInstructor) => {
   return response.data.message;
 };
 
-export const deleteInstructor = async (instructorId) => {
+export const deleteInstructor = async (id) => {
   const accessToken = getSession();
 
   const response = await axios({
     method: 'DELETE',
-    url: `${NEXT_PUBLIC_API}/instructor/${instructorId}`,
+    url: `${NEXT_PUBLIC_API}/instructor/${id}`,
     headers: {
       Authorization: `Bearer ${accessToken}`,
     },

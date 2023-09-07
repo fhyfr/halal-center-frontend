@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import { Box, Container, Grid, Typography } from '@mui/material';
+import { Box, Container, Typography } from '@mui/material';
 import { AccountProfileDetails } from '../../components/account/account-profile-details';
 import { DashboardLayout } from '../../components/dashboard-layout';
 import axios from 'axios';
@@ -7,7 +7,7 @@ import { parseCookies } from '../../lib/auth-cookies';
 
 const { NEXT_PUBLIC_API } = process.env;
 
-export const getServerSideProps = async ({ req, res, query }) => {
+export const getServerSideProps = async ({ req }) => {
   let provinces, cities;
   const data = parseCookies(req);
   if (!data.user) {

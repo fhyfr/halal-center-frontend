@@ -28,17 +28,6 @@ export const OperationalPaymentListToolbar = () => {
     });
   };
 
-  const handleFilterUser = (event) => {
-    const path = router.pathname;
-    const query = router.query;
-    query.userId = event.target.value;
-
-    router.push({
-      pathname: path,
-      query: query,
-    });
-  };
-
   return (
     <Box>
       <Box

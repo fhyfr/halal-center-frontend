@@ -57,8 +57,8 @@ export const AccountProfileDetails = ({ provinces, cities }) => {
   const [info, setInfo] = useState(undefined);
   const [errMessage, setErrMessage] = useState(undefined);
   const [profilePictureUrl, setProfilePictureUrl] = useState(undefined);
-  const [selectedProvinceId, setSelectedProvinceId] = useState(user.provinceId);
-  const [selectedCityId, setSelectedCityId] = useState(user.cityId);
+  const [selectedProvinceId, setSelectedProvinceId] = useState(user?.provinceId);
+  const [selectedCityId, setSelectedCityId] = useState(user?.cityId);
   const [citiesData, setCitiesData] = useState(cities);
 
   const formik = useFormik({
@@ -279,9 +279,12 @@ export const AccountProfileDetails = ({ provinces, cities }) => {
                     )}
                   </FormControl>
                 </Grid>
+
                 <Grid item md={6} xs={12}>
                   <FormControl fullWidth variant="outlined">
-                    <InputLabel id="single-select-province">Province</InputLabel>
+                    <InputLabel id="single-select-province" required>
+                      Province
+                    </InputLabel>
                     <Select
                       labelId="single-select-province"
                       value={selectedProvinceId}
@@ -301,7 +304,9 @@ export const AccountProfileDetails = ({ provinces, cities }) => {
 
                 <Grid item md={6} xs={12}>
                   <FormControl fullWidth variant="outlined">
-                    <InputLabel id="single-select-city">City</InputLabel>
+                    <InputLabel id="single-select-city" required>
+                      City
+                    </InputLabel>
                     <Select
                       labelId="single-select-city"
                       value={selectedCityId}
@@ -318,6 +323,7 @@ export const AccountProfileDetails = ({ provinces, cities }) => {
                     </Select>
                   </FormControl>
                 </Grid>
+
                 <Grid item md={6} xs={12}>
                   <FormControl fullWidth variant="outlined">
                     <InputLabel htmlFor="outlined-adornment-address" required>
@@ -340,7 +346,9 @@ export const AccountProfileDetails = ({ provinces, cities }) => {
                 </Grid>
                 <Grid item md={6} xs={12}>
                   <FormControl fullWidth variant="outlined">
-                    <InputLabel htmlFor="outlined-adornment-facebook">Facebook</InputLabel>
+                    <InputLabel htmlFor="outlined-adornment-facebook" required>
+                      Facebook
+                    </InputLabel>
                     <OutlinedInput
                       id="outlined-adornment-facebook"
                       label="Facebook"
@@ -349,6 +357,7 @@ export const AccountProfileDetails = ({ provinces, cities }) => {
                       onBlur={formik.handleBlur}
                       onChange={formik.handleChange}
                       value={formik.values.facebook}
+                      required
                     />
                     {Boolean(formik.touched.facebook && formik.errors.facebook) && (
                       <FormHelperText error>{formik.errors.facebook}</FormHelperText>
@@ -357,7 +366,9 @@ export const AccountProfileDetails = ({ provinces, cities }) => {
                 </Grid>
                 <Grid item md={6} xs={12}>
                   <FormControl fullWidth variant="outlined">
-                    <InputLabel htmlFor="outlined-adornment-linkedin">LinkedIn</InputLabel>
+                    <InputLabel htmlFor="outlined-adornment-linkedin" required>
+                      LinkedIn
+                    </InputLabel>
                     <OutlinedInput
                       id="outlined-adornment-linkedin"
                       label="LinkedIn"
@@ -366,6 +377,7 @@ export const AccountProfileDetails = ({ provinces, cities }) => {
                       onBlur={formik.handleBlur}
                       onChange={formik.handleChange}
                       value={formik.values.linkedin}
+                      required
                     />
                     {Boolean(formik.touched.linkedin && formik.errors.linkedin) && (
                       <FormHelperText error>{formik.errors.linkedin}</FormHelperText>

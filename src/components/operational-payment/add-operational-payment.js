@@ -30,7 +30,7 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { uploadImage } from '../../services/api/file';
 import { createNewOperationalPayment } from '../../services/api/operational-payment';
 
-export const AddOperationalPayment = (props) => {
+export const AddOperationalPayment = () => {
   const router = useRouter();
 
   const [info, setInfo] = useState(undefined);

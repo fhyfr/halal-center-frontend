@@ -10,7 +10,7 @@ import { RegistrationPaymentDetails } from '../../components/registration-paymen
 
 const { NEXT_PUBLIC_API } = process.env;
 
-export const getServerSideProps = async ({ req, res, query }) => {
+export const getServerSideProps = async ({ req, query }) => {
   let registrationPaymentData, userData, courseData;
 
   const { id } = query;

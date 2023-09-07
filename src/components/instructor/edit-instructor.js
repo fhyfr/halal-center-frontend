@@ -29,19 +29,24 @@ import 'yup-phone';
 import { uploadImage } from '../../services/api/file';
 import { handleRedirectOnClick } from '../../utils/handle-event-button';
 import { editInstructor } from '../../services/api/instructor';
+import { getCitiesByProvinceId } from '../../services/api/city';
 
-export const EditInstructor = ({ instructor, courses }) => {
+export const EditInstructor = ({ instructor, provinces, cities, courses, instructorCourseIds }) => {
   const router = useRouter();
 
   const [info, setInfo] = useState(undefined);
   const [errMessage, setErrMessage] = useState(undefined);
   const [profilePictureUrl, setProfilePictureUrl] = useState(instructor.profilePicture);
-  const [selected, setSelected] = useState(instructor.courseIds);
+  const [selectedCourseIds, setSelectedCourseIds] = useState(instructorCourseIds);
+  const [citiesData, setCitiesData] = useState(cities);
+  const [selectedProvinceId, setSelectedProvinceId] = useState(instructor.provinceId);
+  const [selectedCityId, setSelectedCityId] = useState(instructor.cityId);
 
   const formik = useFormik({
     initialValues: {
       email: instructor.email,
       fullName: instructor.fullName,
+      username: instructor.username,
       address: instructor.address,
       phoneNumber: instructor.phoneNumber,
       facebook: instructor.facebook,
@@ -50,6 +55,7 @@ export const EditInstructor = ({ instructor, courses }) => {
     validationSchema: Yup.object({
       email: Yup.string().email('Must be a valid email').required('Email is required'),
       fullName: Yup.string().required('Full Name is required'),
+      username: Yup.string().required('Username is required'),
       address: Yup.string().required('Address is required'),
       phoneNumber: Yup.string().phone('ID').required('Phone Number is required'),
       facebook: Yup.string().url(),
@@ -59,7 +65,9 @@ export const EditInstructor = ({ instructor, courses }) => {
       const updateInstructor = { ...values };
 
       Object.assign(updateInstructor, {
-        courseIds: selected,
+        courseIds: selectedCourseIds,
+        provinceId: selectedProvinceId,
+        cityId: selectedCityId,
       });
 
       if (profilePictureUrl && profilePictureUrl !== null) {
@@ -87,7 +95,7 @@ export const EditInstructor = ({ instructor, courses }) => {
 
   const handleChangeCourseIds = (event) => {
     const value = event.target.value;
-    setSelected(value);
+    setSelectedCourseIds(value);
   };
 
   const handleUploadProfilePicture = async (event) => {
@@ -101,6 +109,19 @@ export const EditInstructor = ({ instructor, courses }) => {
         setErrMessage(err.response.data?.message);
         setInfo(undefined);
       });
+  };
+
+  const handleChangeProvinceId = async (event) => {
+    const value = event.target.value;
+    setSelectedProvinceId(value);
+
+    const cities = await getCitiesByProvinceId(value);
+    setCitiesData(cities);
+  };
+
+  const handleChangeCityId = (event) => {
+    const value = event.target.value;
+    setSelectedCityId(value);
   };
 
   if (instructor.error) {
@@ -190,7 +211,7 @@ export const EditInstructor = ({ instructor, courses }) => {
                 <Select
                   labelId="mutiple-select-course"
                   multiple
-                  value={selected}
+                  value={selectedCourseIds}
                   label="Course Ids"
                   onChange={handleChangeCourseIds}
                   renderValue={(selected) => selected.join(', ')}
@@ -199,7 +220,7 @@ export const EditInstructor = ({ instructor, courses }) => {
                   {courses.data.map((course) => (
                     <MenuItem key={course.id} value={course.id}>
                       <ListItemIcon>
-                        <Checkbox checked={selected.indexOf(course.id) > -1} />
+                        <Checkbox checked={selectedCourseIds.indexOf(course.id) > -1} />
                       </ListItemIcon>
                       <ListItemText primary={`${course.title} - Batch ${course.batchNumber}`} />
                     </MenuItem>
@@ -225,6 +246,27 @@ export const EditInstructor = ({ instructor, courses }) => {
                     />
                     {Boolean(formik.touched.fullName && formik.errors.fullName) && (
                       <FormHelperText error>{formik.errors.fullName}</FormHelperText>
+                    )}
+                  </FormControl>
+                </Grid>
+
+                <Grid item md={6} xs={12}>
+                  <FormControl fullWidth variant="outlined">
+                    <InputLabel htmlFor="outlined-adornment-username" required>
+                      Username
+                    </InputLabel>
+                    <OutlinedInput
+                      id="outlined-adornment-username"
+                      label="Username"
+                      name="username"
+                      type="text"
+                      onBlur={formik.handleBlur}
+                      onChange={formik.handleChange}
+                      value={formik.values.username}
+                      required
+                    />
+                    {Boolean(formik.touched.username && formik.errors.username) && (
+                      <FormHelperText error>{formik.errors.username}</FormHelperText>
                     )}
                   </FormControl>
                 </Grid>
@@ -265,6 +307,50 @@ export const EditInstructor = ({ instructor, courses }) => {
                     {Boolean(formik.touched.phoneNumber && formik.errors.phoneNumber) && (
                       <FormHelperText error>{formik.errors.phoneNumber}</FormHelperText>
                     )}
+                  </FormControl>
+                </Grid>
+
+                <Grid item md={6} xs={12}>
+                  <FormControl fullWidth variant="outlined">
+                    <InputLabel id="single-select-province" required>
+                      Province
+                    </InputLabel>
+                    <Select
+                      labelId="single-select-province"
+                      value={selectedProvinceId}
+                      label="Province"
+                      onChange={handleChangeProvinceId}
+                      name="provinceId"
+                      required
+                    >
+                      {provinces.data.map((province) => (
+                        <MenuItem key={province.id} value={province.id}>
+                          {province.name}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Grid>
+
+                <Grid item md={6} xs={12}>
+                  <FormControl fullWidth variant="outlined">
+                    <InputLabel id="single-select-city" required>
+                      City
+                    </InputLabel>
+                    <Select
+                      labelId="single-select-city"
+                      value={selectedCityId}
+                      label="City"
+                      onChange={handleChangeCityId}
+                      name="cityId"
+                      required
+                    >
+                      {citiesData?.data?.map((city) => (
+                        <MenuItem key={city.id} value={city.id}>
+                          {city.name}
+                        </MenuItem>
+                      ))}
+                    </Select>
                   </FormControl>
                 </Grid>
 

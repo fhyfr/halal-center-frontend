@@ -53,6 +53,7 @@ export const InstructorDetails = ({ instructor, courses }) => {
             </Typography>
           </CardContent>
           <Divider />
+
           <CardContent sx={{ marginY: -2 }}>
             <Typography variant="h6">Email</Typography>
             <Typography variant="body1" gutterBottom>
@@ -60,6 +61,7 @@ export const InstructorDetails = ({ instructor, courses }) => {
             </Typography>
           </CardContent>
           <Divider />
+
           <CardContent sx={{ marginY: -2 }}>
             <Typography variant="h6">Phone Number</Typography>
             <Typography variant="body1" gutterBottom>
@@ -67,6 +69,27 @@ export const InstructorDetails = ({ instructor, courses }) => {
             </Typography>
           </CardContent>
           <Divider />
+
+          <CardContent sx={{ marginY: -2 }}>
+            <Typography variant="h6" gutterBottom>
+              Province
+            </Typography>
+            <Typography variant="body1" gutterBottom>
+              {instructor.province ? instructor.province.name : 'empty'}
+            </Typography>
+          </CardContent>
+          <Divider />
+
+          <CardContent sx={{ marginY: -2 }}>
+            <Typography variant="h6" gutterBottom>
+              City
+            </Typography>
+            <Typography variant="body1" gutterBottom>
+              {instructor.city ? instructor.city.name : 'empty'}
+            </Typography>
+          </CardContent>
+          <Divider />
+
           <CardContent sx={{ marginY: -2 }}>
             <Typography variant="h6" gutterBottom>
               Address
@@ -76,6 +99,7 @@ export const InstructorDetails = ({ instructor, courses }) => {
             </Typography>
           </CardContent>
           <Divider />
+
           <CardContent sx={{ marginY: -2 }}>
             <Typography variant="h6">Facebook</Typography>
             <Typography variant="body1" gutterBottom>
@@ -89,6 +113,7 @@ export const InstructorDetails = ({ instructor, courses }) => {
             </Typography>
           </CardContent>
           <Divider />
+
           <CardContent sx={{ marginY: -2 }}>
             <Typography variant="h6">LinkedIn</Typography>
             <Typography variant="body1" gutterBottom>

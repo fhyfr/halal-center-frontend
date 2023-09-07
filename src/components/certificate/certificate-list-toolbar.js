@@ -14,7 +14,7 @@ import { Add } from '@mui/icons-material';
 import { handleRedirectOnClick } from '../../utils/handle-event-button';
 import { useRouter } from 'next/router';
 
-export const CertificateListToolbar = (props) => {
+export const CertificateListToolbar = () => {
   const router = useRouter();
 
   const handleFilterCourse = (event) => {

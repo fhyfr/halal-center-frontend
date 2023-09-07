@@ -10,7 +10,7 @@ import { OperationalPaymentDetails } from '../../components/operational-payment/
 
 const { NEXT_PUBLIC_API } = process.env;
 
-export const getServerSideProps = async ({ req, res, query }) => {
+export const getServerSideProps = async ({ req, query }) => {
   let operationalPaymentData, courseData;
 
   const { id } = query;

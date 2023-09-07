@@ -29,6 +29,8 @@ const permissions = {
     'Dashboard',
     'Users',
     'Courses',
+    'Absense',
+    'Exams',
     'Modules',
     'Certificates',
     'Instructors',
@@ -43,7 +45,7 @@ const permissions = {
   VICE_DIRECTOR: ['Dashboard', 'Categories', 'Instructors', 'Modules', 'Certificates'],
   ADMIN_COURSE: ['Dashboard', 'Categories', 'Courses', 'Instructors', 'Modules', 'Certificates'],
   MEMBER: ['Dashboard', 'Courses', 'My Course', 'Account', 'Settings'],
-  INSTRUCTOR: ['Dashboard', 'Courses', 'Modules', 'Certificates'],
+  INSTRUCTOR: ['Dashboard', 'Courses', 'Modules', 'Certificates', 'Account', 'Settings'],
 };
 
 const items = [
@@ -66,6 +68,16 @@ const items = [
     href: '/module',
     icon: <LibraryBooks fontSize="small" />,
     title: 'Modules',
+  },
+  {
+    href: '/absense',
+    icon: <LibraryBooks fontSize="small" />,
+    title: 'Absense',
+  },
+  {
+    href: '/exams',
+    icon: <LibraryBooks fontSize="small" />,
+    title: 'Exams',
   },
   {
     href: '/certificate',

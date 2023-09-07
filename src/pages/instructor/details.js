@@ -10,12 +10,12 @@ import { InstructorDetails } from '../../components/instructor/instructor-detail
 
 const { NEXT_PUBLIC_API } = process.env;
 
-export const getServerSideProps = async ({ req, res, query }) => {
+export const getServerSideProps = async ({ req, query }) => {
   let instructor;
   let courses = [];
 
-  const { instructorId } = query;
-  if (!instructorId || instructorId === null) {
+  const { id } = query;
+  if (!id || id === null) {
     return {
       redirect: {
         permanent: false,
@@ -38,34 +38,31 @@ export const getServerSideProps = async ({ req, res, query }) => {
   const user = JSON.parse(data.user);
 
   try {
-    const response = await axios({
+    const responseInstructor = await axios({
       method: 'GET',
-      url: `${NEXT_PUBLIC_API}/instructor/${instructorId}`,
+      url: `${NEXT_PUBLIC_API}/instructor/${id}`,
       headers: {
         Authorization: `Bearer ${user.accessToken}`,
       },
     });
-    if (response.status !== 200) {
+
+    if (responseInstructor.status !== 200) {
       throw new Error('failed to get data instructor');
     }
-    instructor = response.data;
 
-    if (instructor.courseIds?.length > 0) {
-      for (let iterator = 0; iterator < instructor.courseIds.length; iterator++) {
-        const responseCourse = await axios({
-          method: 'GET',
-          url: `${NEXT_PUBLIC_API}/course/${instructor.courseIds[iterator]}`,
-          headers: {
-            Authorization: `Bearer ${user.accessToken}`,
-          },
-        });
-        if (responseCourse.status !== 200) {
-          throw new Error('failed to get data course');
-        }
-
-        courses.push(responseCourse.data);
-      }
+    const responseCourses = await axios({
+      method: 'GET',
+      url: `${NEXT_PUBLIC_API}/course/instructor/${id}?page=1&size=200`,
+      headers: {
+        Authorization: `Bearer ${user.accessToken}`,
+      },
+    });
+    if (responseCourses.status !== 200) {
+      throw new Error('failed to get data courses');
     }
+
+    instructor = responseInstructor.data;
+    courses = responseCourses.data.data;
   } catch (err) {
     instructor = { error: { message: err.message } };
     courses = { error: { message: err.message } };

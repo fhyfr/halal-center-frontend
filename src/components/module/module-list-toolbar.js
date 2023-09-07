@@ -8,16 +8,13 @@ import {
   SvgIcon,
   Typography,
   Grid,
-  FormControl,
-  InputLabel,
-  NativeSelect,
 } from '@mui/material';
 import { Search as SearchIcon } from '../../icons/search';
 import { Add } from '@mui/icons-material';
 import { handleRedirectOnClick } from '../../utils/handle-event-button';
 import { useRouter } from 'next/router';
 
-export const ModuleListToolbar = (props) => {
+export const ModuleListToolbar = () => {
   const router = useRouter();
 
   const handleFilterCourse = (event) => {

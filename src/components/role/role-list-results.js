@@ -1,9 +1,7 @@
 import { useState } from 'react';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import PropTypes from 'prop-types';
-import { format } from 'date-fns';
 import {
-  Avatar,
   Box,
   Card,
   Checkbox,
@@ -13,10 +11,8 @@ import {
   TableHead,
   TablePagination,
   TableRow,
-  Typography,
   Button,
 } from '@mui/material';
-import { getInitials } from '../../utils/get-initials';
 
 export const RoleListResults = ({ role, ...rest }) => {
   const [selectedRoleIds, setSelectedRoleIds] = useState([]);

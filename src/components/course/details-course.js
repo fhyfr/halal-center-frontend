@@ -27,7 +27,14 @@ import {
 } from '@mui/icons-material';
 import { formatRupiahCurrency } from '../../utils/currency-converter';
 
-export const CourseDetails = ({ course, instructors, user, documents, certificates, payments }) => {
+export const CourseDetails = ({
+  course,
+  instructors,
+  user,
+  modules,
+  certificates,
+  registrationPayments,
+}) => {
   if (course.error) {
     return (
       <Typography align="center" variant="h4" style={{ color: 'red' }}>
@@ -44,10 +51,10 @@ export const CourseDetails = ({ course, instructors, user, documents, certificat
     );
   }
 
-  if (documents.error) {
+  if (modules.error) {
     return (
       <Typography align="center" variant="h4" style={{ color: 'red' }}>
-        error, {documents.error.message}
+        error, {modules.error.message}
       </Typography>
     );
   }
@@ -60,10 +67,10 @@ export const CourseDetails = ({ course, instructors, user, documents, certificat
     );
   }
 
-  if (payments.error) {
+  if (registrationPayments.error) {
     return (
       <Typography align="center" variant="h4" style={{ color: 'red' }}>
-        error, {payments.error.message}
+        error, {registrationPayments.error.message}
       </Typography>
     );
   }
@@ -71,11 +78,11 @@ export const CourseDetails = ({ course, instructors, user, documents, certificat
   const quota = course.quota - course.totalRegistered;
   const currentDate = formatDateWithoutHourMinutes(new Date());
   const isCoursePaid =
-    payments.itemCount > 0
-      ? course.type === 'PAID' &&
-        payments.data[0].type === 'REGISTRATION' &&
-        payments.data[0].status === 'SUCCESS'
+    registrationPayments.itemCount > 0
+      ? course.type === 'PAID' && registrationPayments.data[0].status === 'SUCCESS'
       : false;
+
+  const isCoursesEnded = currentDate > formatDateWithoutHourMinutes(course.endDate);
 
   return (
     <Grid container spacing={3}>
@@ -240,8 +247,7 @@ export const CourseDetails = ({ course, instructors, user, documents, certificat
 
           <Table>
             <TableHead>
-              <TableCell align="left">Module ID</TableCell>
-              <TableCell align="left">Type</TableCell>
+              <TableCell align="center">Module ID</TableCell>
               <TableCell>
                 <Box
                   sx={{
@@ -254,41 +260,38 @@ export const CourseDetails = ({ course, instructors, user, documents, certificat
               </TableCell>
             </TableHead>
             <TableBody>
-              {(documents.data?.length > 0 && course.type === 'FREE') ||
+              {(modules.data?.length > 0 && course.type === 'FREE') ||
               (course.type === 'PAID' && isCoursePaid) ? (
-                documents.data?.map((document) => {
-                  if (document.type !== 'CERTIFICATE') {
-                    return (
-                      <TableRow key={document.id}>
-                        <TableCell>
-                          <Typography>{document.id}</Typography>
-                        </TableCell>
-                        <TableCell>{document.type}</TableCell>
-                        <TableCell>
-                          <Box
+                modules.data?.map((module) => {
+                  return (
+                    <TableRow key={module.id}>
+                      <TableCell align="center">
+                        <Typography>{module.id}</Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Box
+                          sx={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                          }}
+                        >
+                          <Button
+                            color="secondary"
+                            size="small"
                             sx={{
-                              display: 'flex',
-                              justifyContent: 'center',
+                              mr: 2,
                             }}
+                            variant="contained"
+                            startIcon={<Download />}
+                            href={module.url}
+                            target="_blank"
                           >
-                            <Button
-                              color="secondary"
-                              size="small"
-                              sx={{
-                                mr: 2,
-                              }}
-                              variant="contained"
-                              startIcon={<Download />}
-                              href={document.url}
-                              target="_blank"
-                            >
-                              Download
-                            </Button>
-                          </Box>
-                        </TableCell>
-                      </TableRow>
-                    );
-                  }
+                            Download
+                          </Button>
+                        </Box>
+                      </TableCell>
+                    </TableRow>
+                  );
                 })
               ) : (
                 <>
@@ -319,9 +322,9 @@ export const CourseDetails = ({ course, instructors, user, documents, certificat
 
           <Table>
             <TableHead>
-              <TableCell align="left">Certificate ID</TableCell>
-              <TableCell align="left">Type</TableCell>
-              <TableCell align="left">Username</TableCell>
+              <TableCell align="center">Certificate ID</TableCell>
+              <TableCell align="center">Type</TableCell>
+              <TableCell align="center">Username</TableCell>
               <TableCell>
                 <Box
                   sx={{
@@ -334,50 +337,45 @@ export const CourseDetails = ({ course, instructors, user, documents, certificat
               </TableCell>
             </TableHead>
             <TableBody>
-              {certificates.data?.length > 0 ? (
+              {certificates.data?.length > 0 && course.isRegistered && isCoursesEnded ? (
                 certificates.data?.map((certificate) => {
-                  if (
-                    course.isRegistered &&
-                    currentDate > formatDateWithoutHourMinutes(course.endDate)
-                  ) {
-                    return (
-                      <TableRow key={certificate.id}>
-                        <TableCell>
-                          <Typography>{certificate.id}</Typography>
-                        </TableCell>
-                        <TableCell>{certificate.type}</TableCell>
-                        <TableCell>{user.username}</TableCell>
-                        <TableCell>
-                          <Box
+                  return (
+                    <TableRow key={certificate.id}>
+                      <TableCell align="center">
+                        <Typography>{certificate.id}</Typography>
+                      </TableCell>
+                      <TableCell align="center">{certificate.type}</TableCell>
+                      <TableCell align="center">{user.username}</TableCell>
+                      <TableCell align="center">
+                        <Box
+                          sx={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                          }}
+                        >
+                          <Button
+                            color="secondary"
+                            size="small"
                             sx={{
-                              display: 'flex',
-                              justifyContent: 'center',
+                              mr: 2,
                             }}
+                            variant="contained"
+                            startIcon={<Download />}
+                            href={certificate.url}
+                            target="_blank"
                           >
-                            <Button
-                              color="secondary"
-                              size="small"
-                              sx={{
-                                mr: 2,
-                              }}
-                              variant="contained"
-                              startIcon={<Download />}
-                              href={certificate.url}
-                              target="_blank"
-                            >
-                              Download
-                            </Button>
-                          </Box>
-                        </TableCell>
-                      </TableRow>
-                    );
-                  }
+                            Download
+                          </Button>
+                        </Box>
+                      </TableCell>
+                    </TableRow>
+                  );
                 })
               ) : (
                 <>
                   <CardContent>
                     <Box>
-                      {currentDate < formatDateWithoutHourMinutes(course.endDate) ? (
+                      {!isCoursesEnded ? (
                         <Typography variant="subtitle1">Empty</Typography>
                       ) : (
                         <Typography variant="subtitle2">

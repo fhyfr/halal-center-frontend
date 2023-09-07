@@ -7,7 +7,7 @@ import { EditRegistrationPayment } from '../../components/registration-payment/e
 
 const { NEXT_PUBLIC_API } = process.env;
 
-export const getServerSideProps = async ({ req, res, query }) => {
+export const getServerSideProps = async ({ req, query }) => {
   const { id } = query;
   if (!id || id === null) {
     return {

@@ -8,7 +8,7 @@ import { CertificateListResults } from '../../components/certificate/certificate
 
 const { NEXT_PUBLIC_API } = process.env;
 
-export const getServerSideProps = async ({ req, res, query }) => {
+export const getServerSideProps = async ({ req, query }) => {
   const page = query.page || 1;
   const size = query.limit || 10;
   const courseId = query.courseId;

@@ -17,7 +17,7 @@ import {
 } from '@mui/material';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { FileUpload, PhotoCamera } from '@mui/icons-material';
+import { FileUpload } from '@mui/icons-material';
 import { uploadDocument } from '../../services/api/file';
 import { useRouter } from 'next/router';
 import { handleRedirectOnClick } from '../../utils/handle-event-button';

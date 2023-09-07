@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Head from 'next/head';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
-import { setIn, useFormik } from 'formik';
+import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import {
   Box,

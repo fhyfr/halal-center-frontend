@@ -17,7 +17,7 @@ import {
   Select,
   Typography,
 } from '@mui/material';
-import { Field, useFormik } from 'formik';
+import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { useRouter } from 'next/router';
 import { handleRedirectOnClick } from '../../utils/handle-event-button';
@@ -67,6 +67,8 @@ export const AddUser = ({ roles }) => {
     },
   });
 
+  const excludedRoles = ['SUPER_ADMIN', 'MEMBER', 'INSTRUCTOR'];
+
   if (roles.error) {
     return (
       <Typography align="center" variant="h4" style={{ color: 'red' }}>
@@ -103,17 +105,17 @@ export const AddUser = ({ roles }) => {
               onChange={formik.handleChange}
               name="roleId"
             >
-              {roles.data.map((role) =>
-                role.roleName === 'SUPER_ADMIN' ? (
-                  <MenuItem disabled key={role.id} value={role.id}>
-                    --- Select Role ---
-                  </MenuItem>
-                ) : (
+              <MenuItem disabled key="selectRole" value="">
+                --- Select Role ---
+              </MenuItem>
+
+              {roles.data
+                .filter((role) => !excludedRoles.includes(role.roleName))
+                .map((role) => (
                   <MenuItem key={role.id} value={role.id}>
                     {role.roleName}
                   </MenuItem>
-                ),
-              )}
+                ))}
             </Select>
             {Boolean(formik.touched.roleId && formik.errors.roleId) && (
               <FormHelperText error>{formik.errors.roleId}</FormHelperText>

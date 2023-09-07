@@ -71,7 +71,7 @@ export const CourseCard = ({ user, course }) => {
     if (course.type === 'FREE') {
       registerCourse(course.id)
         .then((res) => {
-          alert(res);
+          alert(res.message);
 
           router.push({
             pathname: '/course/details',

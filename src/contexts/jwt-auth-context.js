@@ -91,6 +91,7 @@ const AuthContext = createContext({
 
 export const AuthProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialAuthState);
+  // eslint-disable-next-line unused-imports/no-unused-vars
   const [cookie, setCookie] = useCookies(['user']);
 
   const login = async (email, password) => {

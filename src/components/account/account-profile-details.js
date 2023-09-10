@@ -18,18 +18,17 @@ import {
   Select,
   Typography,
 } from '@mui/material';
-import useAuth from '../../hooks/use-auth';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import 'yup-phone';
-import { updateProfile } from '../../services/api/member';
+import { updateProfileMember } from '../../services/api/member';
 import { PhotoCamera } from '@mui/icons-material';
 import { uploadImage } from '../../services/api/file';
 import { useRouter } from 'next/router';
 import { getCitiesByProvinceId } from '../../services/api/city';
+import { updateInstructor } from '../../services/api/instructor';
 
-export const AccountProfileDetails = ({ provinces, cities }) => {
-  const { user } = useAuth();
+export const AccountProfileDetails = ({ user, provinces, cities }) => {
   const router = useRouter();
 
   let initialValues = {
@@ -88,20 +87,47 @@ export const AccountProfileDetails = ({ provinces, cities }) => {
         });
       }
 
-      updateProfile(values)
-        .then((res) => {
-          setInfo(undefined);
-          setInfo(res);
-          setErrMessage(undefined);
-          setTimeout(() => {
-            router.reload();
-          }, 2000);
-        })
-        .catch((err) => {
-          setErrMessage(err.response.data?.message);
-          setInfo(undefined);
-          action.setSubmitting(false);
-        });
+      switch (user.role?.roleName) {
+        case 'MEMBER':
+          updateProfileMember(values)
+            .then((res) => {
+              setInfo(undefined);
+              setInfo(res);
+              setErrMessage(undefined);
+              setTimeout(() => {
+                router.reload();
+              }, 2000);
+            })
+            .catch((err) => {
+              setErrMessage(err.response.data?.message);
+              setInfo(undefined);
+              action.setSubmitting(false);
+            });
+          break;
+        case 'INSTRUCTOR':
+          Object.assign(values, {
+            email: user.email,
+          });
+
+          updateInstructor(user.id, values)
+            .then((res) => {
+              setInfo(undefined);
+              setInfo(res);
+              setErrMessage(undefined);
+              setTimeout(() => {
+                router.reload();
+              }, 2000);
+            })
+            .catch((err) => {
+              setErrMessage(err.response.data?.message);
+              setInfo(undefined);
+              action.setSubmitting(false);
+            });
+          break;
+          break;
+        default:
+          break;
+      }
     },
   });
 

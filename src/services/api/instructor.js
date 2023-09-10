@@ -18,7 +18,7 @@ export const createNewInstructor = async (newInstructor) => {
   return response.data.message;
 };
 
-export const editInstructor = async (id, updateInstructor) => {
+export const updateInstructor = async (id, updateInstructor) => {
   const accessToken = getSession();
 
   const response = await axios({

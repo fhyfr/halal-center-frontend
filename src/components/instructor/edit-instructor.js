@@ -28,7 +28,7 @@ import * as Yup from 'yup';
 import 'yup-phone';
 import { uploadImage } from '../../services/api/file';
 import { handleRedirectOnClick } from '../../utils/handle-event-button';
-import { editInstructor } from '../../services/api/instructor';
+import { updateInstructor } from '../../services/api/instructor';
 import { getCitiesByProvinceId } from '../../services/api/city';
 
 export const EditInstructor = ({ instructor, provinces, cities, courses, instructorCourseIds }) => {
@@ -62,21 +62,21 @@ export const EditInstructor = ({ instructor, provinces, cities, courses, instruc
       linkedin: Yup.string().url(),
     }),
     onSubmit: (values, action) => {
-      const updateInstructor = { ...values };
+      const updateInstructorData = { ...values };
 
-      Object.assign(updateInstructor, {
+      Object.assign(updateInstructorData, {
         courseIds: selectedCourseIds,
         provinceId: selectedProvinceId,
         cityId: selectedCityId,
       });
 
       if (profilePictureUrl && profilePictureUrl !== null) {
-        Object.assign(updateInstructor, {
+        Object.assign(updateInstructorData, {
           profilePicture: profilePictureUrl,
         });
       }
 
-      editInstructor(instructor.id, updateInstructor)
+      updateInstructor(instructor.id, updateInstructorData)
         .then((res) => {
           setInfo(res);
           setErrMessage(undefined);

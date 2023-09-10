@@ -17,7 +17,7 @@ export const updatePassword = async (currentPassword, newPassword, newPasswordCo
   return response.data.message;
 };
 
-export const updateProfile = async (updateValues) => {
+export const updateProfileMember = async (updateValues) => {
   if (!updateValues.facebook) {
     delete updateValues.facebook;
   }

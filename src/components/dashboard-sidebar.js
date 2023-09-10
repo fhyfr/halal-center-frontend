@@ -19,6 +19,8 @@ import {
   School,
   Sell,
   ShoppingCartCheckout,
+  PlaylistAddCheck,
+  FormatListNumbered,
 } from '@mui/icons-material';
 import useAuth from '../hooks/use-auth';
 
@@ -29,8 +31,8 @@ const permissions = {
     'Dashboard',
     'Users',
     'Courses',
-    'Absense',
-    'Exams',
+    'Attendances',
+    'Tests',
     'Modules',
     'Certificates',
     'Instructors',
@@ -45,7 +47,7 @@ const permissions = {
   VICE_DIRECTOR: ['Dashboard', 'Categories', 'Instructors', 'Modules', 'Certificates'],
   ADMIN_COURSE: ['Dashboard', 'Categories', 'Courses', 'Instructors', 'Modules', 'Certificates'],
   MEMBER: ['Dashboard', 'Courses', 'My Course', 'Account', 'Settings'],
-  INSTRUCTOR: ['Dashboard', 'Courses', 'Modules', 'Certificates', 'Account', 'Settings'],
+  INSTRUCTOR: ['Dashboard', 'Courses', 'Modules', 'Tests', 'Certificates', 'Account', 'Settings'],
 };
 
 const items = [
@@ -70,14 +72,14 @@ const items = [
     title: 'Modules',
   },
   {
-    href: '/absense',
-    icon: <LibraryBooks fontSize="small" />,
-    title: 'Absense',
+    href: '/attendance',
+    icon: <PlaylistAddCheck fontSize="small" />,
+    title: 'Attendances',
   },
   {
-    href: '/exams',
-    icon: <LibraryBooks fontSize="small" />,
-    title: 'Exams',
+    href: '/test',
+    icon: <FormatListNumbered fontSize="small" />,
+    title: 'Tests',
   },
   {
     href: '/certificate',
@@ -115,7 +117,7 @@ const items = [
     title: 'My Course',
   },
   {
-    href: '#',
+    href: '/report',
     icon: <FolderCopy fontSize="small" />,
     title: 'Report',
   },

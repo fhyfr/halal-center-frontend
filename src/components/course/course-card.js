@@ -173,7 +173,7 @@ export const CourseCard = ({ user, course }) => {
         <Typography align="left" color="textPrimary" variant="body1">
           {course.descriptions}
         </Typography>
-        {user && user.roleId === 3 ? (
+        {user && user.role?.roleName === 'MEMBER' ? (
           <Box
             sx={{
               display: 'flex',
@@ -218,6 +218,31 @@ export const CourseCard = ({ user, course }) => {
                 </span>
               </Tooltip>
             )}
+          </Box>
+        ) : user && user.role?.roleName === 'INSTRUCTOR' ? (
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              mt: 4,
+            }}
+          >
+            <span>
+              <Button
+                color="info"
+                size="medium"
+                variant="contained"
+                startIcon={<InfoOutlined />}
+                onClick={() => {
+                  router.push({
+                    pathname: '/course/details',
+                    query: { courseId: course.id },
+                  });
+                }}
+              >
+                Details Course
+              </Button>
+            </span>
           </Box>
         ) : (
           <Box

@@ -5,6 +5,7 @@ import { parseCookies } from '../../lib/auth-cookies';
 import axios from 'axios';
 import { CertificateListToolbar } from '../../components/certificate/certificate-list-toolbar';
 import { CertificateListResults } from '../../components/certificate/certificate-list-results';
+import { getCurrentUser } from '../../services/api/user';
 
 const { NEXT_PUBLIC_API } = process.env;
 
@@ -38,7 +39,16 @@ export const getServerSideProps = async ({ req, query }) => {
   }
 
   try {
-    const response = await axios({
+    const responseUser = await getCurrentUser(user.accessToken);
+    if (responseUser === null) {
+      throw new Error('failed to get data user');
+    }
+
+    if (responseUser && responseUser.role?.roleName === 'INSTRUCTOR') {
+      Object.assign(queryParams, { userId: responseUser.id });
+    }
+
+    const responseCertificates = await axios({
       method: 'GET',
       url: `${NEXT_PUBLIC_API}/certificate`,
       params: queryParams,
@@ -46,11 +56,11 @@ export const getServerSideProps = async ({ req, query }) => {
         Authorization: `Bearer ${user.accessToken}`,
       },
     });
-    if (response.status !== 200) {
+    if (responseCertificates.status !== 200) {
       throw new Error('failed to get data certificates');
     }
 
-    certificates = response.data;
+    certificates = responseCertificates.data;
   } catch (err) {
     certificates = { error: { message: err.message } };
   }

@@ -17,8 +17,11 @@ import {
 import { useRouter } from 'next/router';
 import { formatDate } from '../../utils/date-converter';
 import { deleteCertificate } from '../../services/api/certificate';
+import { Download } from '@mui/icons-material';
+import useAuth from '../../hooks/use-auth';
 
 export const CertificateListResults = ({ certificates }) => {
+  const { user } = useAuth();
   const router = useRouter();
 
   const [limit, setLimit] = useState(10);
@@ -141,16 +144,32 @@ export const CertificateListResults = ({ certificates }) => {
                         mr: 2,
                       }}
                     >
-                      <Button
-                        color="error"
-                        variant="contained"
-                        size="small"
-                        onClick={() => {
-                          handleDeleteCertificate(certificate.id);
-                        }}
-                      >
-                        Delete
-                      </Button>
+                      {user?.role?.roleName === 'INSTRUCTOR' ? (
+                        <Button
+                          color="secondary"
+                          size="small"
+                          sx={{
+                            mr: 2,
+                          }}
+                          variant="contained"
+                          startIcon={<Download />}
+                          href={certificate.url}
+                          target="_blank"
+                        >
+                          Download
+                        </Button>
+                      ) : (
+                        <Button
+                          color="error"
+                          variant="contained"
+                          size="small"
+                          onClick={() => {
+                            handleDeleteCertificate(certificate.id);
+                          }}
+                        >
+                          Delete
+                        </Button>
+                      )}
                     </Box>
                   </TableCell>
                 </TableRow>

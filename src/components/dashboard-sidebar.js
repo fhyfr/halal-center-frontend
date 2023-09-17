@@ -6,7 +6,6 @@ import { Box, Divider, Drawer, useMediaQuery } from '@mui/material';
 import { ChartBar as ChartBarIcon } from '../icons/chart-bar';
 import { Cog as CogIcon } from '../icons/cog';
 import { Users as UsersIcon } from '../icons/users';
-import { Logo } from './logo';
 import { NavItem } from './nav-item';
 import {
   AccountCircle,
@@ -23,6 +22,8 @@ import {
   FormatListNumbered,
 } from '@mui/icons-material';
 import useAuth from '../hooks/use-auth';
+import Image from 'next/image';
+import logo from '../assets/images/logo_sdm_halal.jpeg';
 
 const permissions = {
   TREASURER: ['Dashboard', 'Registration Payments', 'Operational Payments'],
@@ -166,12 +167,7 @@ export const DashboardSidebar = (props) => {
           <Box sx={{ p: 3 }}>
             <NextLink href="/" passHref>
               <a>
-                <Logo
-                  sx={{
-                    height: 42,
-                    width: 42,
-                  }}
-                />
+                <Image width="40px" height="40px" layout="fixed" src={logo} />
               </a>
             </NextLink>
           </Box>

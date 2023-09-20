@@ -263,7 +263,7 @@ export const EditTest = ({ test }) => {
             color="primary"
             variant="contained"
           >
-            Submit
+            Update
           </Button>
         </Box>
       </Card>

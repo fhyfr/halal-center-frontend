@@ -79,7 +79,7 @@ export const RegistrationPaymentListResults = ({ registrationPayments }) => {
     <Card>
       <PerfectScrollbar>
         <Box sx={{ minWidth: 1050 }}>
-          <TableContainer sx={{ maxHeight: 440 }}>
+          <TableContainer>
             <Table stickyHeader aria-label="sticky table">
               <TableHead>
                 <TableRow>

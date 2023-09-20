@@ -40,7 +40,7 @@ export const AddTest = () => {
       active: '',
     },
     validationSchema: Yup.object({
-      courseId: Yup.string().required('Course id is required'),
+      courseId: Yup.number().required('Course ID is required'),
       url: Yup.string().url().required('Test URL is required'),
       type: Yup.string().required(),
       startDate: Yup.string().required(),

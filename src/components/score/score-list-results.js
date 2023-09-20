@@ -12,14 +12,12 @@ import {
   TableRow,
   Button,
   Typography,
-  Link,
-  Tooltip,
 } from '@mui/material';
 import { useRouter } from 'next/router';
 import { formatDate } from '../../utils/date-converter';
-import { deleteTest } from '../../services/api/test';
+import { deleteScore } from '../../services/api/score';
 
-export const TestListResults = ({ tests }) => {
+export const ScoreListResults = ({ scores }) => {
   const router = useRouter();
 
   const [limit, setLimit] = useState(10);
@@ -51,10 +49,10 @@ export const TestListResults = ({ tests }) => {
     });
   };
 
-  const handleDeleteTest = (id) => {
-    const confirmation = confirm('Are you sure to delete this test?');
+  const handleDeleteScore = (scoreId) => {
+    const confirmation = confirm('Are you sure to delete this score?');
     if (confirmation) {
-      deleteTest(id)
+      deleteScore(scoreId)
         .then((res) => {
           alert(res);
           router.reload();
@@ -66,28 +64,19 @@ export const TestListResults = ({ tests }) => {
     return;
   };
 
-  const handleUpdateTest = (id) => {
+  const handleUpdateScore = (scoreId) => {
     router.push({
-      pathname: '/test/edit',
+      pathname: '/test/score/edit',
       query: {
-        id,
+        scoreId,
       },
     });
   };
 
-  const handleDetailScore = (testId) => {
-    router.push({
-      pathname: '/test/score',
-      query: {
-        testId,
-      },
-    });
-  };
-
-  if (tests.error) {
+  if (scores.error) {
     return (
       <Typography align="center" variant="h4" style={{ color: 'red' }}>
-        error, {tests.error.message}
+        error, {scores.error.message}
       </Typography>
     );
   }
@@ -101,12 +90,12 @@ export const TestListResults = ({ tests }) => {
               <TableRow>
                 <TableCell align="center">ID</TableCell>
                 <TableCell align="center">Course ID</TableCell>
-                <TableCell align="center">Type</TableCell>
-                <TableCell align="center">Period</TableCell>
-                <TableCell align="center">Status</TableCell>
-                <TableCell align="center">URL</TableCell>
+                <TableCell align="center">User ID</TableCell>
+                <TableCell align="center">Score</TableCell>
                 <TableCell align="center">Created By</TableCell>
+                <TableCell align="center">Updated By</TableCell>
                 <TableCell align="center">Created Date</TableCell>
+                <TableCell align="center">Updated Date</TableCell>
                 <TableCell>
                   <Box
                     sx={{
@@ -120,70 +109,55 @@ export const TestListResults = ({ tests }) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {tests.data?.slice(0, limit).map((test) => (
-                <TableRow hover key={test.id}>
+              {scores.data?.slice(0, limit).map((score) => (
+                <TableRow hover key={score.id}>
                   <TableCell align="center">
                     <Typography color="textPrimary" variant="body2">
-                      {test.id}
+                      {score.id}
                     </Typography>
                   </TableCell>
                   <TableCell align="center">
                     <Typography color="textPrimary" variant="body2">
-                      {test.courseId}
+                      {score.registration.courseId}
+                    </Typography>
+                  </TableCell>
+                  <TableCell align="center">
+                    <Typography color="textPrimary" variant="body2">
+                      {score.registration.userId}
                     </Typography>
                   </TableCell>{' '}
                   <TableCell align="center">
                     <Typography color="textPrimary" variant="body2">
-                      {test.type}
+                      {score.score}
                     </Typography>
                   </TableCell>
                   <TableCell align="center">
                     <Typography color="textPrimary" variant="body2">
-                      {formatDate(test.startDate)} s/d {formatDate(test.endDate)}
+                      {score.createdBy}
                     </Typography>
                   </TableCell>
                   <TableCell align="center">
                     <Typography color="textPrimary" variant="body2">
-                      {test.active ? 'Active' : 'Inactive'}
-                    </Typography>
-                  </TableCell>
-                  <TableCell>
-                    <Typography color="textPrimary" variant="body2">
-                      <Link href={test.url} target="_blank" underline="hover">
-                        {test.url}
-                      </Link>
+                      {score.updatedBy ? score.updatedBy : 'No update'}
                     </Typography>
                   </TableCell>
                   <TableCell align="center">
                     <Typography color="textPrimary" variant="body2">
-                      {test.createdBy}
+                      {formatDate(score.createdAt)}
                     </Typography>
                   </TableCell>
-                  <TableCell>
+                  <TableCell align="center">
                     <Typography color="textPrimary" variant="body2">
-                      {formatDate(test.createdAt)}
+                      {formatDate(score.updatedAt)}
                     </Typography>
                   </TableCell>
-                  <TableCell>
+                  <TableCell align="center">
                     <Box
                       sx={{
                         display: 'flex',
                         justifyContent: 'center',
-                        mr: 4,
                       }}
                     >
-                      <Button
-                        color="primary"
-                        size="small"
-                        sx={{
-                          mr: 1,
-                        }}
-                        variant="contained"
-                        onClick={() => handleDetailScore(test.id)}
-                      >
-                        Scores
-                      </Button>
-
                       <Button
                         color="secondary"
                         size="small"
@@ -191,29 +165,24 @@ export const TestListResults = ({ tests }) => {
                           mr: 1,
                         }}
                         variant="contained"
-                        onClick={() => handleUpdateTest(test.id)}
+                        onClick={() => handleUpdateScore(score.id)}
                       >
                         Update
                       </Button>
 
-                      <Tooltip title={test.totalScoreData !== 0 ? 'test not empty' : ''}>
-                        <span>
-                          <Button
-                            color="error"
-                            variant="contained"
-                            size="small"
-                            sx={{
-                              mr: 1,
-                            }}
-                            onClick={() => {
-                              handleDeleteTest(test.id);
-                            }}
-                            disabled={test.totalScoreData !== 0}
-                          >
-                            Delete
-                          </Button>
-                        </span>
-                      </Tooltip>
+                      <Button
+                        color="error"
+                        variant="contained"
+                        size="small"
+                        sx={{
+                          mr: 1,
+                        }}
+                        onClick={() => {
+                          handleDeleteScore(score.id);
+                        }}
+                      >
+                        Delete
+                      </Button>
                     </Box>
                   </TableCell>
                 </TableRow>
@@ -224,7 +193,7 @@ export const TestListResults = ({ tests }) => {
       </PerfectScrollbar>
       <TablePagination
         component="div"
-        count={tests.itemCount}
+        count={scores.itemCount}
         onPageChange={handlePageChange}
         onRowsPerPageChange={handleLimitChange}
         page={page}
@@ -235,6 +204,6 @@ export const TestListResults = ({ tests }) => {
   );
 };
 
-TestListResults.propTypes = {
-  tests: PropTypes.array.isRequired,
+ScoreListResults.propTypes = {
+  scores: PropTypes.array.isRequired,
 };

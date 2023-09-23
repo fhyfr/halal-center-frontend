@@ -16,16 +16,20 @@ import {
   Typography,
 } from '@mui/material';
 import { Box } from '@mui/system';
-import { formatDateWithoutHourMinutes } from '../../utils/date-converter';
+import { formatDate, formatDateWithoutHourMinutes } from '../../utils/date-converter';
 import {
   Category,
   Download,
   Event,
   LocalOffer,
   PeopleAlt,
+  PublishOutlined,
   SignalCellularAlt,
 } from '@mui/icons-material';
 import { formatRupiahCurrency } from '../../utils/currency-converter';
+import { useRouter } from 'next/router';
+import { findScoreByTestIdAndUserId } from '../../services/api/score';
+import { findPresenceByAttendanceIdAndUserId } from '../../services/api/presence';
 
 export const CourseDetails = ({
   course,
@@ -34,7 +38,51 @@ export const CourseDetails = ({
   modules,
   certificates,
   registrationPayments,
+  attendances,
+  tests,
 }) => {
+  const router = useRouter();
+
+  const now = new Date();
+  const quota = course.quota - course.totalRegistered;
+  const currentDate = formatDateWithoutHourMinutes(new Date());
+  const isCoursePaid =
+    registrationPayments.itemCount > 0
+      ? course.type === 'PAID' && registrationPayments.data[0].status === 'SUCCESS'
+      : false;
+
+  const isCoursesEnded = currentDate > formatDateWithoutHourMinutes(course.endDate);
+
+  const handleSubmitTest = async (testId, userId, testUrl) => {
+    const isScoreExist = await findScoreByTestIdAndUserId(testId, userId);
+
+    if (isScoreExist.data?.length > 0) {
+      return alert('You have submitted the test');
+    }
+
+    router.push({
+      pathname: testUrl,
+    });
+  };
+
+  const handleSubmitAttendance = async (courseId, attendanceId, userId) => {
+    const isAttendanceExist = await findPresenceByAttendanceIdAndUserId(attendanceId, userId);
+
+    if (isAttendanceExist.data?.length > 0) {
+      return alert('You have submitted the attendance');
+    }
+
+    router.push({
+      pathname: '/attendance/presence/add',
+      query: {
+        courseId: courseId,
+        attendanceId: attendanceId,
+        userId: userId,
+      },
+    });
+  };
+
+  // errors handler
   if (course.error) {
     return (
       <Typography align="center" variant="h4" style={{ color: 'red' }}>
@@ -59,10 +107,10 @@ export const CourseDetails = ({
     );
   }
 
-  if (certificates.error) {
+  if (attendances.error) {
     return (
       <Typography align="center" variant="h4" style={{ color: 'red' }}>
-        error, {certificates.error.message}
+        error, {attendances.error.message}
       </Typography>
     );
   }
@@ -75,14 +123,21 @@ export const CourseDetails = ({
     );
   }
 
-  const quota = course.quota - course.totalRegistered;
-  const currentDate = formatDateWithoutHourMinutes(new Date());
-  const isCoursePaid =
-    registrationPayments.itemCount > 0
-      ? course.type === 'PAID' && registrationPayments.data[0].status === 'SUCCESS'
-      : false;
+  if (attendances.error) {
+    return (
+      <Typography align="center" variant="h4" style={{ color: 'red' }}>
+        error, {attendances.error.message}
+      </Typography>
+    );
+  }
 
-  const isCoursesEnded = currentDate > formatDateWithoutHourMinutes(course.endDate);
+  if (tests.error) {
+    return (
+      <Typography align="center" variant="h4" style={{ color: 'red' }}>
+        error, {tests.error.message}
+      </Typography>
+    );
+  }
 
   return (
     <Grid container spacing={3}>
@@ -383,6 +438,247 @@ export const CourseDetails = ({
                           ended and you have fulfilled the requirements
                         </Typography>
                       )}
+                    </Box>
+                  </CardContent>
+                </>
+              )}
+            </TableBody>
+          </Table>
+        </Card>
+      </Grid>
+
+      <Grid item lg={6} md={6} xs={12}>
+        <Card id="attendance-section">
+          <CardHeader subheader="Attendance of Course" title="Attendance" />
+          <Divider />
+
+          <Table>
+            <TableHead>
+              <TableCell align="center">Attendance ID</TableCell>
+              <TableCell align="center">Title</TableCell>
+              <TableCell align="center">Status</TableCell>
+              <TableCell align="center">End Date</TableCell>
+              <TableCell>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                  }}
+                >
+                  Action
+                </Box>
+              </TableCell>
+            </TableHead>
+            <TableBody>
+              {attendances.data?.length > 0 &&
+              user?.role?.roleName === 'MEMBER' &&
+              course.isRegistered ? (
+                attendances.data?.map((attendance) => {
+                  return (
+                    <TableRow key={attendance.id}>
+                      <TableCell align="center">
+                        <Typography>{attendance.id}</Typography>
+                      </TableCell>
+                      <TableCell align="center">{attendance.title}</TableCell>
+                      <TableCell align="center">
+                        {attendance.active ? 'Active' : 'Inactive'}
+                      </TableCell>
+                      <TableCell align="center">{formatDate(attendance.endDate)}</TableCell>
+                      <TableCell align="center">
+                        <Box
+                          sx={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                          }}
+                        >
+                          <Button
+                            color="secondary"
+                            size="small"
+                            sx={{
+                              mr: 2,
+                            }}
+                            variant="contained"
+                            startIcon={<PublishOutlined />}
+                            onClick={() => {
+                              handleSubmitAttendance(course.id, attendance.id, user.id);
+                            }}
+                            disabled={!attendance.active || new Date(attendance.endDate) < now}
+                          >
+                            Submit
+                          </Button>
+                        </Box>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })
+              ) : attendances.data?.length > 0 ? (
+                attendances.data?.map((attendance) => {
+                  return (
+                    <TableRow key={attendance.id}>
+                      <TableCell align="center">
+                        <Typography>{attendance.id}</Typography>
+                      </TableCell>
+                      <TableCell align="center">{attendance.title}</TableCell>
+                      <TableCell align="center">
+                        {attendance.active ? 'Active' : 'Inactive'}
+                      </TableCell>
+                      <TableCell align="center">{formatDate(attendance.endDate)}</TableCell>
+                      <TableCell align="center">
+                        <Box
+                          sx={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                          }}
+                        >
+                          <Button
+                            color="primary"
+                            size="small"
+                            sx={{
+                              mr: 2,
+                            }}
+                            variant="contained"
+                            onClick={() => {
+                              router.push({
+                                pathname: '/attendance',
+                                query: {
+                                  courseId: course.id,
+                                },
+                              });
+                            }}
+                          >
+                            Manage
+                          </Button>
+                        </Box>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })
+              ) : (
+                <>
+                  <CardContent>
+                    <Box>
+                      <Typography variant="subtitle1">Empty</Typography>
+                    </Box>
+                  </CardContent>
+                </>
+              )}
+            </TableBody>
+          </Table>
+        </Card>
+      </Grid>
+
+      <Grid item lg={6} md={6} xs={12}>
+        <Card id="test-section">
+          <CardHeader subheader="Test of Course" title="Test" />
+          <Divider />
+
+          <Table>
+            <TableHead>
+              <TableCell align="center">Test ID</TableCell>
+              <TableCell align="center">Type</TableCell>
+              <TableCell align="center">Status</TableCell>
+              <TableCell align="center">Period</TableCell>
+              <TableCell>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                  }}
+                >
+                  Action
+                </Box>
+              </TableCell>
+            </TableHead>
+            <TableBody>
+              {tests.data?.length > 0 &&
+              user?.role?.roleName === 'MEMBER' &&
+              course.isRegistered ? (
+                tests.data?.map((test) => {
+                  return (
+                    <TableRow key={test.id}>
+                      <TableCell align="center">
+                        <Typography>{test.id}</Typography>
+                      </TableCell>
+                      <TableCell align="center">{test.type}</TableCell>
+                      <TableCell align="center">{test.active ? 'Active' : 'Inactive'}</TableCell>
+                      <TableCell align="center">
+                        {formatDate(test.startDate)} - {formatDate(test.endDate)}
+                      </TableCell>
+                      <TableCell align="center">
+                        <Box
+                          sx={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                          }}
+                        >
+                          <Button
+                            color="secondary"
+                            size="small"
+                            sx={{
+                              mr: 2,
+                            }}
+                            variant="contained"
+                            startIcon={<PublishOutlined />}
+                            disabled={
+                              !test.active ||
+                              !(new Date(test.startDate) <= now && now <= new Date(test.endDate))
+                            }
+                            onClick={() => handleSubmitTest(test.id, user.id, test.url)}
+                          >
+                            Submit
+                          </Button>
+                        </Box>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })
+              ) : tests.data?.length > 0 ? (
+                tests.data?.map((test) => {
+                  return (
+                    <TableRow key={test.id}>
+                      <TableCell align="center">
+                        <Typography>{test.id}</Typography>
+                      </TableCell>
+                      <TableCell align="center">{test.type}</TableCell>
+                      <TableCell align="center">{test.active ? 'Active' : 'Inactive'}</TableCell>
+                      <TableCell align="center">
+                        {formatDate(test.startDate)} - {formatDate(test.endDate)}
+                      </TableCell>
+                      <TableCell align="center">
+                        <Box
+                          sx={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                          }}
+                        >
+                          <Button
+                            color="primary"
+                            size="small"
+                            sx={{
+                              mr: 2,
+                            }}
+                            variant="contained"
+                            onClick={async () => {
+                              router.push({
+                                pathname: '/test',
+                                query: {
+                                  courseId: course.id,
+                                },
+                              });
+                            }}
+                          >
+                            Manage
+                          </Button>
+                        </Box>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })
+              ) : (
+                <>
+                  <CardContent>
+                    <Box>
+                      <Typography variant="subtitle1">Empty</Typography>
                     </Box>
                   </CardContent>
                 </>

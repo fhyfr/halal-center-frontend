@@ -28,9 +28,9 @@ export const getServerSideProps = async ({ req, query }) => {
 
   let currentUser;
   try {
-    const response = await getCurrentUser(user.accessToken);
+    const responseUser = await getCurrentUser(user.accessToken);
 
-    currentUser = { ...response };
+    currentUser = { ...responseUser };
   } catch (err) {
     currentUser = { error: { message: err.message } };
   }

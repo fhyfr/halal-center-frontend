@@ -3,6 +3,24 @@ import { getSession } from '../../contexts/jwt-auth-context';
 
 const { NEXT_PUBLIC_API } = process.env;
 
+export const findPresenceByAttendanceIdAndUserId = async (attendanceId, userId) => {
+  const accessToken = getSession();
+
+  const response = await axios({
+    method: 'GET',
+    url: `${NEXT_PUBLIC_API}/presence`,
+    params: {
+      attendanceId,
+      userId,
+    },
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+
+  return response.data;
+};
+
 export const createNewPresence = async (newPresenceData) => {
   const accessToken = getSession();
 

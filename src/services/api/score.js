@@ -3,6 +3,24 @@ import { getSession } from '../../contexts/jwt-auth-context';
 
 const { NEXT_PUBLIC_API } = process.env;
 
+export const findScoreByTestIdAndUserId = async (testId, userId) => {
+  const accessToken = getSession();
+
+  const response = await axios({
+    method: 'GET',
+    url: `${NEXT_PUBLIC_API}/score`,
+    params: {
+      testId,
+      userId,
+    },
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+
+  return response.data;
+};
+
 export const createNewScore = async (newScoreData) => {
   const accessToken = getSession();
 

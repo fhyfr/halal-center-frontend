@@ -12,7 +12,7 @@ const { NEXT_PUBLIC_API } = process.env;
 
 // eslint-disable-next-line no-unused-vars, unused-imports/no-unused-vars
 export const getServerSideProps = async ({ req, res, query }) => {
-  let course, instructors, modules, certificates, registrationPayments;
+  let course, instructors, modules, certificates, registrationPayments, attendances, tests;
 
   const { courseId } = query;
   if (!courseId || courseId === null) {
@@ -112,12 +112,36 @@ export const getServerSideProps = async ({ req, res, query }) => {
       },
     });
     registrationPayments = responseRegistrationPayment.data;
+
+    // get attendances data
+    const responseAttendances = await axios({
+      method: 'GET',
+      url: `${NEXT_PUBLIC_API}/attendance`,
+      params: { courseId: course.id },
+      headers: {
+        Authorization: `Bearer ${user.accessToken}`,
+      },
+    });
+    attendances = responseAttendances.data;
+
+    // get tests data
+    const responseTests = await axios({
+      method: 'GET',
+      url: `${NEXT_PUBLIC_API}/test`,
+      params: { courseId: course.id },
+      headers: {
+        Authorization: `Bearer ${user.accessToken}`,
+      },
+    });
+    tests = responseTests.data;
   } catch (err) {
     course = { error: { message: err.message } };
     instructors = { error: { message: err.message } };
     modules = { error: { message: err.message } };
     certificates = { error: { message: err.message } };
     registrationPayments = { error: { message: err.message } };
+    attendances = { error: { message: err.message } };
+    tests = { error: { message: err.message } };
   }
 
   return {
@@ -128,13 +152,24 @@ export const getServerSideProps = async ({ req, res, query }) => {
       modules,
       certificates,
       registrationPayments,
+      attendances,
+      tests,
     },
   };
 };
 
 const Details = (props) => {
   const router = useRouter();
-  const { course, instructors, user, modules, certificates, registrationPayments } = props;
+  const {
+    course,
+    instructors,
+    user,
+    modules,
+    certificates,
+    registrationPayments,
+    attendances,
+    tests,
+  } = props;
 
   if (user.roleId === 3 && !course.isRegistered) {
     router.push('/course');
@@ -180,6 +215,8 @@ const Details = (props) => {
             modules={modules}
             certificates={certificates}
             registrationPayments={registrationPayments}
+            attendances={attendances}
+            tests={tests}
           />
         </Container>
       </Box>

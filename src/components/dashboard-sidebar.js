@@ -48,7 +48,16 @@ const permissions = {
   VICE_DIRECTOR: ['Dashboard', 'Categories', 'Instructors', 'Modules', 'Certificates'],
   ADMIN_COURSE: ['Dashboard', 'Categories', 'Courses', 'Instructors', 'Modules', 'Certificates'],
   MEMBER: ['Dashboard', 'Courses', 'My Course', 'Account', 'Settings'],
-  INSTRUCTOR: ['Dashboard', 'Courses', 'Modules', 'Tests', 'Certificates', 'Account', 'Settings'],
+  INSTRUCTOR: [
+    'Dashboard',
+    'Courses',
+    'Modules',
+    'Tests',
+    'Attendances',
+    'Certificates',
+    'Account',
+    'Settings',
+  ],
 };
 
 const items = [
@@ -73,14 +82,14 @@ const items = [
     title: 'Modules',
   },
   {
-    href: '/attendance',
-    icon: <PlaylistAddCheck fontSize="small" />,
-    title: 'Attendances',
-  },
-  {
     href: '/test',
     icon: <FormatListNumbered fontSize="small" />,
     title: 'Tests',
+  },
+  {
+    href: '/attendance',
+    icon: <PlaylistAddCheck fontSize="small" />,
+    title: 'Attendances',
   },
   {
     href: '/certificate',

@@ -78,6 +78,7 @@ export const MemberDetails = ({ user, courses }) => {
             </Typography>
           </CardContent>
           <Divider />
+
           <CardContent sx={{ marginY: -2 }}>
             <Typography variant="h6">Email</Typography>
             <Typography variant="body1" gutterBottom>
@@ -85,6 +86,7 @@ export const MemberDetails = ({ user, courses }) => {
             </Typography>
           </CardContent>
           <Divider />
+
           <CardContent sx={{ marginY: -2 }}>
             <Typography variant="h6">Phone Number</Typography>
             <Typography variant="body1" gutterBottom>
@@ -92,6 +94,33 @@ export const MemberDetails = ({ user, courses }) => {
             </Typography>
           </CardContent>
           <Divider />
+
+          <CardContent sx={{ marginY: -2 }}>
+            <Typography variant="h6">Date of Birth</Typography>
+            <Typography variant="body1" gutterBottom>
+              {formatDateWithoutHourMinutes(user.dateOfBirth)}
+            </Typography>
+          </CardContent>
+          <Divider />
+
+          <CardContent sx={{ marginY: -2 }}>
+            <Typography variant="h6">Education</Typography>
+            <Typography variant="body1" gutterBottom>
+              {user.education === 'S1_OR_D4' ? 'Strata 1 atau Diploma 4' : user.education}
+            </Typography>
+          </CardContent>
+          <Divider />
+
+          <CardContent sx={{ marginY: -2 }}>
+            <Typography variant="h6">Work Experience</Typography>
+            <Typography variant="body1" gutterBottom>
+              {user.workExperience > 1
+                ? `${user.workExperience} years`
+                : `${user.workExperience} year`}
+            </Typography>
+          </CardContent>
+          <Divider />
+
           <CardContent sx={{ marginY: -2 }}>
             <Typography variant="h6" gutterBottom>
               Address
@@ -101,6 +130,7 @@ export const MemberDetails = ({ user, courses }) => {
             </Typography>
           </CardContent>
           <Divider />
+
           <CardContent sx={{ marginY: -2 }}>
             <Typography variant="h6">Facebook</Typography>
             <Typography variant="body1" gutterBottom>
@@ -114,6 +144,7 @@ export const MemberDetails = ({ user, courses }) => {
             </Typography>
           </CardContent>
           <Divider />
+
           <CardContent sx={{ marginY: -2 }}>
             <Typography variant="h6">LinkedIn</Typography>
             <Typography variant="body1" gutterBottom>
@@ -127,6 +158,7 @@ export const MemberDetails = ({ user, courses }) => {
             </Typography>
           </CardContent>
           <Divider />
+
           <CardContent sx={{ marginY: -2 }}>
             <Typography variant="h6">Registered At</Typography>
             <Typography variant="body1" gutterBottom>
@@ -134,6 +166,7 @@ export const MemberDetails = ({ user, courses }) => {
             </Typography>
           </CardContent>
           <Divider />
+
           <CardContent sx={{ marginY: -2 }}>
             <Typography variant="h6">Last Updated</Typography>
             <Typography variant="body1" gutterBottom>

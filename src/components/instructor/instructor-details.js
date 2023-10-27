@@ -63,6 +63,32 @@ export const InstructorDetails = ({ instructor, courses }) => {
           <Divider />
 
           <CardContent sx={{ marginY: -2 }}>
+            <Typography variant="h6">Date of Birth</Typography>
+            <Typography variant="body1" gutterBottom>
+              {formatDateWithoutHourMinutes(instructor.dateOfBirth)}
+            </Typography>
+          </CardContent>
+          <Divider />
+
+          <CardContent sx={{ marginY: -2 }}>
+            <Typography variant="h6">Education</Typography>
+            <Typography variant="body1" gutterBottom>
+              {instructor.education}
+            </Typography>
+          </CardContent>
+          <Divider />
+
+          <CardContent sx={{ marginY: -2 }}>
+            <Typography variant="h6">Work Experience</Typography>
+            <Typography variant="body1" gutterBottom>
+              {instructor.workExperience > 1
+                ? `${instructor.workExperience} years`
+                : `${instructor.workExperience} year`}
+            </Typography>
+          </CardContent>
+          <Divider />
+
+          <CardContent sx={{ marginY: -2 }}>
             <Typography variant="h6">Phone Number</Typography>
             <Typography variant="body1" gutterBottom>
               {instructor.phoneNumber ? instructor.phoneNumber : 'empty'}
@@ -127,6 +153,7 @@ export const InstructorDetails = ({ instructor, courses }) => {
             </Typography>
           </CardContent>
           <Divider />
+
           <CardContent sx={{ marginY: -2 }}>
             <Typography variant="h6">Last Updated</Typography>
             <Typography variant="body1" gutterBottom>

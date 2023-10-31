@@ -153,7 +153,10 @@ export const ReportListResults = ({ courses }) => {
                         }}
                         variant="contained"
                         onClick={() => {
-                          handleDeleteCategory(course.id);
+                          router.push({
+                            pathname: '/report/finance',
+                            query: { courseId: course.id },
+                          });
                         }}
                       >
                         Finance
@@ -162,7 +165,12 @@ export const ReportListResults = ({ courses }) => {
                         color="info"
                         size="small"
                         variant="contained"
-                        onClick={() => handleUpdateCategory(course.id, course.categoryName)}
+                        onClick={() => {
+                          router.push({
+                            pathname: '/report/rank',
+                            query: { courseId: course.id },
+                          });
+                        }}
                       >
                         Ranking
                       </Button>

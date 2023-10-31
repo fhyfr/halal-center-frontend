@@ -99,6 +99,14 @@ export const CourseDetails = ({
     );
   }
 
+  if (user.error) {
+    return (
+      <Typography align="center" variant="h4" style={{ color: 'red' }}>
+        error, {user.error.message}
+      </Typography>
+    );
+  }
+
   if (modules.error) {
     return (
       <Typography align="center" variant="h4" style={{ color: 'red' }}>
@@ -107,10 +115,10 @@ export const CourseDetails = ({
     );
   }
 
-  if (attendances.error) {
+  if (certificates.error) {
     return (
       <Typography align="center" variant="h4" style={{ color: 'red' }}>
-        error, {attendances.error.message}
+        error, {certificates.error.message}
       </Typography>
     );
   }
@@ -266,7 +274,7 @@ export const CourseDetails = ({
 
       <Grid item lg={6} md={6} xs={12}>
         <Card sx={{ p: 2 }}>
-          <CardHeader subheader="List instructors of course" title="Instructors" />
+          <CardHeader subheader="List instructors of the course" title="Instructors" />
           <Divider />
 
           {instructors.data?.length > 0 ? (
@@ -449,7 +457,7 @@ export const CourseDetails = ({
 
       <Grid item lg={6} md={6} xs={12}>
         <Card id="attendance-section">
-          <CardHeader subheader="Attendance of Course" title="Attendance" />
+          <CardHeader subheader="Attendance of the Course" title="Attendance" />
           <Divider />
 
           <Table>

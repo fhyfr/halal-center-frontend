@@ -1,6 +1,6 @@
 import { Avatar, Card, CardContent, Grid, Typography } from '@mui/material';
-import InsertChartIcon from '@mui/icons-material/InsertChartOutlined';
 import { formatDateWithoutHourMinutes } from '../../utils/date-converter';
+import { People } from '@mui/icons-material';
 
 export const TotalInstructors = ({ dashboardReport }) => {
   if (dashboardReport.error) {
@@ -34,7 +34,7 @@ export const TotalInstructors = ({ dashboardReport }) => {
                 width: 56,
               }}
             >
-              <InsertChartIcon />
+              <People />
             </Avatar>
           </Grid>
         </Grid>

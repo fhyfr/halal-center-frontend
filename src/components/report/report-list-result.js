@@ -63,8 +63,8 @@ export const ReportListResults = ({ courses }) => {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell align="center">ID</TableCell>
-                <TableCell align="left">Category</TableCell>
+                <TableCell align="center">Course ID</TableCell>
+                <TableCell align="left">Course Category</TableCell>
                 <TableCell align="left">Course Title</TableCell>
                 <TableCell align="center">Course Level</TableCell>
                 <TableCell align="center">Course Date</TableCell>

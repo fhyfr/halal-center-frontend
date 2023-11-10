@@ -7,6 +7,8 @@ import { handleRedirectOnClick } from '../../utils/handle-event-button';
 import { useRouter } from 'next/router';
 import { parseCookies } from '../../lib/auth-cookies';
 import axios from 'axios';
+import useAuth from '../../hooks/use-auth';
+import { role } from '../../utils/role';
 
 const { NEXT_PUBLIC_API } = process.env;
 
@@ -79,6 +81,7 @@ export const getServerSideProps = async ({ req, query }) => {
 const Details = (props) => {
   const router = useRouter();
   const { user, courses } = props;
+  const { user: currentUser } = useAuth();
 
   return (
     <>
@@ -93,22 +96,29 @@ const Details = (props) => {
         }}
       >
         <Container maxWidth="lg">
-          <Box sx={{ marginY: 2 }}>
-            <Button
-              startIcon={
-                <SvgIcon fontSize="small">
-                  <ArrowBack />
-                </SvgIcon>
-              }
-              color="primary"
-              variant="contained"
-              onClick={() => {
-                handleRedirectOnClick(router, '/user');
-              }}
-            >
-              Back
-            </Button>
-          </Box>
+          {currentUser.roleId === role.SUPER_ADMIN.ID ||
+          currentUser.roleId === role.ADMIN_COURSE.ID ? (
+            <>
+              <Box sx={{ marginY: 2 }}>
+                <Button
+                  startIcon={
+                    <SvgIcon fontSize="small">
+                      <ArrowBack />
+                    </SvgIcon>
+                  }
+                  color="primary"
+                  variant="contained"
+                  onClick={() => {
+                    handleRedirectOnClick(router, '/user');
+                  }}
+                >
+                  Back
+                </Button>
+              </Box>
+            </>
+          ) : (
+            ''
+          )}
           <Typography sx={{ mb: 3 }} variant="h4">
             Member Details
           </Typography>

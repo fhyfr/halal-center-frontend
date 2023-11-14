@@ -1,1 +1,1 @@
-## Frontend Applications for Halal Center Human Resource Development
+## Frontend Applications for Sistem Informasi Pelatihan Sertifikasi Halal

@@ -41,6 +41,8 @@ export const ImportCertificates = () => {
   });
 
   const handleDownloadTemplate = async () => {
+    setIsLoading(true);
+
     try {
       await downloadImportCertificatesTemplate(formik.values.courseId);
       setErrMessage(undefined);
@@ -48,6 +50,8 @@ export const ImportCertificates = () => {
     } catch (err) {
       setErrMessage(err.response?.data?.message || 'An error occurred during download.');
       setInfo(undefined);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -57,7 +61,6 @@ export const ImportCertificates = () => {
     importCertificates(event.target.files[0])
       .then((res) => {
         setInfo(res.message);
-        formik.values.url = res.data.documentUrl;
         setErrMessage(undefined);
 
         setTimeout(() => {
@@ -132,7 +135,7 @@ export const ImportCertificates = () => {
             <Divider />
 
             <CardHeader
-              subheader="Upload the certificate file that has been filled in with the data of the certificate to be imported"
+              subheader="Import the certificates template file that has been filled in with the data of the certificates to be imported"
               title="Import Certificates"
             />
             <Divider />

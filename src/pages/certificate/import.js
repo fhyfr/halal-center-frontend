@@ -3,7 +3,7 @@ import { Box, Container, Typography } from '@mui/material';
 import { DashboardLayout } from '../../components/dashboard-layout';
 import { ImportCertificates } from '../../components/certificate/import-certificates';
 
-const ImportCertificatePage = () => (
+const ImportCertificatesPage = () => (
   <>
     <Head>
       <title>Import Certificates</title>
@@ -27,6 +27,6 @@ const ImportCertificatePage = () => (
   </>
 );
 
-ImportCertificatePage.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
+ImportCertificatesPage.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
 
-export default ImportCertificatePage;
+export default ImportCertificatesPage;

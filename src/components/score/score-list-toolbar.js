@@ -10,7 +10,7 @@ import {
   Grid,
 } from '@mui/material';
 import { Search as SearchIcon } from '../../icons/search';
-import { Add, ArrowBack } from '@mui/icons-material';
+import { Add, ArrowBack, Download } from '@mui/icons-material';
 import { handleRedirectOnClick } from '../../utils/handle-event-button';
 import { useRouter } from 'next/router';
 
@@ -61,6 +61,7 @@ export const ScoreListToolbar = () => {
 
         <Box sx={{ m: 1 }}>
           <Button
+            sx={{ mr: 2 }}
             startIcon={
               <SvgIcon fontSize="small">
                 <Add />
@@ -72,7 +73,22 @@ export const ScoreListToolbar = () => {
               handleRedirectOnClick(router, `/test/score/add?testId=${router.query.testId}`);
             }}
           >
-            Add New Score
+            Add New
+          </Button>
+
+          <Button
+            startIcon={
+              <SvgIcon fontSize="small">
+                <Download />
+              </SvgIcon>
+            }
+            color="warning"
+            variant="contained"
+            onClick={() => {
+              handleRedirectOnClick(router, `/test/score/import?testId=${router.query.testId}`);
+            }}
+          >
+            Import
           </Button>
         </Box>
       </Box>

@@ -31,7 +31,7 @@ const Login = () => {
   const router = useRouter();
   const { login, isAuthenticated } = useAuth();
 
-  if (isAuthenticated) {
+  if (isAuthenticated && router.query.referrer !== '/auth/register') {
     router.push('/');
   }
 

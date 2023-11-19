@@ -13,8 +13,6 @@ import {
 } from '@mui/material';
 
 export const ReportRank = ({ ranks }) => {
-  console.log(ranks.length);
-
   if (ranks.error) {
     return (
       <Typography align="center" variant="h4" style={{ color: 'red' }}>

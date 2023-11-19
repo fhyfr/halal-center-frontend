@@ -10,7 +10,7 @@ import {
   Grid,
 } from '@mui/material';
 import { Search as SearchIcon } from '../../icons/search';
-import { Add } from '@mui/icons-material';
+import { Add, Download } from '@mui/icons-material';
 import { handleRedirectOnClick } from '../../utils/handle-event-button';
 import { useRouter } from 'next/router';
 import useAuth from '../../hooks/use-auth';
@@ -59,22 +59,40 @@ export const CertificateListToolbar = () => {
         {user?.role?.roleName === 'INSTRUCTOR' ? (
           ''
         ) : (
-          <Box sx={{ m: 1 }}>
-            <Button
-              startIcon={
-                <SvgIcon fontSize="small">
-                  <Add />
-                </SvgIcon>
-              }
-              color="primary"
-              variant="contained"
-              onClick={() => {
-                handleRedirectOnClick(router, '/certificate/add');
-              }}
-            >
-              Add New
-            </Button>
-          </Box>
+          <>
+            <Box sx={{ m: 2 }}>
+              <Button
+                sx={{ mr: 2 }}
+                startIcon={
+                  <SvgIcon fontSize="small">
+                    <Add />
+                  </SvgIcon>
+                }
+                color="primary"
+                variant="contained"
+                onClick={() => {
+                  handleRedirectOnClick(router, '/certificate/add');
+                }}
+              >
+                Add New
+              </Button>
+
+              <Button
+                startIcon={
+                  <SvgIcon fontSize="small">
+                    <Download />
+                  </SvgIcon>
+                }
+                color="warning"
+                variant="contained"
+                onClick={() => {
+                  handleRedirectOnClick(router, '/certificate/import');
+                }}
+              >
+                Import
+              </Button>
+            </Box>
+          </>
         )}
       </Box>
       <Box sx={{ mt: 3 }}>

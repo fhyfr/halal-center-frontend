@@ -323,8 +323,13 @@ export const CourseDetails = ({
               </TableCell>
             </TableHead>
             <TableBody>
-              {(modules.data?.length > 0 && course.type === 'FREE') ||
-              (course.type === 'PAID' && isCoursePaid) ? (
+              {(modules.data?.length > 0 &&
+                user?.role?.roleName === 'MEMBER' &&
+                course.type === 'FREE') ||
+              (modules.data?.length > 0 &&
+                user?.role?.roleName === 'MEMBER' &&
+                course.type === 'PAID' &&
+                isCoursePaid) ? (
                 modules.data?.map((module) => {
                   return (
                     <TableRow key={module.id}>
@@ -356,20 +361,59 @@ export const CourseDetails = ({
                     </TableRow>
                   );
                 })
+              ) : user?.role?.roleName === 'MEMBER' && course.type === 'PAID' && !isCoursePaid ? (
+                <>
+                  <CardContent>
+                    <Box>
+                      <Typography variant="subtitle2">
+                        You can download the modules if your payments is success (admin would check
+                        your payment)
+                      </Typography>
+                    </Box>
+                  </CardContent>
+                </>
+              ) : modules.data?.length > 0 ? (
+                modules.data?.map((module) => {
+                  return (
+                    <TableRow key={module.id}>
+                      <TableCell align="center">
+                        <Typography>{module.id}</Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Box
+                          sx={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                          }}
+                        >
+                          <Button
+                            color="primary"
+                            size="small"
+                            sx={{
+                              mr: 2,
+                            }}
+                            variant="contained"
+                            onClick={async () => {
+                              router.push({
+                                pathname: `/module`,
+                                query: {
+                                  courseId: course.id,
+                                },
+                              });
+                            }}
+                          >
+                            Manage
+                          </Button>
+                        </Box>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })
               ) : (
                 <>
                   <CardContent>
                     <Box>
-                      {!isCoursePaid &&
-                      course.type === 'PAID' &&
-                      user?.role?.roleName === 'MEMBER' ? (
-                        <Typography variant="subtitle2">
-                          You can download the modules if your payments is success (admin would
-                          check your payment)
-                        </Typography>
-                      ) : (
-                        <Typography variant="subtitle1">Empty</Typography>
-                      )}
+                      <Typography variant="subtitle1">Empty</Typography>
                     </Box>
                   </CardContent>
                 </>
@@ -400,7 +444,17 @@ export const CourseDetails = ({
               </TableCell>
             </TableHead>
             <TableBody>
-              {certificates.data?.length > 0 && course.isRegistered && isCoursesEnded ? (
+              {(certificates.data?.length > 0 &&
+                user?.role?.roleName === 'MEMBER' &&
+                course.isRegistered &&
+                isCoursesEnded &&
+                course.type == 'FREE') ||
+              (certificates.data?.length > 0 &&
+                user?.role?.roleName === 'MEMBER' &&
+                course.isRegistered &&
+                isCoursesEnded &&
+                course.type === 'PAID' &&
+                isCoursePaid) ? (
                 certificates.data?.map((certificate) => {
                   return (
                     <TableRow key={certificate.id}>
@@ -434,17 +488,39 @@ export const CourseDetails = ({
                     </TableRow>
                   );
                 })
+              ) : course.type === 'PAID' &&
+                !isCoursePaid &&
+                user?.role?.roleName === 'MEMBER' &&
+                isCoursesEnded ? (
+                <>
+                  <CardContent>
+                    <Box>
+                      <Typography variant="subtitle2">
+                        You can download the certificates if your payments is success (admin would
+                        check your payment)
+                      </Typography>
+                    </Box>
+                  </CardContent>
+                </>
+              ) : user?.role?.roleName !== 'MEMBER' ? (
+                <>
+                  <CardContent>
+                    <Box>
+                      <Typography variant="subtitle1">Empty</Typography>
+                    </Box>
+                  </CardContent>
+                </>
               ) : (
                 <>
                   <CardContent>
                     <Box>
                       {!isCoursesEnded ? (
-                        <Typography variant="subtitle1">Empty</Typography>
-                      ) : (
                         <Typography variant="subtitle2">
-                          You can download your certificate for this course after the course is
+                          You can download your certificates for this course after the course is
                           ended and you have fulfilled the requirements
                         </Typography>
+                      ) : (
+                        <Typography variant="subtitle1">Empty</Typography>
                       )}
                     </Box>
                   </CardContent>
@@ -478,9 +554,15 @@ export const CourseDetails = ({
               </TableCell>
             </TableHead>
             <TableBody>
-              {attendances.data?.length > 0 &&
-              user?.role?.roleName === 'MEMBER' &&
-              course.isRegistered ? (
+              {(attendances.data?.length > 0 &&
+                user?.role?.roleName === 'MEMBER' &&
+                course.isRegistered &&
+                course.type === 'FREE') ||
+              (attendances.data?.length > 0 &&
+                user?.role?.roleName === 'MEMBER' &&
+                course.isRegistered &&
+                course.type === 'PAID' &&
+                isCoursePaid) ? (
                 attendances.data?.map((attendance) => {
                   return (
                     <TableRow key={attendance.id}>
@@ -519,6 +601,17 @@ export const CourseDetails = ({
                     </TableRow>
                   );
                 })
+              ) : user?.role?.roleName === 'MEMBER' && course.type === 'PAID' && !isCoursePaid ? (
+                <>
+                  <CardContent>
+                    <Box>
+                      <Typography variant="subtitle2">
+                        You can submit the attendances if your payments is success (admin would
+                        check your payment)
+                      </Typography>
+                    </Box>
+                  </CardContent>
+                </>
               ) : attendances.data?.length > 0 ? (
                 attendances.data?.map((attendance) => {
                   return (
@@ -598,9 +691,15 @@ export const CourseDetails = ({
               </TableCell>
             </TableHead>
             <TableBody>
-              {tests.data?.length > 0 &&
-              user?.role?.roleName === 'MEMBER' &&
-              course.isRegistered ? (
+              {(tests.data?.length > 0 &&
+                user?.role?.roleName === 'MEMBER' &&
+                course.isRegistered &&
+                course.type === 'FREE') ||
+              (tests.data?.length > 0 &&
+                user?.role?.roleName === 'MEMBER' &&
+                course.isRegistered &&
+                course.type === 'PAID' &&
+                isCoursePaid) ? (
                 tests.data?.map((test) => {
                   return (
                     <TableRow key={test.id}>
@@ -640,6 +739,17 @@ export const CourseDetails = ({
                     </TableRow>
                   );
                 })
+              ) : user?.role?.roleName === 'MEMBER' && course.type === 'PAID' && !isCoursePaid ? (
+                <>
+                  <CardContent>
+                    <Box>
+                      <Typography variant="subtitle2">
+                        You can see the tests if your payments is success (admin would check your
+                        payment)
+                      </Typography>
+                    </Box>
+                  </CardContent>
+                </>
               ) : tests.data?.length > 0 ? (
                 tests.data?.map((test) => {
                   return (

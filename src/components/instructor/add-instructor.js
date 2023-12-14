@@ -21,6 +21,7 @@ import {
   MenuItem,
   OutlinedInput,
   Select,
+  TextField,
   Typography,
 } from '@mui/material';
 import { useRouter } from 'next/router';
@@ -32,6 +33,9 @@ import { uploadImage } from '../../services/api/file';
 import { handleRedirectOnClick } from '../../utils/handle-event-button';
 import { createNewInstructor } from '../../services/api/instructor';
 import { getCitiesByProvinceId } from '../../services/api/city';
+import { Stack } from '@mui/system';
+import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 
 export const AddInstructor = ({ courses, provinces, cities }) => {
   const router = useRouter();
@@ -53,6 +57,9 @@ export const AddInstructor = ({ courses, provinces, cities }) => {
       fullName: '',
       address: '',
       phoneNumber: '',
+      dateOfBirth: '',
+      education: '',
+      workExperience: '',
       facebook: '',
       linkedin: '',
     },
@@ -63,6 +70,9 @@ export const AddInstructor = ({ courses, provinces, cities }) => {
       fullName: Yup.string().required('Full Name is required'),
       address: Yup.string().required('Address is required'),
       phoneNumber: Yup.string().phone('ID').required('Phone Number is required'),
+      dateOfBirth: Yup.string().required(),
+      education: Yup.string().required('Education is required'),
+      workExperience: Yup.number().required('Work Experience is required'),
       facebook: Yup.string().url().required(),
       linkedin: Yup.string().url().required(),
     }),
@@ -429,6 +439,92 @@ export const AddInstructor = ({ courses, provinces, cities }) => {
                     />
                     {Boolean(formik.touched.address && formik.errors.address) && (
                       <FormHelperText error>{formik.errors.address}</FormHelperText>
+                    )}
+                  </FormControl>
+                </Grid>
+
+                <Grid item md={6} xs={12}>
+                  <Stack sx={{ marginX: 2 }} alignItems="center" direction="row" spacing={4}>
+                    <LocalizationProvider dateAdapter={AdapterDateFns}>
+                      <InputLabel htmlFor="id-date-of-birth">Date of Birth</InputLabel>
+                      <DatePicker
+                        onChange={(value) => {
+                          formik.setFieldValue('dateOfBirth', new Date(value).toISOString());
+                        }}
+                        value={formik.values.dateOfBirth}
+                        inputFormat="dd/MM/yyyy"
+                        renderInput={(params) => (
+                          <TextField
+                            id="id-date-of-birth"
+                            sx={{ maxWidth: 180 }}
+                            error={Boolean(formik.touched.dateOfBirth && formik.errors.dateOfBirth)}
+                            helperText={formik.touched.dateOfBirth && formik.errors.dateOfBirth}
+                            label="Date of Birth"
+                            name="dateOfBirth"
+                            variant="outlined"
+                            {...params}
+                          />
+                        )}
+                      />
+                    </LocalizationProvider>
+                  </Stack>
+                </Grid>
+
+                <Grid item md={6} xs={12}>
+                  <FormControl fullWidth variant="outlined">
+                    <InputLabel id="single-select-education" required>
+                      Education
+                    </InputLabel>
+                    <Select
+                      labelId="single-select-education"
+                      value={formik.values.education}
+                      label="Education"
+                      onChange={formik.handleChange}
+                      name="education"
+                      required
+                    >
+                      <MenuItem key="1" value="SLTA">
+                        SLTA (SMA, SMK, MA, sederajat)
+                      </MenuItem>
+                      <MenuItem key="2" value="D1">
+                        Diploma 1 (D1)
+                      </MenuItem>
+                      <MenuItem key="3" value="D2">
+                        Diploma 2 (D2)
+                      </MenuItem>
+                      <MenuItem key="4" value="D3">
+                        Diploma 3 (D3)
+                      </MenuItem>
+                      <MenuItem key="5" value="S1_OR_D4">
+                        Strata 1 (S1) atau Diploma 4 (D4)
+                      </MenuItem>
+                      <MenuItem key="6" value="S2">
+                        Strata 2 (S2)
+                      </MenuItem>
+                      <MenuItem key="7" value="S3">
+                        Strata 3 (S3)
+                      </MenuItem>
+                    </Select>
+                  </FormControl>
+                </Grid>
+
+                <Grid item md={6} xs={12}>
+                  <FormControl fullWidth variant="outlined">
+                    <InputLabel htmlFor="outlined-adornment-work-experience" required>
+                      Work Experience (Years)
+                    </InputLabel>
+                    <OutlinedInput
+                      id="outlined-adornment-work-experience"
+                      label="Work Experience (Years)"
+                      name="workExperience"
+                      type="number"
+                      onBlur={formik.handleBlur}
+                      onChange={formik.handleChange}
+                      value={formik.values.workExperience}
+                      required
+                    />
+                    {Boolean(formik.touched.workExperience && formik.errors.workExperience) && (
+                      <FormHelperText error>{formik.errors.workExperience}</FormHelperText>
                     )}
                   </FormControl>
                 </Grid>

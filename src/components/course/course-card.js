@@ -65,7 +65,7 @@ export const CourseCard = ({ user, course }) => {
     ) {
       alert('please complete your profile before register to this course!');
 
-      router.push('/user/account');
+      return router.push('/user/account');
     }
 
     if (course.type === 'FREE') {

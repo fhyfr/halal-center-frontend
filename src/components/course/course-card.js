@@ -244,6 +244,31 @@ export const CourseCard = ({ user, course }) => {
               </Button>
             </span>
           </Box>
+        ) : user && user.role?.roleName === 'DIRECTOR' ? (
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              mt: 4,
+            }}
+          >
+            <span>
+              <Button
+                color="info"
+                size="medium"
+                variant="contained"
+                startIcon={<InfoOutlined />}
+                onClick={() => {
+                  router.push({
+                    pathname: '/course/details',
+                    query: { courseId: course.id },
+                  });
+                }}
+              >
+                Details Course
+              </Button>
+            </span>
+          </Box>
         ) : (
           <Box
             sx={{

@@ -27,7 +27,8 @@ import logo from '../assets/images/logo_sdm_halal.jpeg';
 
 const permissions = {
   TREASURER: ['Dashboard', 'Registration Payments', 'Operational Payments'],
-  DIRECTOR: ['Dashboard', 'Registration Payments', 'Operational Payments', 'Courses', 'Report'],
+  // DIRECTOR: ['Dashboard', 'Registration Payments', 'Operational Payments', 'Courses', 'Report'],
+  DIRECTOR: ['Dashboard', 'Courses', 'Report'],
   SUPER_ADMIN: [
     'Dashboard',
     'Users',

@@ -311,16 +311,23 @@ export const CourseDetails = ({
           <Table>
             <TableHead>
               <TableCell align="center">Module ID</TableCell>
-              <TableCell>
-                <Box
-                  sx={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                  }}
-                >
-                  Action
-                </Box>
-              </TableCell>
+
+              {user?.role?.roleName === 'DIRECTOR' ? (
+                ''
+              ) : (
+                <>
+                  <TableCell>
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                      }}
+                    >
+                      Action
+                    </Box>
+                  </TableCell>
+                </>
+              )}
             </TableHead>
             <TableBody>
               {(modules.data?.length > 0 &&
@@ -386,24 +393,30 @@ export const CourseDetails = ({
                             justifyContent: 'center',
                           }}
                         >
-                          <Button
-                            color="primary"
-                            size="small"
-                            sx={{
-                              mr: 2,
-                            }}
-                            variant="contained"
-                            onClick={async () => {
-                              router.push({
-                                pathname: `/module`,
-                                query: {
-                                  courseId: course.id,
-                                },
-                              });
-                            }}
-                          >
-                            Manage
-                          </Button>
+                          {user?.role?.roleName === 'DIRECTOR' ? (
+                            ''
+                          ) : (
+                            <>
+                              <Button
+                                color="primary"
+                                size="small"
+                                sx={{
+                                  mr: 2,
+                                }}
+                                variant="contained"
+                                onClick={async () => {
+                                  router.push({
+                                    pathname: `/module`,
+                                    query: {
+                                      courseId: course.id,
+                                    },
+                                  });
+                                }}
+                              >
+                                Manage
+                              </Button>
+                            </>
+                          )}
                         </Box>
                       </TableCell>
                     </TableRow>
@@ -542,16 +555,22 @@ export const CourseDetails = ({
               <TableCell align="center">Title</TableCell>
               <TableCell align="center">Status</TableCell>
               <TableCell align="center">End Date</TableCell>
-              <TableCell>
-                <Box
-                  sx={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                  }}
-                >
-                  Action
-                </Box>
-              </TableCell>
+              {user?.role?.roleName === 'DIRECTOR' ? (
+                ''
+              ) : (
+                <>
+                  <TableCell>
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                      }}
+                    >
+                      Action
+                    </Box>
+                  </TableCell>
+                </>
+              )}
             </TableHead>
             <TableBody>
               {(attendances.data?.length > 0 &&
@@ -631,24 +650,30 @@ export const CourseDetails = ({
                             justifyContent: 'center',
                           }}
                         >
-                          <Button
-                            color="primary"
-                            size="small"
-                            sx={{
-                              mr: 2,
-                            }}
-                            variant="contained"
-                            onClick={() => {
-                              router.push({
-                                pathname: '/attendance',
-                                query: {
-                                  courseId: course.id,
-                                },
-                              });
-                            }}
-                          >
-                            Manage
-                          </Button>
+                          {user?.role?.roleName === 'DIRECTOR' ? (
+                            ''
+                          ) : (
+                            <>
+                              <Button
+                                color="primary"
+                                size="small"
+                                sx={{
+                                  mr: 2,
+                                }}
+                                variant="contained"
+                                onClick={() => {
+                                  router.push({
+                                    pathname: '/attendance',
+                                    query: {
+                                      courseId: course.id,
+                                    },
+                                  });
+                                }}
+                              >
+                                Manage
+                              </Button>
+                            </>
+                          )}
                         </Box>
                       </TableCell>
                     </TableRow>
@@ -679,16 +704,22 @@ export const CourseDetails = ({
               <TableCell align="center">Type</TableCell>
               <TableCell align="center">Status</TableCell>
               <TableCell align="center">Period</TableCell>
-              <TableCell>
-                <Box
-                  sx={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                  }}
-                >
-                  Action
-                </Box>
-              </TableCell>
+              {user?.role?.roleName === 'DIRECTOR' ? (
+                ''
+              ) : (
+                <>
+                  <TableCell>
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                      }}
+                    >
+                      Action
+                    </Box>
+                  </TableCell>
+                </>
+              )}
             </TableHead>
             <TableBody>
               {(tests.data?.length > 0 &&
@@ -769,24 +800,30 @@ export const CourseDetails = ({
                             justifyContent: 'center',
                           }}
                         >
-                          <Button
-                            color="primary"
-                            size="small"
-                            sx={{
-                              mr: 2,
-                            }}
-                            variant="contained"
-                            onClick={async () => {
-                              router.push({
-                                pathname: '/test',
-                                query: {
-                                  courseId: course.id,
-                                },
-                              });
-                            }}
-                          >
-                            Manage
-                          </Button>
+                          {user?.role?.roleName === 'DIRECTOR' ? (
+                            ''
+                          ) : (
+                            <>
+                              <Button
+                                color="primary"
+                                size="small"
+                                sx={{
+                                  mr: 2,
+                                }}
+                                variant="contained"
+                                onClick={async () => {
+                                  router.push({
+                                    pathname: '/test',
+                                    query: {
+                                      courseId: course.id,
+                                    },
+                                  });
+                                }}
+                              >
+                                Manage
+                              </Button>
+                            </>
+                          )}
                         </Box>
                       </TableCell>
                     </TableRow>

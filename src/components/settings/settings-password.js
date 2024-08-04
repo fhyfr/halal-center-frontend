@@ -19,7 +19,7 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { updatePassword } from '../../services/api/member';
 
-export const SettingsPassword = (props) => {
+export const SettingsPassword = () => {
   const [info, setInfo] = useState(undefined);
   const [errMessage, setErrMessage] = useState(undefined);
 

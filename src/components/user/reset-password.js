@@ -18,7 +18,7 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { useRouter } from 'next/router';
 import { handleRedirectOnClick } from '../../utils/handle-event-button';
-import { resetPasswordUser, updateUser } from '../../services/api/user';
+import { resetPasswordUser } from '../../services/api/user';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 
 export const ResetPasswordUser = () => {

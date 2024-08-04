@@ -9,11 +9,7 @@ import {
   CardMedia,
   Divider,
   FormControl,
-  FormHelperText,
   Grid,
-  InputLabel,
-  MenuItem,
-  Select,
   Typography,
 } from '@mui/material';
 import { Box, Stack } from '@mui/system';
@@ -24,7 +20,7 @@ import * as Yup from 'yup';
 import { uploadImage } from '../../services/api/file';
 import { handleRedirectOnClick } from '../../utils/handle-event-button';
 import { formatRupiahCurrency } from '../../utils/currency-converter';
-import { createNewPayment } from '../../services/api/payment';
+import { createNewRegistrationPayment } from '../../services/api/registration-payment';
 import { registerCourse } from '../../services/api/course';
 
 export const PaymentCourse = ({ course, user }) => {
@@ -37,34 +33,33 @@ export const PaymentCourse = ({ course, user }) => {
 
   const formik = useFormik({
     initialValues: {
-      courseId: course.id,
-      userId: user.id,
       amount: course.price,
       discount: 0,
       descriptions: 'User Course Registration',
-      paymentMethod: '',
       transactionDate: new Date().toISOString(),
       status: 'PENDING',
       receiptUrl: '',
-      type: 'REGISTRATION',
     },
     validationSchema: Yup.object({
-      courseId: Yup.number().required('Course id is required'),
-      userId: Yup.number().required('User id is required'),
       descriptions: Yup.string().required('Descriptions is required'),
-      type: Yup.string().required('Type is required'),
-      paymentMethod: Yup.string().required('Payment method is required'),
       transactionDate: Yup.string().required(),
       status: Yup.string().required('Status is required'),
       receiptUrl: Yup.string().url().required('Receipt url is required'),
     }),
     onSubmit: (values, action) => {
-      createNewPayment(values)
-        .then((res) => {
-          // register course after payment success
-          registerCourse(course.id);
+      Object.assign(values, {
+        paymentMethod: 'BANK_TRANSFER',
+      });
 
-          setInfo(res);
+      registerCourse(course.id)
+        .then((res) => {
+          // create payment after registration success
+          Object.assign(values, {
+            registrationId: res.data.id,
+          });
+          createNewRegistrationPayment(values);
+
+          setInfo(res.message);
           setErrMessage(undefined);
 
           setTimeout(() => {
@@ -139,10 +134,10 @@ export const PaymentCourse = ({ course, user }) => {
               <Divider />
               <Typography variant="body1" sx={{ marginTop: 2 }} maxWidth={600}>
                 Please make payment for this course according to the total to be paid above. <br />
-                For payment, you can use the bank transfer method or pay cash. For the bank transfer
-                method, please transfer to the following account according to the total above.
+                For payment, you can use the bank transfer method. For the bank transfer method,
+                please transfer to the following account according to the total above.
                 <br />
-                For payments via cash, please contact the course admin.
+                Please contact the course admin if you have any problems.
               </Typography>
             </CardContent>
 
@@ -171,32 +166,6 @@ export const PaymentCourse = ({ course, user }) => {
 
             <CardContent>
               <Grid container sx={{ p: 2 }}>
-                <FormControl sx={{ marginTop: 1, marginBottom: 2 }} fullWidth variant="outlined">
-                  <InputLabel id="select-payment-method">Payment Method</InputLabel>
-                  <Select
-                    labelId="select-payment-method"
-                    id="select-payment-method"
-                    value={formik.values.paymentMethod}
-                    label="Payment Method"
-                    onChange={formik.handleChange}
-                    name="paymentMethod"
-                  >
-                    <MenuItem disabled key="" value="">
-                      --- Payment Method ---
-                    </MenuItem>
-                    <MenuItem key="CASH" value="CASH">
-                      Cash
-                    </MenuItem>
-
-                    <MenuItem key="BANK_TRANSFER" value="BANK_TRANSFER">
-                      Bank Transfer
-                    </MenuItem>
-                  </Select>
-                  {Boolean(formik.touched.paymentMethod && formik.errors.paymentMethod) && (
-                    <FormHelperText error>{formik.errors.paymentMethod}</FormHelperText>
-                  )}
-                </FormControl>
-
                 <FormControl sx={{ marginTop: 1, marginBottom: 2 }} fullWidth variant="outlined">
                   <Card>
                     <CardActions>

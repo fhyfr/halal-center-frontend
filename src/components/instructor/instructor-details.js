@@ -53,6 +53,7 @@ export const InstructorDetails = ({ instructor, courses }) => {
             </Typography>
           </CardContent>
           <Divider />
+
           <CardContent sx={{ marginY: -2 }}>
             <Typography variant="h6">Email</Typography>
             <Typography variant="body1" gutterBottom>
@@ -60,6 +61,33 @@ export const InstructorDetails = ({ instructor, courses }) => {
             </Typography>
           </CardContent>
           <Divider />
+
+          <CardContent sx={{ marginY: -2 }}>
+            <Typography variant="h6">Date of Birth</Typography>
+            <Typography variant="body1" gutterBottom>
+              {formatDateWithoutHourMinutes(instructor.dateOfBirth)}
+            </Typography>
+          </CardContent>
+          <Divider />
+
+          <CardContent sx={{ marginY: -2 }}>
+            <Typography variant="h6">Education</Typography>
+            <Typography variant="body1" gutterBottom>
+              {instructor.education}
+            </Typography>
+          </CardContent>
+          <Divider />
+
+          <CardContent sx={{ marginY: -2 }}>
+            <Typography variant="h6">Work Experience</Typography>
+            <Typography variant="body1" gutterBottom>
+              {instructor.workExperience > 1
+                ? `${instructor.workExperience} years`
+                : `${instructor.workExperience} year`}
+            </Typography>
+          </CardContent>
+          <Divider />
+
           <CardContent sx={{ marginY: -2 }}>
             <Typography variant="h6">Phone Number</Typography>
             <Typography variant="body1" gutterBottom>
@@ -67,6 +95,27 @@ export const InstructorDetails = ({ instructor, courses }) => {
             </Typography>
           </CardContent>
           <Divider />
+
+          <CardContent sx={{ marginY: -2 }}>
+            <Typography variant="h6" gutterBottom>
+              Province
+            </Typography>
+            <Typography variant="body1" gutterBottom>
+              {instructor.province ? instructor.province.name : 'empty'}
+            </Typography>
+          </CardContent>
+          <Divider />
+
+          <CardContent sx={{ marginY: -2 }}>
+            <Typography variant="h6" gutterBottom>
+              City
+            </Typography>
+            <Typography variant="body1" gutterBottom>
+              {instructor.city ? instructor.city.name : 'empty'}
+            </Typography>
+          </CardContent>
+          <Divider />
+
           <CardContent sx={{ marginY: -2 }}>
             <Typography variant="h6" gutterBottom>
               Address
@@ -76,6 +125,7 @@ export const InstructorDetails = ({ instructor, courses }) => {
             </Typography>
           </CardContent>
           <Divider />
+
           <CardContent sx={{ marginY: -2 }}>
             <Typography variant="h6">Facebook</Typography>
             <Typography variant="body1" gutterBottom>
@@ -89,6 +139,7 @@ export const InstructorDetails = ({ instructor, courses }) => {
             </Typography>
           </CardContent>
           <Divider />
+
           <CardContent sx={{ marginY: -2 }}>
             <Typography variant="h6">LinkedIn</Typography>
             <Typography variant="body1" gutterBottom>
@@ -102,6 +153,7 @@ export const InstructorDetails = ({ instructor, courses }) => {
             </Typography>
           </CardContent>
           <Divider />
+
           <CardContent sx={{ marginY: -2 }}>
             <Typography variant="h6">Last Updated</Typography>
             <Typography variant="body1" gutterBottom>
@@ -123,7 +175,7 @@ export const InstructorDetails = ({ instructor, courses }) => {
                     <Stack sx={{ marginBottom: 2 }}>
                       <Typography variant="h6">Course ID: {course.id}</Typography>
                       <Typography variant="body1" gutterBottom>
-                        Title: {course.title}
+                        Title: {`${course.title} - Batch ${course.batchNumber}`}
                       </Typography>
                       <Typography variant="body1" gutterBottom>
                         Date: {formatDateWithoutHourMinutes(course.startDate)} s/d{' '}

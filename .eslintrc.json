@@ -1,5 +1,6 @@
 {
   "extends": "next/core-web-vitals",
+  "plugins": ["unused-imports"],
   "rules": {
     "@next/next/no-img-element": "off",
     "jsx-a11y/alt-text": "off",
@@ -7,6 +8,12 @@
     "react/jsx-max-props-per-line": [
       2,
       { "maximum": 1, "when": "multiline" }
-    ]
+    ],
+    "no-unused-vars": "off",
+		"unused-imports/no-unused-imports": "error",
+		"unused-imports/no-unused-vars": [
+			"warn",
+			{ "vars": "all", "varsIgnorePattern": "^_", "args": "after-used", "argsIgnorePattern": "^_" }
+		]
   }
 }

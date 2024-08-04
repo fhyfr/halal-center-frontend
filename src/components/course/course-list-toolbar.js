@@ -16,8 +16,10 @@ import {
 import { useRouter } from 'next/router';
 import { Search as SearchIcon } from '../../icons/search';
 import { handleRedirectOnClick } from '../../utils/handle-event-button';
+import useAuth from '../../hooks/use-auth';
 
 export const CourseListToolbar = ({ categories }) => {
+  const { user } = useAuth();
   const router = useRouter();
 
   const handleFilterCategory = (event) => {
@@ -56,22 +58,26 @@ export const CourseListToolbar = ({ categories }) => {
         <Typography sx={{ m: 1 }} variant="h4">
           List Course
         </Typography>
-        <Box sx={{ m: 1 }}>
-          <Button
-            startIcon={
-              <SvgIcon fontSize="small">
-                <Add />
-              </SvgIcon>
-            }
-            color="primary"
-            variant="contained"
-            onClick={() => {
-              handleRedirectOnClick(router, '/course/add');
-            }}
-          >
-            Add New
-          </Button>
-        </Box>
+        {(user && user?.role?.roleName === 'MEMBER') || user?.role?.roleName === 'INSTRUCTOR' ? (
+          <Box sx={{ m: 1 }}></Box>
+        ) : (
+          <Box sx={{ m: 1 }}>
+            <Button
+              startIcon={
+                <SvgIcon fontSize="small">
+                  <Add />
+                </SvgIcon>
+              }
+              color="primary"
+              variant="contained"
+              onClick={() => {
+                handleRedirectOnClick(router, '/course/add');
+              }}
+            >
+              Add New
+            </Button>
+          </Box>
+        )}
       </Box>
       <Box sx={{ mt: 3 }}>
         <Card>

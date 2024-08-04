@@ -50,7 +50,7 @@ export const AccountPopover = (props) => {
         }}
       >
         <Typography variant="overline">Account</Typography>
-        {user && user?.role?.roleName === 'MEMBER' ? (
+        {(user && user?.role?.roleName === 'MEMBER') || user?.role?.roleName === 'INSTRUCTOR' ? (
           <NextLink href="/user/account">
             <Link
               to="/user/account"

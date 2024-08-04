@@ -16,18 +16,73 @@ import {
   Typography,
 } from '@mui/material';
 import { Box } from '@mui/system';
-import { formatDateWithoutHourMinutes } from '../../utils/date-converter';
+import { formatDate, formatDateWithoutHourMinutes } from '../../utils/date-converter';
 import {
   Category,
   Download,
   Event,
   LocalOffer,
   PeopleAlt,
+  PublishOutlined,
   SignalCellularAlt,
 } from '@mui/icons-material';
 import { formatRupiahCurrency } from '../../utils/currency-converter';
+import { useRouter } from 'next/router';
+import { findScoreByTestIdAndUserId } from '../../services/api/score';
+import { findPresenceByAttendanceIdAndUserId } from '../../services/api/presence';
 
-export const CourseDetails = ({ course, instructors, user, documents, certificates, payments }) => {
+export const CourseDetails = ({
+  course,
+  instructors,
+  user,
+  modules,
+  certificates,
+  registrationPayments,
+  attendances,
+  tests,
+}) => {
+  const router = useRouter();
+
+  const now = new Date();
+  const quota = course.quota - course.totalRegistered;
+  const currentDate = formatDateWithoutHourMinutes(new Date());
+  const isCoursePaid =
+    registrationPayments.itemCount > 0
+      ? course.type === 'PAID' && registrationPayments.data[0].status === 'SUCCESS'
+      : false;
+
+  const isCoursesEnded = currentDate > formatDateWithoutHourMinutes(course.endDate);
+
+  const handleSubmitTest = async (testId, userId, testUrl) => {
+    const isScoreExist = await findScoreByTestIdAndUserId(testId, userId);
+
+    if (isScoreExist.data?.length > 0) {
+      return alert('You have submitted the test');
+    }
+
+    router.push({
+      pathname: testUrl,
+    });
+  };
+
+  const handleSubmitAttendance = async (courseId, attendanceId, userId) => {
+    const isAttendanceExist = await findPresenceByAttendanceIdAndUserId(attendanceId, userId);
+
+    if (isAttendanceExist.data?.length > 0) {
+      return alert('You have submitted the attendance');
+    }
+
+    router.push({
+      pathname: '/attendance/presence/add',
+      query: {
+        courseId: courseId,
+        attendanceId: attendanceId,
+        userId: userId,
+      },
+    });
+  };
+
+  // errors handler
   if (course.error) {
     return (
       <Typography align="center" variant="h4" style={{ color: 'red' }}>
@@ -44,10 +99,18 @@ export const CourseDetails = ({ course, instructors, user, documents, certificat
     );
   }
 
-  if (documents.error) {
+  if (user.error) {
     return (
       <Typography align="center" variant="h4" style={{ color: 'red' }}>
-        error, {documents.error.message}
+        error, {user.error.message}
+      </Typography>
+    );
+  }
+
+  if (modules.error) {
+    return (
+      <Typography align="center" variant="h4" style={{ color: 'red' }}>
+        error, {modules.error.message}
       </Typography>
     );
   }
@@ -60,22 +123,29 @@ export const CourseDetails = ({ course, instructors, user, documents, certificat
     );
   }
 
-  if (payments.error) {
+  if (registrationPayments.error) {
     return (
       <Typography align="center" variant="h4" style={{ color: 'red' }}>
-        error, {payments.error.message}
+        error, {registrationPayments.error.message}
       </Typography>
     );
   }
 
-  const quota = course.quota - course.totalRegistered;
-  const currentDate = formatDateWithoutHourMinutes(new Date());
-  const isCoursePaid =
-    payments.itemCount > 0
-      ? course.type === 'PAID' &&
-        payments.data[0].type === 'REGISTRATION' &&
-        payments.data[0].status === 'SUCCESS'
-      : false;
+  if (attendances.error) {
+    return (
+      <Typography align="center" variant="h4" style={{ color: 'red' }}>
+        error, {attendances.error.message}
+      </Typography>
+    );
+  }
+
+  if (tests.error) {
+    return (
+      <Typography align="center" variant="h4" style={{ color: 'red' }}>
+        error, {tests.error.message}
+      </Typography>
+    );
+  }
 
   return (
     <Grid container spacing={3}>
@@ -129,10 +199,15 @@ export const CourseDetails = ({ course, instructors, user, documents, certificat
                 pb: 2,
               }}
             >
-              <CardMedia component="img" height="auto" image={course.banner} alt={course.title} />
+              <CardMedia
+                component="img"
+                height="auto"
+                image={course.banner}
+                alt={`${course.title} - Batch ${course.batchNumber}`}
+              />
             </Box>
             <Typography align="left" color="textPrimary" gutterBottom variant="h5">
-              {course.title}
+              {`${course.title} - Batch ${course.batchNumber}`}
             </Typography>
             <Typography align="left" color="textPrimary" gutterBottom variant="h6">
               {course.subTitle}
@@ -199,7 +274,7 @@ export const CourseDetails = ({ course, instructors, user, documents, certificat
 
       <Grid item lg={6} md={6} xs={12}>
         <Card sx={{ p: 2 }}>
-          <CardHeader subheader="List instructors of course" title="Instructors" />
+          <CardHeader subheader="List instructors of the course" title="Instructors" />
           <Divider />
 
           {instructors.data?.length > 0 ? (
@@ -235,70 +310,123 @@ export const CourseDetails = ({ course, instructors, user, documents, certificat
 
           <Table>
             <TableHead>
-              <TableCell align="left">Module ID</TableCell>
-              <TableCell align="left">Type</TableCell>
-              <TableCell>
-                <Box
-                  sx={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                  }}
-                >
-                  Action
-                </Box>
-              </TableCell>
+              <TableCell align="center">Module ID</TableCell>
+
+              {user?.role?.roleName === 'DIRECTOR' ? (
+                ''
+              ) : (
+                <>
+                  <TableCell>
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                      }}
+                    >
+                      Action
+                    </Box>
+                  </TableCell>
+                </>
+              )}
             </TableHead>
             <TableBody>
-              {(documents.data?.length > 0 && course.type === 'FREE') ||
-              (course.type === 'PAID' && isCoursePaid) ? (
-                documents.data?.map((document) => {
-                  if (document.type !== 'CERTIFICATE') {
-                    return (
-                      <TableRow key={document.id}>
-                        <TableCell>
-                          <Typography>{document.id}</Typography>
-                        </TableCell>
-                        <TableCell>{document.type}</TableCell>
-                        <TableCell>
-                          <Box
+              {(modules.data?.length > 0 &&
+                user?.role?.roleName === 'MEMBER' &&
+                course.type === 'FREE') ||
+              (modules.data?.length > 0 &&
+                user?.role?.roleName === 'MEMBER' &&
+                course.type === 'PAID' &&
+                isCoursePaid) ? (
+                modules.data?.map((module) => {
+                  return (
+                    <TableRow key={module.id}>
+                      <TableCell align="center">
+                        <Typography>{module.id}</Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Box
+                          sx={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                          }}
+                        >
+                          <Button
+                            color="secondary"
+                            size="small"
                             sx={{
-                              display: 'flex',
-                              justifyContent: 'center',
+                              mr: 2,
                             }}
+                            variant="contained"
+                            startIcon={<Download />}
+                            href={module.url}
+                            target="_blank"
                           >
-                            <Button
-                              color="secondary"
-                              size="small"
-                              sx={{
-                                mr: 2,
-                              }}
-                              variant="contained"
-                              startIcon={<Download />}
-                              href={document.url}
-                              target="_blank"
-                            >
-                              Download
-                            </Button>
-                          </Box>
-                        </TableCell>
-                      </TableRow>
-                    );
-                  }
+                            Download
+                          </Button>
+                        </Box>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })
+              ) : user?.role?.roleName === 'MEMBER' && course.type === 'PAID' && !isCoursePaid ? (
+                <>
+                  <CardContent>
+                    <Box>
+                      <Typography variant="subtitle2">
+                        You can download the modules if your payments is success (admin would check
+                        your payment)
+                      </Typography>
+                    </Box>
+                  </CardContent>
+                </>
+              ) : modules.data?.length > 0 ? (
+                modules.data?.map((module) => {
+                  return (
+                    <TableRow key={module.id}>
+                      <TableCell align="center">
+                        <Typography>{module.id}</Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Box
+                          sx={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                          }}
+                        >
+                          {user?.role?.roleName === 'DIRECTOR' ? (
+                            ''
+                          ) : (
+                            <>
+                              <Button
+                                color="primary"
+                                size="small"
+                                sx={{
+                                  mr: 2,
+                                }}
+                                variant="contained"
+                                onClick={async () => {
+                                  router.push({
+                                    pathname: `/module`,
+                                    query: {
+                                      courseId: course.id,
+                                    },
+                                  });
+                                }}
+                              >
+                                Manage
+                              </Button>
+                            </>
+                          )}
+                        </Box>
+                      </TableCell>
+                    </TableRow>
+                  );
                 })
               ) : (
                 <>
                   <CardContent>
                     <Box>
-                      {!isCoursePaid &&
-                      course.type === 'PAID' &&
-                      user?.role?.roleName === 'MEMBER' ? (
-                        <Typography variant="subtitle2">
-                          You can download the modules if your payments is success (admin would
-                          check your payment)
-                        </Typography>
-                      ) : (
-                        <Typography variant="subtitle1">Empty</Typography>
-                      )}
+                      <Typography variant="subtitle1">Empty</Typography>
                     </Box>
                   </CardContent>
                 </>
@@ -314,9 +442,9 @@ export const CourseDetails = ({ course, instructors, user, documents, certificat
 
           <Table>
             <TableHead>
-              <TableCell align="left">Certificate ID</TableCell>
-              <TableCell align="left">Type</TableCell>
-              <TableCell align="left">Username</TableCell>
+              <TableCell align="center">Certificate ID</TableCell>
+              <TableCell align="center">Type</TableCell>
+              <TableCell align="center">Username</TableCell>
               <TableCell>
                 <Box
                   sx={{
@@ -329,57 +457,383 @@ export const CourseDetails = ({ course, instructors, user, documents, certificat
               </TableCell>
             </TableHead>
             <TableBody>
-              {certificates.data?.length > 0 ? (
+              {(certificates.data?.length > 0 &&
+                user?.role?.roleName === 'MEMBER' &&
+                course.isRegistered &&
+                isCoursesEnded &&
+                course.type == 'FREE') ||
+              (certificates.data?.length > 0 &&
+                user?.role?.roleName === 'MEMBER' &&
+                course.isRegistered &&
+                isCoursesEnded &&
+                course.type === 'PAID' &&
+                isCoursePaid) ? (
                 certificates.data?.map((certificate) => {
-                  if (
-                    course.isRegistered &&
-                    currentDate > formatDateWithoutHourMinutes(course.endDate)
-                  ) {
-                    return (
-                      <TableRow key={certificate.id}>
-                        <TableCell>
-                          <Typography>{certificate.id}</Typography>
-                        </TableCell>
-                        <TableCell>{certificate.type}</TableCell>
-                        <TableCell>{user.username}</TableCell>
-                        <TableCell>
-                          <Box
+                  return (
+                    <TableRow key={certificate.id}>
+                      <TableCell align="center">
+                        <Typography>{certificate.id}</Typography>
+                      </TableCell>
+                      <TableCell align="center">{certificate.type}</TableCell>
+                      <TableCell align="center">{user.username}</TableCell>
+                      <TableCell align="center">
+                        <Box
+                          sx={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                          }}
+                        >
+                          <Button
+                            color="secondary"
+                            size="small"
                             sx={{
-                              display: 'flex',
-                              justifyContent: 'center',
+                              mr: 2,
                             }}
+                            variant="contained"
+                            startIcon={<Download />}
+                            href={certificate.url}
+                            target="_blank"
                           >
-                            <Button
-                              color="secondary"
-                              size="small"
-                              sx={{
-                                mr: 2,
-                              }}
-                              variant="contained"
-                              startIcon={<Download />}
-                              href={certificate.url}
-                              target="_blank"
-                            >
-                              Download
-                            </Button>
-                          </Box>
-                        </TableCell>
-                      </TableRow>
-                    );
-                  }
+                            Download
+                          </Button>
+                        </Box>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })
+              ) : course.type === 'PAID' &&
+                !isCoursePaid &&
+                user?.role?.roleName === 'MEMBER' &&
+                isCoursesEnded ? (
+                <>
+                  <CardContent>
+                    <Box>
+                      <Typography variant="subtitle2">
+                        You can download the certificates if your payments is success (admin would
+                        check your payment)
+                      </Typography>
+                    </Box>
+                  </CardContent>
+                </>
+              ) : user?.role?.roleName !== 'MEMBER' ? (
+                <>
+                  <CardContent>
+                    <Box>
+                      <Typography variant="subtitle1">Empty</Typography>
+                    </Box>
+                  </CardContent>
+                </>
+              ) : (
+                <>
+                  <CardContent>
+                    <Box>
+                      {!isCoursesEnded ? (
+                        <Typography variant="subtitle2">
+                          You can download your certificates for this course after the course is
+                          ended and you have fulfilled the requirements
+                        </Typography>
+                      ) : (
+                        <Typography variant="subtitle1">Empty</Typography>
+                      )}
+                    </Box>
+                  </CardContent>
+                </>
+              )}
+            </TableBody>
+          </Table>
+        </Card>
+      </Grid>
+
+      <Grid item lg={6} md={6} xs={12}>
+        <Card id="attendance-section">
+          <CardHeader subheader="Attendance of the Course" title="Attendance" />
+          <Divider />
+
+          <Table>
+            <TableHead>
+              <TableCell align="center">Attendance ID</TableCell>
+              <TableCell align="center">Title</TableCell>
+              <TableCell align="center">Status</TableCell>
+              <TableCell align="center">End Date</TableCell>
+              {user?.role?.roleName === 'DIRECTOR' ? (
+                ''
+              ) : (
+                <>
+                  <TableCell>
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                      }}
+                    >
+                      Action
+                    </Box>
+                  </TableCell>
+                </>
+              )}
+            </TableHead>
+            <TableBody>
+              {(attendances.data?.length > 0 &&
+                user?.role?.roleName === 'MEMBER' &&
+                course.isRegistered &&
+                course.type === 'FREE') ||
+              (attendances.data?.length > 0 &&
+                user?.role?.roleName === 'MEMBER' &&
+                course.isRegistered &&
+                course.type === 'PAID' &&
+                isCoursePaid) ? (
+                attendances.data?.map((attendance) => {
+                  return (
+                    <TableRow key={attendance.id}>
+                      <TableCell align="center">
+                        <Typography>{attendance.id}</Typography>
+                      </TableCell>
+                      <TableCell align="center">{attendance.title}</TableCell>
+                      <TableCell align="center">
+                        {attendance.active ? 'Active' : 'Inactive'}
+                      </TableCell>
+                      <TableCell align="center">{formatDate(attendance.endDate)}</TableCell>
+                      <TableCell align="center">
+                        <Box
+                          sx={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                          }}
+                        >
+                          <Button
+                            color="secondary"
+                            size="small"
+                            sx={{
+                              mr: 2,
+                            }}
+                            variant="contained"
+                            startIcon={<PublishOutlined />}
+                            onClick={() => {
+                              handleSubmitAttendance(course.id, attendance.id, user.id);
+                            }}
+                            disabled={!attendance.active || new Date(attendance.endDate) < now}
+                          >
+                            Submit
+                          </Button>
+                        </Box>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })
+              ) : user?.role?.roleName === 'MEMBER' && course.type === 'PAID' && !isCoursePaid ? (
+                <>
+                  <CardContent>
+                    <Box>
+                      <Typography variant="subtitle2">
+                        You can submit the attendances if your payments is success (admin would
+                        check your payment)
+                      </Typography>
+                    </Box>
+                  </CardContent>
+                </>
+              ) : attendances.data?.length > 0 ? (
+                attendances.data?.map((attendance) => {
+                  return (
+                    <TableRow key={attendance.id}>
+                      <TableCell align="center">
+                        <Typography>{attendance.id}</Typography>
+                      </TableCell>
+                      <TableCell align="center">{attendance.title}</TableCell>
+                      <TableCell align="center">
+                        {attendance.active ? 'Active' : 'Inactive'}
+                      </TableCell>
+                      <TableCell align="center">{formatDate(attendance.endDate)}</TableCell>
+                      <TableCell align="center">
+                        <Box
+                          sx={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                          }}
+                        >
+                          {user?.role?.roleName === 'DIRECTOR' ? (
+                            ''
+                          ) : (
+                            <>
+                              <Button
+                                color="primary"
+                                size="small"
+                                sx={{
+                                  mr: 2,
+                                }}
+                                variant="contained"
+                                onClick={() => {
+                                  router.push({
+                                    pathname: '/attendance',
+                                    query: {
+                                      courseId: course.id,
+                                    },
+                                  });
+                                }}
+                              >
+                                Manage
+                              </Button>
+                            </>
+                          )}
+                        </Box>
+                      </TableCell>
+                    </TableRow>
+                  );
                 })
               ) : (
                 <>
                   <CardContent>
                     <Box>
-                      {currentDate < formatDateWithoutHourMinutes(course.endDate) ? (
-                        <Typography variant="subtitle1">Empty</Typography>
-                      ) : (
-                        <Typography variant="subtitle2">
-                          You can download your certificate for this course after the course is
-                          ended and you have fulfilled the requirements
-                        </Typography>
-                      )}
+                      <Typography variant="subtitle1">Empty</Typography>
+                    </Box>
+                  </CardContent>
+                </>
+              )}
+            </TableBody>
+          </Table>
+        </Card>
+      </Grid>
+
+      <Grid item lg={6} md={6} xs={12}>
+        <Card id="test-section">
+          <CardHeader subheader="Test of Course" title="Test" />
+          <Divider />
+
+          <Table>
+            <TableHead>
+              <TableCell align="center">Test ID</TableCell>
+              <TableCell align="center">Type</TableCell>
+              <TableCell align="center">Status</TableCell>
+              <TableCell align="center">Period</TableCell>
+              {user?.role?.roleName === 'DIRECTOR' ? (
+                ''
+              ) : (
+                <>
+                  <TableCell>
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                      }}
+                    >
+                      Action
+                    </Box>
+                  </TableCell>
+                </>
+              )}
+            </TableHead>
+            <TableBody>
+              {(tests.data?.length > 0 &&
+                user?.role?.roleName === 'MEMBER' &&
+                course.isRegistered &&
+                course.type === 'FREE') ||
+              (tests.data?.length > 0 &&
+                user?.role?.roleName === 'MEMBER' &&
+                course.isRegistered &&
+                course.type === 'PAID' &&
+                isCoursePaid) ? (
+                tests.data?.map((test) => {
+                  return (
+                    <TableRow key={test.id}>
+                      <TableCell align="center">
+                        <Typography>{test.id}</Typography>
+                      </TableCell>
+                      <TableCell align="center">{test.type}</TableCell>
+                      <TableCell align="center">{test.active ? 'Active' : 'Inactive'}</TableCell>
+                      <TableCell align="center">
+                        {formatDate(test.startDate)} - {formatDate(test.endDate)}
+                      </TableCell>
+                      <TableCell align="center">
+                        <Box
+                          sx={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                          }}
+                        >
+                          <Button
+                            color="secondary"
+                            size="small"
+                            sx={{
+                              mr: 2,
+                            }}
+                            variant="contained"
+                            startIcon={<PublishOutlined />}
+                            disabled={
+                              !test.active ||
+                              !(new Date(test.startDate) <= now && now <= new Date(test.endDate))
+                            }
+                            onClick={() => handleSubmitTest(test.id, user.id, test.url)}
+                          >
+                            Submit
+                          </Button>
+                        </Box>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })
+              ) : user?.role?.roleName === 'MEMBER' && course.type === 'PAID' && !isCoursePaid ? (
+                <>
+                  <CardContent>
+                    <Box>
+                      <Typography variant="subtitle2">
+                        You can see the tests if your payments is success (admin would check your
+                        payment)
+                      </Typography>
+                    </Box>
+                  </CardContent>
+                </>
+              ) : tests.data?.length > 0 ? (
+                tests.data?.map((test) => {
+                  return (
+                    <TableRow key={test.id}>
+                      <TableCell align="center">
+                        <Typography>{test.id}</Typography>
+                      </TableCell>
+                      <TableCell align="center">{test.type}</TableCell>
+                      <TableCell align="center">{test.active ? 'Active' : 'Inactive'}</TableCell>
+                      <TableCell align="center">
+                        {formatDate(test.startDate)} - {formatDate(test.endDate)}
+                      </TableCell>
+                      <TableCell align="center">
+                        <Box
+                          sx={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                          }}
+                        >
+                          {user?.role?.roleName === 'DIRECTOR' ? (
+                            ''
+                          ) : (
+                            <>
+                              <Button
+                                color="primary"
+                                size="small"
+                                sx={{
+                                  mr: 2,
+                                }}
+                                variant="contained"
+                                onClick={async () => {
+                                  router.push({
+                                    pathname: '/test',
+                                    query: {
+                                      courseId: course.id,
+                                    },
+                                  });
+                                }}
+                              >
+                                Manage
+                              </Button>
+                            </>
+                          )}
+                        </Box>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })
+              ) : (
+                <>
+                  <CardContent>
+                    <Box>
+                      <Typography variant="subtitle1">Empty</Typography>
                     </Box>
                   </CardContent>
                 </>

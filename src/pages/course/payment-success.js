@@ -6,7 +6,7 @@ import { Box, Container } from '@mui/system';
 import Image from 'next/image';
 import { handleRedirectOnClick } from '../../utils/handle-event-button';
 
-const PaymentSuccess = (props) => {
+const PaymentSuccess = () => {
   const router = useRouter();
 
   return (

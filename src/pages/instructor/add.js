@@ -7,10 +7,10 @@ import axios from 'axios';
 
 const { NEXT_PUBLIC_API } = process.env;
 
-export const getServerSideProps = async ({ req, res }) => {
-  const data = parseCookies(req);
-  let courses;
+export const getServerSideProps = async ({ req }) => {
+  let courses, provinces, cities;
 
+  const data = parseCookies(req);
   if (!data.user) {
     return {
       redirect: {
@@ -23,7 +23,7 @@ export const getServerSideProps = async ({ req, res }) => {
   const user = JSON.parse(data.user);
 
   try {
-    const response = await axios({
+    const responseCourse = await axios({
       method: 'GET',
       url: `${NEXT_PUBLIC_API}/course?page=1&size=200`,
       headers: {
@@ -31,16 +31,47 @@ export const getServerSideProps = async ({ req, res }) => {
       },
     });
 
-    courses = response.data;
+    if (responseCourse.status !== 200) {
+      throw new Error('failed to get data courses');
+    }
+
+    const responseProvinces = await axios({
+      method: 'GET',
+      url: `${NEXT_PUBLIC_API}/province?page=1&size=200`,
+      headers: {
+        Authorization: `Bearer ${user.accessToken}`,
+      },
+    });
+    if (responseProvinces.status !== 200) {
+      throw new Error('failed to get data provinces');
+    }
+
+    const responseCities = await axios({
+      method: 'GET',
+      url: `${NEXT_PUBLIC_API}/city?page=1&size=200`,
+      params: { provinceId: responseProvinces.data.id },
+      headers: {
+        Authorization: `Bearer ${user.accessToken}`,
+      },
+    });
+    if (responseCities.status !== 200) {
+      throw new Error('failed to get data cities');
+    }
+
+    courses = responseCourse.data;
+    provinces = responseProvinces.data;
+    cities = responseCities.data;
   } catch (err) {
     courses = { error: { message: err.message } };
+    provinces = { error: { message: err.message } };
+    cities = { error: { message: err.message } };
   }
 
-  return { props: { courses } };
+  return { props: { courses, provinces, cities } };
 };
 
 const AddNew = (props) => {
-  const { courses } = props;
+  const { courses, provinces, cities } = props;
 
   return (
     <>
@@ -59,7 +90,7 @@ const AddNew = (props) => {
             Add New Instructor
           </Typography>
           <Box sx={{ pt: 3 }}>
-            <AddInstructor courses={courses} />
+            <AddInstructor courses={courses} provinces={provinces} cities={cities} />
           </Box>
         </Container>
       </Box>

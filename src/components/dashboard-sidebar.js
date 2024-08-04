@@ -6,23 +6,69 @@ import { Box, Divider, Drawer, useMediaQuery } from '@mui/material';
 import { ChartBar as ChartBarIcon } from '../icons/chart-bar';
 import { Cog as CogIcon } from '../icons/cog';
 import { Users as UsersIcon } from '../icons/users';
-import { Logo } from './logo';
 import { NavItem } from './nav-item';
 import {
   AccountCircle,
-  Apartment,
   Bookmarks,
+  CardMembership,
   Category,
   FolderCopy,
-  FolderOpen,
-  Groups,
-  Payment,
+  LibraryBooks,
   People,
-  PermContactCalendar,
   School,
+  Sell,
+  ShoppingCartCheckout,
+  PlaylistAddCheck,
+  FormatListNumbered,
 } from '@mui/icons-material';
+import useAuth from '../hooks/use-auth';
+import Image from 'next/image';
+import logo from '../assets/images/logo_sdm_halal.jpeg';
 
-// TODO: implement user access control on menu sidebar
+const permissions = {
+  TREASURER: ['Dashboard', 'Registration Payments', 'Operational Payments'],
+  // DIRECTOR: ['Dashboard', 'Registration Payments', 'Operational Payments', 'Courses', 'Report'],
+  DIRECTOR: ['Dashboard', 'Courses', 'Report'],
+  SUPER_ADMIN: [
+    'Dashboard',
+    'Users',
+    'Courses',
+    'Attendances',
+    'Tests',
+    'Modules',
+    'Certificates',
+    'Instructors',
+    'Registration Payments',
+    'Operational Payments',
+    'Categories',
+    'Account',
+    'My Course',
+    'Report',
+    'Settings',
+  ],
+  ADMIN_COURSE: [
+    'Dashboard',
+    'Users',
+    'Attendances',
+    'Tests',
+    'Categories',
+    'Courses',
+    'Instructors',
+    'Modules',
+    'Certificates',
+  ],
+  MEMBER: ['Dashboard', 'Courses', 'My Course', 'Account', 'Settings'],
+  INSTRUCTOR: [
+    'Dashboard',
+    'Courses',
+    'Modules',
+    'Tests',
+    'Attendances',
+    'Certificates',
+    'Account',
+    'Settings',
+  ],
+};
 
 const items = [
   {
@@ -41,9 +87,24 @@ const items = [
     title: 'Courses',
   },
   {
-    href: '/document',
-    icon: <FolderOpen fontSize="small" />,
-    title: 'Documents',
+    href: '/module',
+    icon: <LibraryBooks fontSize="small" />,
+    title: 'Modules',
+  },
+  {
+    href: '/test',
+    icon: <FormatListNumbered fontSize="small" />,
+    title: 'Tests',
+  },
+  {
+    href: '/attendance',
+    icon: <PlaylistAddCheck fontSize="small" />,
+    title: 'Attendances',
+  },
+  {
+    href: '/certificate',
+    icon: <CardMembership fontSize="small" />,
+    title: 'Certificates',
   },
   {
     href: '/instructor',
@@ -51,9 +112,14 @@ const items = [
     title: 'Instructors',
   },
   {
-    href: '/payment',
-    icon: <Payment fontSize="small" />,
-    title: 'Payments',
+    href: '/registration-payment',
+    icon: <Sell fontSize="small" />,
+    title: 'Registration Payments',
+  },
+  {
+    href: '/operational-payment',
+    icon: <ShoppingCartCheckout fontSize="small" />,
+    title: 'Operational Payments',
   },
   {
     href: '/category',
@@ -71,7 +137,7 @@ const items = [
     title: 'My Course',
   },
   {
-    href: '#',
+    href: '/report',
     icon: <FolderCopy fontSize="small" />,
     title: 'Report',
   },
@@ -89,6 +155,9 @@ export const DashboardSidebar = (props) => {
     defaultMatches: true,
     noSsr: false,
   });
+  const { user } = useAuth();
+
+  const userPermissions = permissions[user?.role?.roleName];
 
   useEffect(
     () => {
@@ -117,12 +186,7 @@ export const DashboardSidebar = (props) => {
           <Box sx={{ p: 3 }}>
             <NextLink href="/" passHref>
               <a>
-                <Logo
-                  sx={{
-                    height: 42,
-                    width: 42,
-                  }}
-                />
+                <Image width="40px" height="40px" layout="fixed" src={logo} />
               </a>
             </NextLink>
           </Box>
@@ -134,9 +198,13 @@ export const DashboardSidebar = (props) => {
           }}
         />
         <Box sx={{ flexGrow: 1 }}>
-          {items.map((item) => (
-            <NavItem key={item.title} icon={item.icon} href={item.href} title={item.title} />
-          ))}
+          {items.map((item) => {
+            if (userPermissions && userPermissions.includes(item.title)) {
+              return (
+                <NavItem key={item.title} icon={item.icon} href={item.href} title={item.title} />
+              );
+            }
+          })}
         </Box>
       </Box>
     </>

@@ -7,7 +7,7 @@ import { EditInstructor } from '../../components/instructor/edit-instructor';
 
 const { NEXT_PUBLIC_API } = process.env;
 
-export const getServerSideProps = async ({ req, res, query }) => {
+export const getServerSideProps = async ({ req, query }) => {
   const { id } = query;
   if (!id || id === null) {
     return {
@@ -20,7 +20,7 @@ export const getServerSideProps = async ({ req, res, query }) => {
   }
 
   const data = parseCookies(req);
-  let instructor, courses;
+  let instructor, courses, provinces, cities, instructorCourseIds;
 
   if (!data.user) {
     return {
@@ -34,14 +34,14 @@ export const getServerSideProps = async ({ req, res, query }) => {
   const user = JSON.parse(data.user);
 
   try {
-    const response = await axios({
+    const responseInstructor = await axios({
       method: 'GET',
       url: `${NEXT_PUBLIC_API}/instructor/${id}`,
       headers: {
         Authorization: `Bearer ${user.accessToken}`,
       },
     });
-    if (response.status !== 200) {
+    if (responseInstructor.status !== 200) {
       throw new Error('failed to get data instructor');
     }
 
@@ -52,19 +52,63 @@ export const getServerSideProps = async ({ req, res, query }) => {
         Authorization: `Bearer ${user.accessToken}`,
       },
     });
+    if (responseCourse.status !== 200) {
+      throw new Error('failed to get data course');
+    }
 
-    instructor = response.data;
+    const responseCoursesOfInstructor = await axios({
+      method: 'GET',
+      url: `${NEXT_PUBLIC_API}/course/instructor/${id}`,
+      headers: {
+        Authorization: `Bearer ${user.accessToken}`,
+      },
+    });
+    if (responseCoursesOfInstructor.status !== 200) {
+      throw new Error('failed to get data courses of instructor');
+    }
+
+    const responseProvinces = await axios({
+      method: 'GET',
+      url: `${NEXT_PUBLIC_API}/province?page=1&size=200`,
+      headers: {
+        Authorization: `Bearer ${user.accessToken}`,
+      },
+    });
+    if (responseProvinces.status !== 200) {
+      throw new Error('failed to get data provinces');
+    }
+
+    const responseCities = await axios({
+      method: 'GET',
+      url: `${NEXT_PUBLIC_API}/city?page=1&size=200`,
+      params: { provinceId: responseInstructor.data.provinceId },
+      headers: {
+        Authorization: `Bearer ${user.accessToken}`,
+      },
+    });
+    if (responseCities.status !== 200) {
+      throw new Error('failed to get data cities');
+    }
+
+    instructorCourseIds = responseCoursesOfInstructor.data?.data.map((course) => course.id);
+
+    instructor = responseInstructor.data;
     courses = responseCourse.data;
+    provinces = responseProvinces.data;
+    cities = responseCities.data;
   } catch (err) {
     instructor = { error: { message: err.message } };
     courses = { error: { message: err.message } };
+    instructorCourseIds = { error: { message: err.message } };
+    provinces = { error: { message: err.message } };
+    cities = { error: { message: err.message } };
   }
 
-  return { props: { instructor, courses } };
+  return { props: { instructor, courses, provinces, cities, instructorCourseIds } };
 };
 
 const Edit = (props) => {
-  const { instructor, courses } = props;
+  const { instructor, courses, provinces, cities, instructorCourseIds } = props;
 
   return (
     <>
@@ -83,7 +127,13 @@ const Edit = (props) => {
             Instructor
           </Typography>
           <Box sx={{ pt: 3 }}>
-            <EditInstructor instructor={instructor} courses={courses} />
+            <EditInstructor
+              instructor={instructor}
+              courses={courses}
+              provinces={provinces}
+              cities={cities}
+              instructorCourseIds={instructorCourseIds}
+            />
           </Box>
         </Container>
       </Box>

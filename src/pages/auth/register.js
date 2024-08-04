@@ -59,7 +59,7 @@ const Register = () => {
           setErrMessage(undefined);
 
           setTimeout(() => {
-            router.push('/auth/login');
+            router.push('/auth/login?referrer=/auth/register');
           }, 3000);
         })
         .catch((err) => {

@@ -11,7 +11,7 @@ import useAuth from '../../hooks/use-auth';
 
 const { NEXT_PUBLIC_API } = process.env;
 
-export const getServerSideProps = async ({ req, res, query }) => {
+export const getServerSideProps = async ({ req, query }) => {
   const page = query.page || 1;
   const size = query.limit || 6;
   const search = query.search;

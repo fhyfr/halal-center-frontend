@@ -19,6 +19,7 @@ import {
   MenuItem,
   OutlinedInput,
   Select,
+  TextField,
   Typography,
 } from '@mui/material';
 import { useRouter } from 'next/router';
@@ -28,47 +29,64 @@ import * as Yup from 'yup';
 import 'yup-phone';
 import { uploadImage } from '../../services/api/file';
 import { handleRedirectOnClick } from '../../utils/handle-event-button';
-import { editInstructor } from '../../services/api/instructor';
+import { updateInstructor } from '../../services/api/instructor';
+import { getCitiesByProvinceId } from '../../services/api/city';
+import { Stack } from '@mui/system';
+import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 
-export const EditInstructor = ({ instructor, courses }) => {
+export const EditInstructor = ({ instructor, provinces, cities, courses, instructorCourseIds }) => {
   const router = useRouter();
 
   const [info, setInfo] = useState(undefined);
   const [errMessage, setErrMessage] = useState(undefined);
   const [profilePictureUrl, setProfilePictureUrl] = useState(instructor.profilePicture);
-  const [selected, setSelected] = useState(instructor.courseIds);
+  const [selectedCourseIds, setSelectedCourseIds] = useState(instructorCourseIds);
+  const [citiesData, setCitiesData] = useState(cities);
+  const [selectedProvinceId, setSelectedProvinceId] = useState(instructor.provinceId);
+  const [selectedCityId, setSelectedCityId] = useState(instructor.cityId);
 
   const formik = useFormik({
     initialValues: {
       email: instructor.email,
       fullName: instructor.fullName,
+      username: instructor.username,
       address: instructor.address,
       phoneNumber: instructor.phoneNumber,
+      dateOfBirth: instructor.dateOfBirth,
+      education: instructor.education,
+      workExperience: instructor.workExperience,
       facebook: instructor.facebook,
       linkedin: instructor.linkedin,
     },
     validationSchema: Yup.object({
       email: Yup.string().email('Must be a valid email').required('Email is required'),
       fullName: Yup.string().required('Full Name is required'),
+      username: Yup.string().required('Username is required'),
       address: Yup.string().required('Address is required'),
       phoneNumber: Yup.string().phone('ID').required('Phone Number is required'),
+      dateOfBirth: Yup.string().required(),
+      education: Yup.string().required('Education is required'),
+      workExperience: Yup.number().required('Work Experience is required'),
       facebook: Yup.string().url(),
       linkedin: Yup.string().url(),
     }),
     onSubmit: (values, action) => {
-      const updateInstructor = { ...values };
+      const updateInstructorData = { ...values };
 
-      Object.assign(updateInstructor, {
-        courseIds: selected,
+      Object.assign(updateInstructorData, {
+        courseIds: selectedCourseIds,
+        provinceId: selectedProvinceId,
+        cityId: selectedCityId,
       });
 
       if (profilePictureUrl && profilePictureUrl !== null) {
-        Object.assign(updateInstructor, {
+        Object.assign(updateInstructorData, {
           profilePicture: profilePictureUrl,
         });
       }
 
-      editInstructor(instructor.id, updateInstructor)
+      updateInstructor(instructor.id, updateInstructorData)
         .then((res) => {
           setInfo(res);
           setErrMessage(undefined);
@@ -87,7 +105,7 @@ export const EditInstructor = ({ instructor, courses }) => {
 
   const handleChangeCourseIds = (event) => {
     const value = event.target.value;
-    setSelected(value);
+    setSelectedCourseIds(value);
   };
 
   const handleUploadProfilePicture = async (event) => {
@@ -101,6 +119,19 @@ export const EditInstructor = ({ instructor, courses }) => {
         setErrMessage(err.response.data?.message);
         setInfo(undefined);
       });
+  };
+
+  const handleChangeProvinceId = async (event) => {
+    const value = event.target.value;
+    setSelectedProvinceId(value);
+
+    const cities = await getCitiesByProvinceId(value);
+    setCitiesData(cities);
+  };
+
+  const handleChangeCityId = (event) => {
+    const value = event.target.value;
+    setSelectedCityId(value);
   };
 
   if (instructor.error) {
@@ -190,7 +221,7 @@ export const EditInstructor = ({ instructor, courses }) => {
                 <Select
                   labelId="mutiple-select-course"
                   multiple
-                  value={selected}
+                  value={selectedCourseIds}
                   label="Course Ids"
                   onChange={handleChangeCourseIds}
                   renderValue={(selected) => selected.join(', ')}
@@ -199,9 +230,9 @@ export const EditInstructor = ({ instructor, courses }) => {
                   {courses.data.map((course) => (
                     <MenuItem key={course.id} value={course.id}>
                       <ListItemIcon>
-                        <Checkbox checked={selected.indexOf(course.id) > -1} />
+                        <Checkbox checked={selectedCourseIds.indexOf(course.id) > -1} />
                       </ListItemIcon>
-                      <ListItemText primary={course.title} />
+                      <ListItemText primary={`${course.title} - Batch ${course.batchNumber}`} />
                     </MenuItem>
                   ))}
                 </Select>
@@ -225,6 +256,27 @@ export const EditInstructor = ({ instructor, courses }) => {
                     />
                     {Boolean(formik.touched.fullName && formik.errors.fullName) && (
                       <FormHelperText error>{formik.errors.fullName}</FormHelperText>
+                    )}
+                  </FormControl>
+                </Grid>
+
+                <Grid item md={6} xs={12}>
+                  <FormControl fullWidth variant="outlined">
+                    <InputLabel htmlFor="outlined-adornment-username" required>
+                      Username
+                    </InputLabel>
+                    <OutlinedInput
+                      id="outlined-adornment-username"
+                      label="Username"
+                      name="username"
+                      type="text"
+                      onBlur={formik.handleBlur}
+                      onChange={formik.handleChange}
+                      value={formik.values.username}
+                      required
+                    />
+                    {Boolean(formik.touched.username && formik.errors.username) && (
+                      <FormHelperText error>{formik.errors.username}</FormHelperText>
                     )}
                   </FormControl>
                 </Grid>
@@ -270,6 +322,50 @@ export const EditInstructor = ({ instructor, courses }) => {
 
                 <Grid item md={6} xs={12}>
                   <FormControl fullWidth variant="outlined">
+                    <InputLabel id="single-select-province" required>
+                      Province
+                    </InputLabel>
+                    <Select
+                      labelId="single-select-province"
+                      value={selectedProvinceId}
+                      label="Province"
+                      onChange={handleChangeProvinceId}
+                      name="provinceId"
+                      required
+                    >
+                      {provinces.data.map((province) => (
+                        <MenuItem key={province.id} value={province.id}>
+                          {province.name}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Grid>
+
+                <Grid item md={6} xs={12}>
+                  <FormControl fullWidth variant="outlined">
+                    <InputLabel id="single-select-city" required>
+                      City
+                    </InputLabel>
+                    <Select
+                      labelId="single-select-city"
+                      value={selectedCityId}
+                      label="City"
+                      onChange={handleChangeCityId}
+                      name="cityId"
+                      required
+                    >
+                      {citiesData?.data?.map((city) => (
+                        <MenuItem key={city.id} value={city.id}>
+                          {city.name}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Grid>
+
+                <Grid item md={6} xs={12}>
+                  <FormControl fullWidth variant="outlined">
                     <InputLabel htmlFor="outlined-adornment-address" required>
                       Address
                     </InputLabel>
@@ -285,6 +381,92 @@ export const EditInstructor = ({ instructor, courses }) => {
                     />
                     {Boolean(formik.touched.address && formik.errors.address) && (
                       <FormHelperText error>{formik.errors.address}</FormHelperText>
+                    )}
+                  </FormControl>
+                </Grid>
+
+                <Grid item md={6} xs={12}>
+                  <Stack sx={{ marginX: 2 }} alignItems="center" direction="row" spacing={4}>
+                    <LocalizationProvider dateAdapter={AdapterDateFns}>
+                      <InputLabel htmlFor="id-date-of-birth">Date of Birth</InputLabel>
+                      <DatePicker
+                        onChange={(value) => {
+                          formik.setFieldValue('dateOfBirth', new Date(value).toISOString());
+                        }}
+                        value={formik.values.dateOfBirth}
+                        inputFormat="dd/MM/yyyy"
+                        renderInput={(params) => (
+                          <TextField
+                            id="id-date-of-birth"
+                            sx={{ maxWidth: 180 }}
+                            error={Boolean(formik.touched.dateOfBirth && formik.errors.dateOfBirth)}
+                            helperText={formik.touched.dateOfBirth && formik.errors.dateOfBirth}
+                            label="Date of Birth"
+                            name="dateOfBirth"
+                            variant="outlined"
+                            {...params}
+                          />
+                        )}
+                      />
+                    </LocalizationProvider>
+                  </Stack>
+                </Grid>
+
+                <Grid item md={6} xs={12}>
+                  <FormControl fullWidth variant="outlined">
+                    <InputLabel id="single-select-education" required>
+                      Education
+                    </InputLabel>
+                    <Select
+                      labelId="single-select-education"
+                      value={formik.values.education}
+                      label="Education"
+                      onChange={formik.handleChange}
+                      name="education"
+                      required
+                    >
+                      <MenuItem key="1" value="SLTA">
+                        SLTA (SMA, SMK, MA, sederajat)
+                      </MenuItem>
+                      <MenuItem key="2" value="D1">
+                        Diploma 1 (D1)
+                      </MenuItem>
+                      <MenuItem key="3" value="D2">
+                        Diploma 2 (D2)
+                      </MenuItem>
+                      <MenuItem key="4" value="D3">
+                        Diploma 3 (D3)
+                      </MenuItem>
+                      <MenuItem key="5" value="S1_OR_D4">
+                        Strata 1 (S1) atau Diploma 4 (D4)
+                      </MenuItem>
+                      <MenuItem key="6" value="S2">
+                        Strata 2 (S2)
+                      </MenuItem>
+                      <MenuItem key="7" value="S3">
+                        Strata 3 (S3)
+                      </MenuItem>
+                    </Select>
+                  </FormControl>
+                </Grid>
+
+                <Grid item md={6} xs={12}>
+                  <FormControl fullWidth variant="outlined">
+                    <InputLabel htmlFor="outlined-adornment-work-experience" required>
+                      Work Experience (Years)
+                    </InputLabel>
+                    <OutlinedInput
+                      id="outlined-adornment-work-experience"
+                      label="Work Experience (Years)"
+                      name="workExperience"
+                      type="number"
+                      onBlur={formik.handleBlur}
+                      onChange={formik.handleChange}
+                      value={formik.values.workExperience}
+                      required
+                    />
+                    {Boolean(formik.touched.workExperience && formik.errors.workExperience) && (
+                      <FormHelperText error>{formik.errors.workExperience}</FormHelperText>
                     )}
                   </FormControl>
                 </Grid>

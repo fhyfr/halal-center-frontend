@@ -15,7 +15,7 @@ import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { formatDate, formatDateWithoutHourMinutes } from '../../../utils/date-converter';
-import { InfoOutlined } from '@mui/icons-material';
+import { InfoOutlined, PublishOutlined, QuizOutlined } from '@mui/icons-material';
 
 export const MyCourseListResults = ({ courses }) => {
   const router = useRouter();
@@ -47,6 +47,19 @@ export const MyCourseListResults = ({ courses }) => {
       pathname: path,
       query: query,
     });
+  };
+
+  const scrollToAttendanceSection = () => {
+    const element = document.getElementById('attendance-section');
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+  const scrollToTestSection = () => {
+    const element = document.getElementById('test-section');
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
   };
 
   if (courses.error) {
@@ -98,7 +111,7 @@ export const MyCourseListResults = ({ courses }) => {
                   </TableCell>
                   <TableCell>
                     <Typography color="textPrimary" variant="body2">
-                      {course.title}
+                      {`${course.title} - Batch ${course.batchNumber}`}
                     </Typography>
                   </TableCell>
                   <TableCell>
@@ -130,6 +143,7 @@ export const MyCourseListResults = ({ courses }) => {
                       }}
                     >
                       <Button
+                        sx={{ mr: 1 }}
                         color="info"
                         size="small"
                         variant="contained"
@@ -144,6 +158,42 @@ export const MyCourseListResults = ({ courses }) => {
                         }}
                       >
                         Detail
+                      </Button>
+                      <Button
+                        sx={{ mr: 1 }}
+                        color="primary"
+                        size="small"
+                        variant="contained"
+                        startIcon={<PublishOutlined />}
+                        onClick={() => {
+                          router.push({
+                            pathname: '/course/details',
+                            query: {
+                              courseId: course.id,
+                            },
+                          });
+                          setTimeout(scrollToAttendanceSection, 100); // Delay the scroll for a smooth transition
+                        }}
+                      >
+                        Attendance
+                      </Button>
+                      <Button
+                        sx={{ mr: 1 }}
+                        color="secondary"
+                        size="small"
+                        variant="contained"
+                        startIcon={<QuizOutlined />}
+                        onClick={() => {
+                          router.push({
+                            pathname: '/course/details',
+                            query: {
+                              courseId: course.id,
+                            },
+                          });
+                          setTimeout(scrollToTestSection, 100); // Delay the scroll for a smooth transition
+                        }}
+                      >
+                        Test
                       </Button>
                     </Box>
                   </TableCell>

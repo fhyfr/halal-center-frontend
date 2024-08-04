@@ -7,7 +7,7 @@ import { parseCookies } from '../../lib/auth-cookies';
 
 const { NEXT_PUBLIC_API } = process.env;
 
-export const getServerSideProps = async ({ req, res, query }) => {
+export const getServerSideProps = async ({ req, query }) => {
   let userData, roles;
 
   const { userId } = query;

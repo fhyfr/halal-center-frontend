@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import Head from 'next/head';
 import { Box, Container } from '@mui/material';
 import { CategoryListResults } from '../../components/category/category-list-results';
@@ -9,7 +9,7 @@ import { parseCookies } from '../../lib/auth-cookies';
 
 const { NEXT_PUBLIC_API } = process.env;
 
-export const getServerSideProps = async ({ req, res, query }) => {
+export const getServerSideProps = async ({ req, query }) => {
   const page = query.page || 1;
   const size = query.limit || 10;
   const search = query.search;

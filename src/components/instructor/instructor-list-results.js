@@ -48,19 +48,19 @@ export const InstructorListResults = ({ instructors }) => {
     });
   };
 
-  const handleDetailInstructor = (instructorId) => {
+  const handleDetailInstructor = (id) => {
     router.push({
       pathname: '/instructor/details',
       query: {
-        instructorId,
+        id,
       },
     });
   };
 
-  const handleDeleteInstructor = (instructorId) => {
-    const confirmation = confirm('Are you sure want to delete this instructor?');
+  const handleDeleteInstructor = (id) => {
+    const confirmation = confirm('Are you sure to delete this instructor?');
     if (confirmation) {
-      deleteInstructor(instructorId)
+      deleteInstructor(id)
         .then((res) => {
           alert(res);
           router.reload();

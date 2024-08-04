@@ -67,8 +67,17 @@ export const UserListResults = ({ users }) => {
     });
   };
 
+  const handleDetailInstructor = (id) => {
+    router.push({
+      pathname: '/instructor/details',
+      query: {
+        id,
+      },
+    });
+  };
+
   const handleDeleteUser = (userId) => {
-    const confirmation = confirm('Are you sure want to delete this user?');
+    const confirmation = confirm('Are you sure to delete this user?');
     if (confirmation) {
       deleteUser(userId)
         .then((res) => {
@@ -157,6 +166,26 @@ export const UserListResults = ({ users }) => {
                             }}
                             variant="contained"
                             onClick={() => handleDetailUser(user.id)}
+                          >
+                            Detail
+                          </Button>
+                        </Box>
+                      ) : user.role.roleName === 'INSTRUCTOR' ? (
+                        <Box
+                          sx={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            mr: 2,
+                          }}
+                        >
+                          <Button
+                            color="primary"
+                            size="small"
+                            sx={{
+                              mr: 2,
+                            }}
+                            variant="contained"
+                            onClick={() => handleDetailInstructor(user.id)}
                           >
                             Detail
                           </Button>

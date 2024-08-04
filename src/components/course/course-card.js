@@ -32,7 +32,7 @@ export const CourseCard = ({ user, course }) => {
   const handleDeleteCourse = (course) => {
     const now = new Date();
 
-    const confirmation = confirm('Are you sure want to delete this course?');
+    const confirmation = confirm('Are you sure to delete this course?');
     if (confirmation) {
       if (new Date(course.endDate) > now) {
         return alert('error: course still running');
@@ -65,13 +65,13 @@ export const CourseCard = ({ user, course }) => {
     ) {
       alert('please complete your profile before register to this course!');
 
-      router.push('/user/account');
+      return router.push('/user/account');
     }
 
     if (course.type === 'FREE') {
       registerCourse(course.id)
         .then((res) => {
-          alert(res);
+          alert(res.message);
 
           router.push({
             pathname: '/course/details',
@@ -157,10 +157,15 @@ export const CourseCard = ({ user, course }) => {
             pb: 2,
           }}
         >
-          <CardMedia component="img" height="auto" image={course.banner} alt={course.title} />
+          <CardMedia
+            component="img"
+            height="auto"
+            image={course.banner}
+            alt={`${course.title} - Batch ${course.batchNumber}`}
+          />
         </Box>
         <Typography align="left" color="textPrimary" gutterBottom variant="h5">
-          {course.title}
+          {`${course.title} - Batch ${course.batchNumber}`}
         </Typography>
         <Typography align="left" color="textPrimary" gutterBottom variant="h6">
           {course.subTitle}
@@ -168,7 +173,7 @@ export const CourseCard = ({ user, course }) => {
         <Typography align="left" color="textPrimary" variant="body1">
           {course.descriptions}
         </Typography>
-        {user && user.roleId === 3 ? (
+        {user && user.role?.roleName === 'MEMBER' ? (
           <Box
             sx={{
               display: 'flex',
@@ -213,6 +218,56 @@ export const CourseCard = ({ user, course }) => {
                 </span>
               </Tooltip>
             )}
+          </Box>
+        ) : user && user.role?.roleName === 'INSTRUCTOR' ? (
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              mt: 4,
+            }}
+          >
+            <span>
+              <Button
+                color="info"
+                size="medium"
+                variant="contained"
+                startIcon={<InfoOutlined />}
+                onClick={() => {
+                  router.push({
+                    pathname: '/course/details',
+                    query: { courseId: course.id },
+                  });
+                }}
+              >
+                Details Course
+              </Button>
+            </span>
+          </Box>
+        ) : user && user.role?.roleName === 'DIRECTOR' ? (
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              mt: 4,
+            }}
+          >
+            <span>
+              <Button
+                color="info"
+                size="medium"
+                variant="contained"
+                startIcon={<InfoOutlined />}
+                onClick={() => {
+                  router.push({
+                    pathname: '/course/details',
+                    query: { courseId: course.id },
+                  });
+                }}
+              >
+                Details Course
+              </Button>
+            </span>
           </Box>
         ) : (
           <Box

@@ -7,7 +7,7 @@ import axios from 'axios';
 
 const { NEXT_PUBLIC_API } = process.env;
 
-export const getServerSideProps = async ({ req, res }) => {
+export const getServerSideProps = async ({ req }) => {
   const data = parseCookies(req);
   let categories;
 

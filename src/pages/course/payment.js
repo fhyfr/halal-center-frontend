@@ -11,7 +11,7 @@ import { PaymentCourse } from '../../components/course/payment-course';
 
 const { NEXT_PUBLIC_API } = process.env;
 
-export const getServerSideProps = async ({ req, res, query }) => {
+export const getServerSideProps = async ({ req, query }) => {
   let course, currentUser;
 
   const { courseId } = query;

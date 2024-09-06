@@ -20,6 +20,8 @@ import { formatRupiahCurrency } from '../../utils/currency-converter';
 import { Category, InfoOutlined, LoginOutlined } from '@mui/icons-material';
 import { deleteCourse, registerCourse } from '../../services/api/course';
 
+const { NEXT_PUBLIC_API } = process.env;
+
 export const CourseCard = ({ user, course }) => {
   const router = useRouter();
 
@@ -160,7 +162,9 @@ export const CourseCard = ({ user, course }) => {
           <CardMedia
             component="img"
             height="auto"
-            image={course.banner}
+            image={`${NEXT_PUBLIC_API}/upload/proxy-image?imageUrl=${encodeURIComponent(
+              course.banner,
+            )}`}
             alt={`${course.title} - Batch ${course.batchNumber}`}
           />
         </Box>
